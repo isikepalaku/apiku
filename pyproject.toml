@@ -34,7 +34,9 @@ dependencies = [
   "exa_py",
   "googlesearch-python",
   "pycountry",
-  "mistralai"
+  "mistralai",
+  "groq",
+  "huggingface_hub"
 ]
 
 [build-system]

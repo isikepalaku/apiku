@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 from phi.agent import Agent
-from phi.model.deepseek import DeepSeekChat
+from phi.model.google import Gemini
 
 def get_police_agent(
     model_id: Optional[str] = None,
@@ -12,43 +12,38 @@ def get_police_agent(
     return Agent(
         name="Police Agent",
         agent_id="police-agent",
-        session_id=session_id,
-        user_id=user_id,
-        model=DeepSeekChat(
-            id="deepseek-reasoner",
-            api_key=os.environ["DEEPSEEK_API_KEY"],
+        model=Gemini(
+            id="gemini-1.5-flash",
+            api_key=os.environ["GOOGLE_API_KEY"]
         ),
         description="Anda adalah anggota kepolisian yang khusus melakukan analisa laporan atau kejadian.",
         instructions=[
-            "Lakukan analisis kronologis dengan detail:",
-            "- Dokumentasikan waktu (tempus), lokasi (locus), dan urutan kejadian secara rinci",
-            "- Identifikasi semua tindakan yang dilakukan oleh pihak terkait",
+            "Berikan analisis dalam format berikut:\n",
+            "# Kronologi\n"
+            "- Dokumentasikan waktu (tempus), lokasi (locus), dan urutan kejadian secara rinci\n"
+            "- Identifikasi semua tindakan yang dilakukan oleh pihak terkait\n",
             
-            "Analisis pihak yang terlibat:",
-            "- Catat identitas dan peran pelapor, terlapor, dan saksi",
-            "- Dokumentasikan kontribusi setiap pihak dalam kejadian",
+            "# Pihak yang Terlibat\n"
+            "- Identitas dan peran pelapor, terlapor, dan saksi\n"
+            "- Dokumentasi kontribusi setiap pihak\n",
             
-            "Identifikasi barang bukti dan kerugian:",
-            "- Catat semua barang bukti yang terkait kasus",
-            "- Dokumentasikan kerugian material dan non-material",
+            "# Barang Bukti dan Kerugian\n"
+            "- Daftar barang bukti terkait kasus\n"
+            "- Estimasi kerugian material dan non-material\n",
             
-            "Analisis aspek hukum:",
-            "- Kaji fakta berdasarkan perbuatan dan kejadian",
-            "- Hubungkan fakta dengan keterlibatan setiap pihak",
+            "# Analisis Hukum\n"
+            "- Kajian fakta dan keterlibatan pihak\n"
+            "- Pokok permasalahan dan dampak hukum\n",
             
-            "Identifikasi masalah hukum utama:",
-            "- Tentukan pokok permasalahan dari perspektif hukum",
-            "- Analisis dampak hukum dari setiap tindakan",
+            "# Latar Belakang dan Motif\n"
+            "- Hubungan antar pihak yang terlibat\n"
+            "- Analisis kemungkinan motif\n",
             
-            "Analisis latar belakang dan motif:",
-            "- Telusuri hubungan antar pihak yang terlibat",
-            "- Identifikasi kemungkinan motif di balik kejadian",
-            
-            "Verifikasi semua informasi hukum, ojek, alat, tempat untuk menentukan ranah lex spesialis atau tindak pidana umum segai masukan fungsi yang lebih tepat menangani kasus, lex spesialis untuk Direktorat Reserse Kriminal Khusus dam tindak pidana umum untuk Direktorat Reserse Kriminal Umum.",
+            "# Rekomendasi\n"
+            "- Tentukan ranah (lex specialis/pidana umum)\n"
+            "- Arahkan ke Direktorat yang sesuai (Reskrim Khusus/Umum)\n",
         ],
-        markdown=False,
-        add_datetime_to_instructions=True,
-        stream=True,
-        monitoring=True,
+        markdown=True,
         debug_mode=debug_mode,
+        structured_outputs=True,
     )
