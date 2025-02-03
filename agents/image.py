@@ -1,19 +1,15 @@
+import os
 from typing import Optional
+from pathlib import Path
 
-from phi.agent import Agent
-from phi.model.google import Gemini
-from phi.tools.duckduckgo import DuckDuckGo
-from phi.knowledge.agent import AgentKnowledge
-from phi.storage.agent.postgres import PgAgentStorage
-from phi.vectordb.pgvector import PgVector, SearchType
+from agno.agent import Agent
+from agno.media import Image
+from agno.models.google import Gemini
+from agno.tools.duckduckgo import DuckDuckGoTools
+from dotenv import load_dotenv
 
-from agents.settings import agent_settings
-from db.session import db_url
-
-geo_agent_storage = PgAgentStorage(table_name="geo_agent_sessions", db_url=db_url)
-geo_agent_knowledge = AgentKnowledge(
-    vector_db=PgVector(table_name="geo_agent_knowledge", db_url=db_url, search_type=SearchType.hybrid)
-)
+# Load environment variables
+load_dotenv()
 
 def get_geo_agent(
     model_id: Optional[str] = None,
@@ -21,29 +17,84 @@ def get_geo_agent(
     session_id: Optional[str] = None,
     debug_mode: bool = False,
 ) -> Agent:
+    """Initialize the geography analysis agent."""
+    
+    geo_query = """
+    # Ahli Geografi: Analisis Lokasi dari Gambar
+
+    PENTING: Berikan jawaban dalam Bahasa Indonesia.
+
+    ## Petunjuk Visual yang Dianalisis
+    - **Landmark:** Tempat-tempat atau bangunan ikonik yang dapat dikenali
+    - **Arsitektur:** Gaya bangunan atau desain yang muncul dalam gambar
+    - **Fitur Alam:** Elemen alam seperti gunung, sungai, dan garis pantai
+    - **Bahasa atau Simbol:** Teks, rambu jalan, papan iklan, atau nama yang terlihat dalam gambar
+    - **Pakaian atau Aspek Budaya:** Cara berpakaian atau elemen budaya masyarakat yang terlihat
+    - **Petunjuk Lingkungan:** Kondisi cuaca, waktu (siang/malam), dan aspek lingkungan lainnya
+
+    ## Instruksi Analisis
+    1. **Periksa Gambar Secara Menyeluruh:**  
+       Lihat semua detail yang tersedia dalam gambar.
+
+    2. **Buat Dugaan Lokasi:**  
+       Berikan dugaan lokasi yang mencakup nama jalan (jika terlihat), kota, provinsi (jika relevan), dan negara.
+
+    3. **Jelaskan Alasan Secara Detail:**  
+       Sertakan penjelasan mendalam mengenai petunjuk visual yang mendukung kesimpulan Anda.
+
+    4. **Berikan Opsi Jika Tidak Pasti:**  
+       Jika tidak yakin, tawarkan beberapa kemungkinan lokasi beserta alasan yang mendukung masing-masing dugaan.
+
+    ## Format Output
+    Berikan hasil analisis dalam format:
+    Nama Lokasi, Kota, Negara
+
+    Disertai dengan penjelasan yang mendetail dalam format markdown menggunakan Bahasa Indonesia.
+
+    **Catatan:** Jika gambar tidak tersedia, beritahukan bahwa gambar diperlukan untuk analisis.
+    """
 
     return Agent(
-        name="Geo Image Agent",
+        name="Agen Analisis Lokasi",
         agent_id="geo-image-agent",
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash-exp"),
-        tools=[DuckDuckGo()],
-        description="You are an AI agent specialized in analyzing images and providing geographical and historical context.",
-        instructions=[
-            "Analyze images thoroughly to identify landmarks, architectural features, and geographical locations.",
-            "Provide historical context and background information about identified locations.",
-            "Use web search to find recent news or updates about the locations shown in images.",
-            "Cite reliable sources when providing information.",
-            "If an image is not provided, inform the user that an image is required for analysis.",
-        ],
+        tools=[DuckDuckGoTools()],
+        description="Saya adalah ahli geografi yang menganalisis gambar untuk menentukan lokasi berdasarkan petunjuk visual yang tersedia. Semua analisis akan diberikan dalam Bahasa Indonesia.",
+        instructions=[geo_query],
         markdown=True,
         show_tool_calls=True,
         add_datetime_to_instructions=True,
-        storage=geo_agent_storage,
-        read_chat_history=True,
-        knowledge=geo_agent_knowledge,
-        search_knowledge=True,
         monitoring=True,
         debug_mode=debug_mode,
     )
+
+# Function to analyze the image and return location information
+def analyze_image(image_path: Path) -> Optional[str]:
+    """
+    Analyze an image to determine its geographic location.
+    
+    Args:
+        image_path: Path to the image file
+        
+    Returns:
+        String containing location analysis in markdown format
+        
+    Raises:
+        RuntimeError: If there's an error during image analysis
+    """
+    try:
+        agent = get_geo_agent()
+        prompt = """
+        Mohon analisis gambar ini dan berikan:
+        1. Lokasi yang terlihat dalam gambar
+        2. Penjelasan detail mengapa Anda memilih lokasi tersebut
+        3. Jika tidak yakin, berikan beberapa kemungkinan lokasi
+
+        PENTING: Berikan jawaban dalam Bahasa Indonesia.
+        """
+        response = agent.run(prompt, images=[Image(filepath=image_path)])
+        return response.content
+    except Exception as e:
+        raise RuntimeError(f"Terjadi kesalahan saat menganalisis gambar: {e}")

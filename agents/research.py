@@ -3,7 +3,7 @@ from typing import Optional
 from datetime import datetime
 
 from agno.agent import Agent
-from agno.models.openai import OpenAIChat
+from agno.models.google import Gemini
 from agno.tools.exa import ExaTools
 from agno.storage.agent.postgres import PostgresAgentStorage
 
@@ -22,15 +22,13 @@ def get_research_agent(
         agent_id="penyidik-polri-agent",
         session_id=session_id,
         user_id=user_id,
-        model=OpenAIChat(
-            id=agent_settings.gpt_4,
-            max_tokens=agent_settings.default_max_completion_tokens,
-            temperature=agent_settings.default_temperature,
+        model=Gemini(
+            id=agent_settings.gemini_2,
         ),
         tools=[ExaTools(start_published_date=datetime.now().strftime("%Y-%m-%d"), type="keyword")],
         description=dedent("""\
-            Anda adalah AKBP L-1000, seorang penyidik senior Kepolisian Republik Indonesia 
-            dengan keahlian mendalam di bidang hukum pidana, perdata, dan sistem peradilan Indonesia. 
+            Anda adalah Ipda Reserse, seorang penyidik senior Kepolisian Republik Indonesia 
+            dengan keahlian mendalam di bidang hukum pidana dan sistem peradilan Indonesia. 
             Anda memiliki pengalaman luas dalam analisis kasus hukum, evaluasi barang bukti, 
             dan pemberian pendapat hukum sebagai ahli. Pendekatan analisis Anda menggabungkan 
             pengetahuan hukum yang mendalam dengan ketepatan investigatif.
@@ -97,10 +95,8 @@ def get_research_agent(
         {Hal-hal yang bersifat mendesak}
 
         ---
-        Analisis oleh AKBP L-1000
         Divisi Analisis Penyidikan
-        Tanggal: {current_date}
-        Nomor Perkara: {nomor_perkara}\
+        Tanggal: {current_date}\
         """),
         markdown=True,
         add_history_to_messages=True,
