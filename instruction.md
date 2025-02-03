@@ -14,7 +14,7 @@ When you need to add new Python packages to the project, follow these steps:
 2. **Generate Updated Requirements**
    - Run the following command to generate an updated `requirements.txt`:
    ```bash
-   ./scripts/generate_requirements.sh
+   ./scripts/generate_requirements.sh upgrade
    ```
 
 3. **Configure Build Settings**

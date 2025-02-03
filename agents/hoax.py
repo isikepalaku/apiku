@@ -1,21 +1,21 @@
 import os
-from phi.agent import Agent
+from agno.agent import Agent
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
-from phi.model.mistral import MistralChat
-from phi.tools.googlesearch import GoogleSearch
-from phi.tools.newspaper4k import Newspaper4k
+from agno.models.google import Gemini
+from agno.tools.tavily import TavilyTools
+from agno.tools.newspaper4k import Newspaper4kTools
 
 # Agen Fakta Checker
 fact_checker_agent = Agent(
     name="Hoax Checker Agent",
     agent_id="hoax-checker-agent",
-    model=MistralChat(
-        id="mistral-large-latest",
-        api_key=os.environ["MISTRAL_API_KEY"]
+    model=Gemini(
+        id="gemini-2.0-flash-exp",
+        api_key=os.getenv("GOOGLE_API_KEY")
     ),
-    tools=[GoogleSearch(fixed_language="id"), Newspaper4k()],        # Tools yang digunakan
+    tools=[TavilyTools(), Newspaper4kTools()],        # Tools yang digunakan
     description=(
         "Anda adalah agen pengecek fakta. Tugas Anda adalah memverifikasi "
         "apakah klaim/berita yang diberikan tergolong hoaks atau belum ada "
@@ -24,7 +24,7 @@ fact_checker_agent = Agent(
     ),
     instructions=[
         "1. Terima sebuah klaim atau topik yang ingin diverifikasi.",
-        "2. Lakukan pencarian di Google search untuk menemukan minimal 5 tautan relevan.",
+        "2. Lakukan pencarian untuk menemukan minimal 5 tautan relevan.",
         "3. Baca tiap tautan menggunakan Newspaper4k dan rangkum informasi penting "
         "yang mendukung atau menyanggah klaim.",
         "4. Evaluasi bukti yang terkumpul. Jika Anda menemukan bukti jelas bahwa "

@@ -7,6 +7,7 @@ authors = [{ name = "Phidata Team", email = "hello@phidata.com" }]
 
 dependencies = [
   "alembic",
+  "agno",
   "beautifulsoup4",
   "duckduckgo-search",
   "fastapi[standard]",
@@ -28,6 +29,7 @@ dependencies = [
   "types-beautifulsoup4",
   "types-Pillow",
   "google-generativeai",
+  "google-search-results",
   "tavily-python",
   "newspaper4k",
   "lxml_html_clean",

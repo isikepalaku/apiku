@@ -1,7 +1,7 @@
 import os
 from typing import Optional
-from phi.agent import Agent
-from phi.model.google import Gemini
+from agno.agent import Agent
+from agno.models.google import Gemini
 
 def get_police_agent(
     model_id: Optional[str] = None,
@@ -25,11 +25,13 @@ def get_police_agent(
             
             "# Pihak yang Terlibat\n"
             "- Identitas dan peran pelapor, terlapor, dan saksi\n"
-            "- Dokumentasi kontribusi setiap pihak\n",
+            "- Dokumentasi kontribusi setiap pihak\n"
+            "- buat hasil dalam list\n",
             
             "# Barang Bukti dan Kerugian\n"
             "- Daftar barang bukti terkait kasus\n"
-            "- Estimasi kerugian material dan non-material\n",
+            "- Estimasi kerugian material dan non-material\n"
+            "- buat dalam tabel kolom\n",
             
             "# Analisis Hukum\n"
             "- Kajian fakta dan keterlibatan pihak\n"
