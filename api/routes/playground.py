@@ -21,9 +21,16 @@ analisator_kejahatan = get_analisator_tren_kejahatan(debug_mode=True)
 
 # Create a playground instance
 playground = Playground(
-    agents=[example_agent, agen_polisi, web_search_agent, fact_checker_agent, geo_agent, penyidik_polri],
+    agents=[
+        example_agent,
+        agen_polisi,
+        web_search_agent,
+        fact_checker_agent,
+        geo_agent,
+        penyidik_polri
+    ],
     workflows=[analisator_kejahatan],
-    )
+)
 
 # Log the playground endpoint with phidata.app
 if getenv("RUNTIME_ENV") == "dev":

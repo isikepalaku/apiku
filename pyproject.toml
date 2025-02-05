@@ -38,7 +38,12 @@ dependencies = [
   "pycountry",
   "mistralai",
   "groq",
-  "huggingface_hub"
+  "huggingface_hub",
+  "lancedb",
+  "tantivy",
+  "inquirer"
+
+
 ]
 
 [build-system]
