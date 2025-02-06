@@ -5,12 +5,9 @@ from datetime import datetime
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.tools.exa import ExaTools
-from agno.storage.agent.postgres import PostgresAgentStorage
 
 from agents.settings import agent_settings
 from db.session import db_url
-
-research_agent_storage = PostgresAgentStorage(table_name="research_agent", db_url=db_url)
 
 def get_research_agent(
     user_id: Optional[str] = None,
@@ -102,6 +99,5 @@ def get_research_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         add_datetime_to_instructions=True,
-        storage=research_agent_storage,
         debug_mode=debug_mode,
     )

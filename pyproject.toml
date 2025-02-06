@@ -39,7 +39,6 @@ dependencies = [
   "mistralai",
   "groq",
   "huggingface_hub",
-  "lancedb",
   "tantivy",
   "inquirer"
 
