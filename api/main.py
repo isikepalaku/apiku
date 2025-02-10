@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from starlette.middleware.cors import CORSMiddleware
 
 from api.settings import api_settings
 from api.routes.v1_router import v1_router
+from api.dependencies.auth import verify_api_key
 
 
 def create_app() -> FastAPI:
@@ -21,8 +22,8 @@ def create_app() -> FastAPI:
         openapi_url="/openapi.json" if api_settings.docs_enabled else None,
     )
 
-    # Add v1 router
-    app.include_router(v1_router)
+    # Add v1 router with API key dependency
+    app.include_router(v1_router, dependencies=[Depends(verify_api_key)])
 
     # Add Middlewares
     app.add_middleware(

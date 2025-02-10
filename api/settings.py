@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import field_validator, Field
+from pydantic import field_validator, Field, SecretStr
 from pydantic_settings import BaseSettings
 from pydantic_core.core_schema import FieldValidationInfo
 
@@ -21,6 +21,13 @@ class ApiSettings(BaseSettings):
 
     # Set to False to disable docs at /docs and /redoc
     docs_enabled: bool = True
+
+    # Agno API key for authentication
+    api_key: SecretStr = Field(
+        default='ag-wUJyLXzHxWyNMnzRXlPJjRNs4n18NZIbRrGpgxvYGSY',
+        env='AGNO_API_KEY',
+        description="Agno API key for authentication"
+    )
 
     # Cors origin list to allow requests from.
     # This list is set using the set_cors_origin_list validator
@@ -48,6 +55,8 @@ class ApiSettings(BaseSettings):
                 "http://localhost:3000",
                 "https://app.agno.com",
                 "https://app-stg.agno.com",
+                "https://app.reserse.id",
+                "https://dev.reserse.id",
             ]
         )
 
