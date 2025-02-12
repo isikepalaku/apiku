@@ -28,6 +28,7 @@ dependencies = [
   "typer",
   "types-beautifulsoup4",
   "types-Pillow",
+  "google-genai",
   "google-generativeai",
   "google-search-results",
   "tavily-python",

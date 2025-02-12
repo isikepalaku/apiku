@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
 from agno.models.google import Gemini
-from agno.tools.googlesearch import GoogleSearch
+from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
 # Agen Pengecek Fakta Hoax
@@ -15,7 +15,7 @@ fact_checker_agent = Agent(
         id="gemini-2.0-flash-exp",
         api_key=os.getenv("GOOGLE_API_KEY")
     ),
-    tools=[GoogleSearch(fixed_language="id"), Newspaper4kTools()],
+    tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
     description=(
         "Anda adalah agen pengecek fakta yang andal. Tugas Anda adalah mengevaluasi kebenaran "
         "klaim atau berita dengan menelusuri berbagai sumber terpercaya. Anda harus memeriksa "

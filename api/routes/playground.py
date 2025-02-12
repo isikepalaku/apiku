@@ -5,12 +5,13 @@ from agents.agen_polisi import get_police_agent
 from agents.hoax import fact_checker_agent
 from agents.image import get_geo_agent
 from agents.research import get_research_agent
+from agents.trend_kejahatan import get_crime_trend_agent
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 
 ######################################################
 ## Router for the agent playground
 ######################################################
-
+trend_kejahatan = get_crime_trend_agent(debug_mode=True)
 example_agent = get_example_agent(debug_mode=True)
 agen_polisi = get_police_agent(debug_mode=True)
 geo_agent = get_geo_agent(debug_mode=True)
@@ -24,7 +25,8 @@ playground = Playground(
         agen_polisi,
         fact_checker_agent,
         geo_agent,
-        penyidik_polri
+        penyidik_polri,
+        trend_kejahatan
     ],
     workflows=[analisator_kejahatan],
 )
