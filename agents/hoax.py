@@ -3,7 +3,7 @@ from agno.agent import Agent
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
-from agno.models.google import Gemini
+from agno.models.groq import Groq
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
@@ -11,9 +11,9 @@ from agno.tools.newspaper4k import Newspaper4kTools
 fact_checker_agent = Agent(
     name="Hoax Checker Agent",
     agent_id="hoax-checker-agent",
-    model=Gemini(
-        id="gemini-2.0-flash-exp",
-        api_key=os.getenv("GOOGLE_API_KEY")
+    model=Groq(
+        id="llama-3.3-70b-specdec",
+        api_key=os.getenv("GROQ_API_KEY"),
     ),
     tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
     description=(

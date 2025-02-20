@@ -4,7 +4,8 @@ from datetime import datetime
 
 from agno.agent import Agent
 from agno.models.google import Gemini
-from agno.tools.exa import ExaTools
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.newspaper4k import Newspaper4kTools
 
 from agents.settings import agent_settings
 from db.session import db_url
@@ -20,9 +21,9 @@ def get_research_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(
-            id=agent_settings.gemini_2,
+            id=agent_settings.gemini_2
         ),
-        tools=[ExaTools(start_published_date=datetime.now().strftime("%Y-%m-%d"), type="keyword")],
+        tools=[GoogleSearchTools(), Newspaper4kTools()],
         description=dedent("""\
             Anda adalah Ipda Reserse, seorang penyidik senior Kepolisian Republik Indonesia 
             dengan keahlian mendalam di bidang hukum pidana dan sistem peradilan Indonesia. 
@@ -95,9 +96,9 @@ def get_research_agent(
         Divisi Analisis Penyidikan
         Tanggal: {current_date}\
         """),
-        markdown=True,
         add_history_to_messages=True,
         num_history_responses=5,
         add_datetime_to_instructions=True,
+        markdown=True,
         debug_mode=debug_mode,
     )

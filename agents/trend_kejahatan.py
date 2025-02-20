@@ -3,9 +3,10 @@ from typing import Optional
 from datetime import datetime, timedelta
 from textwrap import dedent
 from agno.agent import Agent
-from agno.models.google import Gemini
-from agno.tools.exa import ExaTools
-from agno.tools.jina import JinaReaderTools
+from agno.models.openrouter import OpenRouter
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.newspaper4k import Newspaper4kTools
+from pydantic import BaseModel, Field
 
 def calculate_start_date(days: int) -> str:
     """Calculate start date based on number of days."""
@@ -24,17 +25,13 @@ def get_crime_trend_agent(
         agent_id="polri-crime-trend-analyst",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(
-            id="gemini-2.0-flash-exp",
-            api_key=os.environ["GOOGLE_API_KEY"]
+        model=OpenRouter(
+            id="google/gemini-2.0-flash-lite-preview-02-05:free",
+            api_key=os.environ["OPENROUTER_API_KEY"]
         ),
         tools=[
-            ExaTools(start_published_date=calculate_start_date(30), type="keyword"),
-            JinaReaderTools(
-                api_key=os.environ.get("JINA_API_KEY"),
-                base_url=os.environ.get("JINA_BASE_URL", "https://api.jina.ai/reader"),
-                max_content_length=10000
-            ),
+            GoogleSearchTools(),
+            Newspaper4kTools(),
         ],
         description=dedent("""\
             Anda adalah ahli analisis tren kejahatan yang mengkhususkan diri dalam:
@@ -46,15 +43,16 @@ def get_crime_trend_agent(
         """),
         instructions=[
             "Analisis tren kejahatan menggunakan langkah-langkah berikut:",
-            "1. Gunakan ExaTools untuk pencarian kata kunci kasus pidana",
-            "2. Untuk setiap URL penting yang ditemukan:",
-            "   - Gunakan Jina read_url untuk mengambil konten lengkap",
+            "1. Gunakan GoogleSearchTools untuk pencarian kata kunci kasus pidana",
+            "2. Gunakan Newspaper4kTools untuk mengakses URL dan mengambil konten lengkap",
+            "3. Untuk setiap URL penting yang ditemukan:",
+            "   - Gunakan Newspaper4kTools untuk mengambil konten lengkap",
             "   - Analisis isi untuk mendapatkan detail kejadian",
             "   - Ekstrak data penting seperti modus operandi, lokasi, waktu",
-            "3. Identifikasi sumber berita dan institusi terpercaya",
-            "4. Rangkum temuan utama dan pola berulang",
-            "5. Sajikan tingkat pertumbuhan dalam persentase jika tersedia",
-            "6. Fokus pada kejadian di wilayah hukum Indonesia",
+            "4. Identifikasi sumber berita dan institusi terpercaya",
+            "5. Rangkum temuan utama dan pola berulang",
+            "6. Sajikan tingkat pertumbuhan dalam persentase jika tersedia",
+            "7. Fokus pada kejadian di wilayah hukum Indonesia",
         ],
         expected_output=dedent("""\
         # Laporan Analisis Tren Kejahatan
