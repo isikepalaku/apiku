@@ -4,8 +4,6 @@ from starlette.middleware.cors import CORSMiddleware
 from api.settings import api_settings
 from api.routes.v1_router import v1_router
 from api.dependencies.auth import verify_api_key
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 
 
 def create_app() -> FastAPI:
@@ -35,11 +33,6 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-        # Konfigurasi rate limiting global
-    limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])
-    app.state.limiter = limiter
-    app.add_exception_handler(429, _rate_limit_exceeded_handler)
 
     return app
 

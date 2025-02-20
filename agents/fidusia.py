@@ -1,19 +1,20 @@
 import os
+import nltk  # type: ignore
+import typer
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
+from agno.knowledge.text import TextKnowledgeBase
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
 from agno.vectordb.pineconedb import PineconeDb
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.tools.googlesearch import GoogleSearchTools
-from agno.tools.newspaper4k import Newspaper4kTools
 
 load_dotenv()  # Load environment variables from .env file
-
+#nltk.download("punkt")
+#nltk.download("punkt_tab")
 # Initialize storage
 fidusia_agent_storage = PostgresAgentStorage(table_name="fidusia_session", db_url=db_url)
 api_key = os.getenv("PINECONE_API_KEY")
@@ -30,13 +31,13 @@ vector_db = PineconeDb(
 )
 
 # Initialize text knowledge base with multiple documents
-knowledge_base = PDFUrlKnowledgeBase(
-    urls=["https://agno-public.s3.amazonaws.com/recipes/ThaiRecipes.pdf"],
+knowledge_base = TextKnowledgeBase(
+    path=Path("data"),
     vector_db=vector_db,
 )
 
 # Load knowledge base before initializing agent
-#knowledge_base.load(upsert=True)
+#knowledge_base.load(recreate=False, upsert=True)
 
 def get_fidusia_agent(
     user_id: Optional[str] = None,
@@ -58,7 +59,6 @@ def get_fidusia_agent(
         read_chat_history=True,
         add_history_to_messages=True,
         num_history_responses=3,
-        tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
         description=(
             "Saya adalah penyidik kepolisian, spesialis dalam analisis mendalam undang-undang sektor keuangan. "
             "Saya memiliki kemampuan untuk:\n"
