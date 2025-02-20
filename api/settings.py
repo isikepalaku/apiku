@@ -56,7 +56,6 @@ class ApiSettings(BaseSettings):
                 "https://app.agno.com",
                 "https://app-stg.agno.com",
                 "https://app.reserse.id",
-                "https://dev.reserse.id",
             ]
         )
 

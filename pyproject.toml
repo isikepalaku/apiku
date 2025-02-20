@@ -11,7 +11,6 @@ dependencies = [
   "beautifulsoup4",
   "duckduckgo-search",
   "fastapi[standard]",
-  "lancedb",
   "mypy",
   "nest_asyncio",
   "openai",
@@ -43,7 +42,10 @@ dependencies = [
   "huggingface_hub",
   "tantivy",
   "inquirer",
-  "crawl4ai"
+  "crawl4ai",
+  "pinecone",
+  "pinecone-text",
+  "slowapi"
 
 
 ]

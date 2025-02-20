@@ -1,32 +1,42 @@
 import os
 from typing import Optional
+from pathlib import Path
 from dotenv import load_dotenv
+from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
 from agno.agent import Agent
-from agno.embedder.google import GeminiEmbedder
-from agno.models.google import Gemini
-from agno.knowledge.text import TextKnowledgeBase
-from agno.vectordb.pgvector import PgVector, SearchType
+from agno.models.openai import OpenAIChat
+from agno.embedder.openai import OpenAIEmbedder
+from agno.vectordb.pineconedb import PineconeDb
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.newspaper4k import Newspaper4kTools
 
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-fidusia_agent_storage = PostgresAgentStorage(table_name="agen.fidusia_agent_sessions", db_url=db_url)
+fidusia_agent_storage = PostgresAgentStorage(table_name="fidusia_session", db_url=db_url)
+api_key = os.getenv("PINECONE_API_KEY")
+index_name = "perkaba"
 
-# Initialize knowledge base
-knowledge_base = TextKnowledgeBase(
-    path="data/UUno42fidusia.md",  # UU Jaminan Fidusia
-    vector_db=PgVector(
-        table_name="agentic.fidusia_knowledge",  # Include schema in table_name
-        db_url=db_url,
-        search_type=SearchType.hybrid,
-        embedder=GeminiEmbedder(),
-    ),
+vector_db = PineconeDb(
+    name=index_name,
+    dimension=1536,
+    metric="cosine",
+    spec={"serverless": {"cloud": "aws", "region": "us-east-1"}},
+    api_key=api_key,
+    use_hybrid_search=True,
+    hybrid_alpha=0.5,
+)
+
+# Initialize text knowledge base with multiple documents
+knowledge_base = PDFUrlKnowledgeBase(
+    urls=["https://agno-public.s3.amazonaws.com/recipes/ThaiRecipes.pdf"],
+    vector_db=vector_db,
 )
 
 # Load knowledge base before initializing agent
-knowledge_base.load(upsert=True)
+#knowledge_base.load(upsert=True)
 
 def get_fidusia_agent(
     user_id: Optional[str] = None,
@@ -34,30 +44,30 @@ def get_fidusia_agent(
     debug_mode: bool = True,
 ) -> Agent:
     return Agent(
-        name="Pakar Fidusia",
-        agent_id="fidusia-agent",
+        name="SOP Reskrim Agent",
+        agent_id="agen-fidusia",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(
-            id="gemini-2.0-flash-exp",
-            api_key=os.getenv("GOOGLE_API_KEY"),
-        ),
+        model=OpenAIChat(id="gpt-4o-mini"),
         knowledge=knowledge_base,
-        # Configure storage and chat history
+        # Add storage to enable conversation history persistence
         storage=fidusia_agent_storage,
+        # Add a tool to search the knowledge base which enables agentic RAG.
+        # This is enabled by default when `knowledge` is provided to the Agent.
+        search_knowledge=True,
         read_chat_history=True,
-        # Automatically add chat history to messages
         add_history_to_messages=True,
         num_history_responses=3,
+        tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
         description=(
-            "Saya adalah penyidik kepolisian, spesialis dalam analisis mendalam UU No. 42 Tahun 1999 tentang Jaminan Fidusia. "
+            "Saya adalah penyidik kepolisian, spesialis dalam analisis mendalam undang-undang sektor keuangan. "
             "Saya memiliki kemampuan untuk:\n"
-            "- Menganalisis setiap aspek UU Jaminan Fidusia secara menyeluruh\n"
+            "- Menganalisis setiap aspek UU undang-undang sektor keuangan secara menyeluruh\n"
             "- Menghubungkan pasal-pasal yang saling terkait\n"
             "- Memberikan penjelasan yang terstruktur dan berbasis sumber\n"
             "- Memastikan interpretasi yang akurat dan kontekstual\n"
             "- Menjelaskan konsep kompleks dengan bahasa yang mudah dipahami\n\n"
-            "Setiap analisis saya berfokus pada konteks UU Jaminan Fidusia, "
+            "Setiap analisis saya berfokus pada konteks undang-undang sektor keuangan, "
             "dengan merujuk langsung ke pasal-pasal terkait dan memastikan jawaban yang komprehensif."
         ),
         instructions=[
@@ -86,20 +96,19 @@ def get_fidusia_agent(
             "   - Berikan kesimpulan yang jelas",
 
             "5. Kontrol Kualitas\n"
-            "   - Pastikan setiap jawaban mengacu pada UU Jaminan Fidusia\n"
+            "   - Pastikan setiap jawaban mengacu pada UU\n"
             "   - Hindari spekulasi di luar konteks UU\n"
             "   - Verifikasi ulang relevansi setiap pasal yang dikutip\n"
             "   - Tanyakan klarifikasi jika pertanyaan ambigu",
 
             "6. Batas Lingkup\n"
-            "   - Fokus pada UU No. 42 Tahun 1999 tentang Jaminan Fidusia\n"
-            "   - Jika ada pertanyaan di luar UU, kembalikan ke konteks Jaminan Fidusia\n"
+            "   - Fokus pada knowledge base dan hasil pencarian internet\n"
+            "   - Jika ada pertanyaan di luar UU, kembalikan ke konteks\n"
             "   - Gunakan pengetahuan tambahan hanya untuk menjelaskan konteks\n"
-            "   - Tetap dalam ruang lingkup pembahasan Jaminan Fidusia"
+            "   - Tetap dalam ruang lingkup pembahasan"
         ],
         markdown=True,
         show_tool_calls=False,
         add_datetime_to_instructions=True,
-        search_knowledge=True,
         debug_mode=debug_mode,
     )
