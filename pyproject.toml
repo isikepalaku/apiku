@@ -6,8 +6,10 @@ readme = "README.md"
 authors = [{ name = "Phidata Team", email = "hello@phidata.com" }]
 
 dependencies = [
-  "alembic",
+   "alembic",
   "agno",
+  "agno-aws",
+  "agno-docker",
   "beautifulsoup4",
   "duckduckgo-search",
   "fastapi[standard]",
@@ -15,7 +17,6 @@ dependencies = [
   "nest_asyncio",
   "openai",
   "pgvector",
-  "phidata[aws]",
   "pillow",
   "psycopg[binary]",
   "pypdf",
@@ -42,10 +43,10 @@ dependencies = [
   "huggingface_hub",
   "tantivy",
   "inquirer",
-  "crawl4ai",
+  "jinaai",
+  "bs4",
   "pinecone",
   "pinecone-text",
-  "slowapi"
 
 
 ]
