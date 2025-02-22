@@ -12,6 +12,7 @@ from agents.trend_kejahatan import get_crime_trend_agent
 from agents.fidusia import get_fidusia_agent
 from agents.sentiment_analyzer import get_sentiment_team
 from workflows.modus_operandi import get_analisator_tren_kejahatan
+from workflows.sentiment_analysis import get_sentiment_analyzer
 
 ######################################################
 ## Router for the agent playground
@@ -27,6 +28,7 @@ penyidik_polri = get_research_agent(debug_mode=True)
 analisator_kejahatan = get_analisator_tren_kejahatan(debug_mode=True)
 fidusia_agent = get_fidusia_agent(debug_mode=True)
 tim_analisis_sentimen = get_sentiment_team(debug_mode=True)
+sentiment_analyzer = get_sentiment_analyzer(debug_mode=True)
 
 # Create a playground instance
 playground = Playground(
@@ -43,7 +45,10 @@ playground = Playground(
         agen_emp,
         agen_wassidik
     ],
-    workflows=[analisator_kejahatan],
+    workflows=[
+        analisator_kejahatan,
+        sentiment_analyzer
+    ],
 )
 
 # Log the playground endpoint with phidata.app

@@ -46,7 +46,9 @@ dependencies = [
   "jinaai",
   "bs4",
   "upstash-redis",
-  "upstash-ratelimit"
+  "upstash-ratelimit",
+  "crawl4ai",
+  "playwright"
 
 
 ]
