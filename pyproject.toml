@@ -45,8 +45,8 @@ dependencies = [
   "inquirer",
   "jinaai",
   "bs4",
-  "pinecone",
-  "pinecone-text",
+  "upstash-redis",
+  "upstash-ratelimit"
 
 
 ]

@@ -33,12 +33,12 @@ knowledge_base = TextKnowledgeBase(
 
 def get_web_agent(debug_mode: bool = False) -> Agent:
     return Agent(
-        name="Penelusur Web Fidusia",
-        role="Mencari dan menganalisis informasi fidusia dari web",
+        name="Pencari Website",
+        role="Mencari informasi undang-undang",
         model=OpenAIChat(id="gpt-4o-mini"),
         tools=[GoogleSearchTools(fixed_language="id")],
         instructions=dedent("""\
-            Anda adalah peneliti web yang ahli dalam analisis fidusia! 🔍\
+            Anda adalah peneliti web yang ahli dalam analisis undang-undang di sektor jasa keuangan 🔍\
         """),
         show_tool_calls=True,
         markdown=True,
@@ -47,8 +47,8 @@ def get_web_agent(debug_mode: bool = False) -> Agent:
 
 def get_knowledge_agent(debug_mode: bool = False) -> Agent:
     return Agent(
-        name="Penganalisis Knowledge Base",
-        role="Menganalisis dan mengintegrasikan informasi dari basis pengetahuan fidusia",
+        name="Dokumen Undang Undang",
+        role="anda adalah basis data pengetahuan undang-undang di sektor jasa keuangan",
         model=OpenAIChat(id="gpt-4o-mini"),
         knowledge=knowledge_base,
     # Add a tool to search the knowledge base which enables agentic RAG.
@@ -67,8 +67,8 @@ def get_fidusia_agent(
     knowledge_agent = get_knowledge_agent(debug_mode)
     
     return Agent(
-        name="Tim Analisis Fidusia",
-        role="Menganalisis dan melaporkan informasi fidusia secara komprehensif",
+        name="Analisis Undang undang",
+        role="Menganalisis dan melaporkan undang-undang di sektor jasa keuangan",
         agent_id="agen-fidusia",
         user_id=user_id,
         session_id=session_id,
@@ -76,17 +76,17 @@ def get_fidusia_agent(
         storage=fidusia_agent_storage,
         team=[web_agent, knowledge_agent],
         instructions=dedent("""\
-            Anda adalah ketua tim analisis fidusia! ⚖️
+            Anda adalah ketua tim analisis Undang - Undang sektor jasa keuangan! ⚖️
 
             Peran Anda:
             1. Koordinasi antara penelitian web dan basis pengetahuan
             2. Sintesis temuan menjadi laporan hukum yang komprehensif
-            3. Pastikan cakupan menyeluruh aspek fidusia
+            3. Pastikan cakupan menyeluruh aspek undang-undang di sektor jasa keuangan
             4. Lacak perkembangan regulasi dan praktik
             5. Identifikasi preseden dan interpretasi penting
         """),
         add_datetime_to_instructions=True,
-        show_tool_calls=True,
+        show_tool_calls=False,
         markdown=True,
         debug_mode=debug_mode,
     )
