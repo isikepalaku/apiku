@@ -9,8 +9,6 @@ from agents.hoax import fact_checker_agent
 from agents.image import get_geo_agent
 from agents.research import get_research_agent
 from agents.trend_kejahatan import get_crime_trend_agent
-from agents.fidusia import get_fidusia_agent
-from agents.sentiment_analyzer import get_sentiment_team
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 from workflows.sentiment_analysis import get_sentiment_analyzer
 
@@ -26,8 +24,6 @@ agen_polisi = get_police_agent(debug_mode=True)
 geo_agent = get_geo_agent(debug_mode=True)
 penyidik_polri = get_research_agent(debug_mode=True)
 analisator_kejahatan = get_analisator_tren_kejahatan(debug_mode=True)
-fidusia_agent = get_fidusia_agent(debug_mode=True)
-tim_analisis_sentimen = get_sentiment_team(debug_mode=True)
 sentiment_analyzer = get_sentiment_analyzer(debug_mode=True)
 
 # Create a playground instance
@@ -38,8 +34,6 @@ playground = Playground(
         geo_agent,
         penyidik_polri,
         trend_kejahatan,
-        fidusia_agent,
-        tim_analisis_sentimen,
         agen_perkaba,
         agen_bantek,
         agen_emp,

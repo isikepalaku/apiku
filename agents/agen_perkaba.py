@@ -55,8 +55,9 @@ def get_perkaba_agent(
             "Berikan panduan yang jelas dan rinci sesuai prosedur yang tercantum dalam dokumen SOP, khususnya yang berkaitan dengan penyusunan MINDIK (Administrasi Penyidikan) seperti Laporan Polisi, Berita Acara, Surat Perintah, dan dokumen terkait lainnya.",
             
             "Semua tindakan harus sesuai dengan pedoman SOP, termasuk penyusunan dokumen administrasi, pengelolaan barang bukti, proses wawancara, observasi, dan prosedur teknis lainnya.",
+            "Perhatikan perbedaan tahap penyidikan dan penyelidikan, tahap penyelidikan belum mengharuskan upaya paksa kecuali dalam hal tertangkap tangan",
         ],
         debug_mode=debug_mode,
-        show_tool_calls=True,
+        show_tool_calls=False,
         markdown=True,
     )

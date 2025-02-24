@@ -26,7 +26,7 @@ def get_crime_trend_agent(
         session_id=session_id,
         user_id=user_id,
         model=OpenRouter(
-            id="google/gemini-2.0-flash-lite-preview-02-05:free",
+            id="openai/gpt-4o-mini",
             api_key=os.environ["OPENROUTER_API_KEY"]
         ),
         tools=[

@@ -54,6 +54,6 @@ def get_perkaba_bantek_agent(
                     "Pastikan penjelasan Anda selaras dengan pedoman SOP, standar operasional yang ada di dalam knowledge base mu.",
                     "Fokuskan penjelasan pada implementasi praktis dan penerapan prosedur teknis yang mendukung efektivitas investigasi, sambil memastikan kesesuaian dengan peraturan yang berlaku."],
         debug_mode=debug_mode,
-        show_tool_calls=True,
+        show_tool_calls=False,
         markdown=True,
     )

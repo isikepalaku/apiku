@@ -54,6 +54,6 @@ def get_emp_agent(
             "Berikan solusi untuk masalah teknis yang mungkin timbul dalam penggunaan aplikasi EMP sesuai dengan panduan resmi yang tersedia."
         ],
         debug_mode=debug_mode,
-        show_tool_calls=True,
+        show_tool_calls=False,
         markdown=True
     )

@@ -3,8 +3,7 @@ import asyncio
 from typing import Iterator, Optional, List
 
 from agno.agent import Agent
-from agno.models.openai import OpenAIChat
-from agno.models.google import Gemini
+from agno.models.openrouter import OpenRouter
 from agno.storage.workflow.postgres import PostgresWorkflowStorage
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.utils.log import logger
@@ -38,7 +37,7 @@ class AnalisaTrenKejahatan(BaseModel):
 
 class SistemAnalisisIntelijen(Workflow):
     agen_analisis_modus: Agent = Agent(
-        model=Gemini(id="gemini-2.0-flash-exp"),
+        model=OpenRouter(id="openai/gpt-4o-mini"),
         instructions=[
             "Analisis mendalam terhadap pola kejahatan dan modus operandi.",
             "Gunakan data kasus nyata sebagai referensi.",
@@ -54,7 +53,7 @@ class SistemAnalisisIntelijen(Workflow):
     )
 
     agen_analisis_tren: Agent = Agent(
-        model=Gemini(id="gemini-2.0-flash-exp"),
+        model=OpenRouter(id="openai/gpt-4o-mini"),
         instructions=[
             "Analisis tren dan perubahan modus operandi kejahatan.",
             "Identifikasi faktor pendorong dan pola musiman.",
@@ -68,7 +67,7 @@ class SistemAnalisisIntelijen(Workflow):
     )
 
     agen_intel: Agent = Agent(
-        model=Gemini(id="gemini-2.0-flash-exp"),
+        model=OpenRouter(id="openai/gpt-4o-mini"),
         instructions=[
             "Lakukan analisis intelijen mendalam:",
             "1. Identifikasi pola operasional pelaku",
@@ -85,7 +84,7 @@ class SistemAnalisisIntelijen(Workflow):
     )
 
     agen_laporan: Agent = Agent(
-        model=Gemini(id="gemini-2.0-flash-exp"),
+        model=OpenRouter(id="openai/gpt-4o-mini"),
         instructions=[
             "Buat laporan analisis kejahatan yang objektif:",
             "1. Ringkasan eksekutif dengan kategori dan deskripsi",

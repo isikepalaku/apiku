@@ -29,7 +29,7 @@ knowledge_base = TextKnowledgeBase(
     ),
 )
 # Load the knowledge base: Comment after first run as the knowledge base is already loaded
-#knowledge_base.load(upsert=True)
+#knowledge_base.load(upsert=False)
 
 def get_web_agent(debug_mode: bool = False) -> Agent:
     return Agent(
