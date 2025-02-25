@@ -3,7 +3,8 @@ from typing import Iterator, List, Optional
 from textwrap import dedent
 
 from agno.agent import Agent
-from agno.models.openrouter import OpenRouter
+from agno.models.google import Gemini
+from agno.models.openai import OpenAIChat
 from agno.storage.workflow.postgres import PostgresWorkflowStorage
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
@@ -49,7 +50,7 @@ class TrendAnalysis(BaseModel):
 
 class SentimentAnalysisSystem(Workflow):
     web_analyzer: Agent = Agent(
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=OpenAIChat(id="gpt-4o-mini"),
         instructions=[
             "Penelusuran mendalam konten web untuk analisis sentimen:",
             "1. Cari 5-10 sumber berita, gabungan social media dan forum terkait topik",
@@ -65,7 +66,7 @@ class SentimentAnalysisSystem(Workflow):
     )
 
     sentiment_analyzer: Agent = Agent(
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=Gemini(id="gemini-1.5-flash"),
         instructions=[
             "Analisis sentimen mendalam dari konten yang ditemukan:",
             "1. Evaluasi tone dan konteks pembahasan",
@@ -80,7 +81,7 @@ class SentimentAnalysisSystem(Workflow):
     )
 
     trend_analyzer: Agent = Agent(
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=Gemini(id="gemini-1.5-flash"),
         instructions=[
             "Analisis tren dan pola sentimen:",
             "1. Identifikasi perubahan sentimen overtime",
@@ -95,7 +96,7 @@ class SentimentAnalysisSystem(Workflow):
     )
 
     reporter: Agent = Agent(
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=Gemini(id="gemini-2.0-flash-exp"),
         instructions=[
         "Buat Laporan Analisis Sentimen Komprehensif dengan Struktur Sebagai Berikut:",
         "1. **Ringkasan Eksekutif:**",

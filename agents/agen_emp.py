@@ -27,7 +27,7 @@ knowledge_base = PDFUrlKnowledgeBase(
 )
 
 # Load knowledge base before initializing agent
-#knowledge_base.load(upsert=True)
+#knowledge_base.load(upsert=True, recreate=True)
 
 def get_emp_agent(
     user_id: Optional[str] = None,

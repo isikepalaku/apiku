@@ -5,8 +5,10 @@ from agents.agen_perkaba import get_perkaba_agent
 from agents.agen_bantek import get_perkaba_bantek_agent
 from agents.agen_emp import get_emp_agent
 from agents.agen_wassidik import get_wassidik_agent
+from agents.fidusia import get_corruption_investigator
 from agents.hoax import fact_checker_agent
 from agents.image import get_geo_agent
+from agents.tipidkor_chat import get_tipidkor_agent
 from agents.research import get_research_agent
 from agents.trend_kejahatan import get_crime_trend_agent
 from workflows.modus_operandi import get_analisator_tren_kejahatan
@@ -23,6 +25,8 @@ agen_bantek = get_perkaba_bantek_agent(debug_mode=True)
 agen_polisi = get_police_agent(debug_mode=True)
 geo_agent = get_geo_agent(debug_mode=True)
 penyidik_polri = get_research_agent(debug_mode=True)
+penyidik_tipikor = get_corruption_investigator(debug_mode=True)
+agen_tipidkor = get_tipidkor_agent(debug_mode=True)
 analisator_kejahatan = get_analisator_tren_kejahatan(debug_mode=True)
 sentiment_analyzer = get_sentiment_analyzer(debug_mode=True)
 
@@ -33,11 +37,13 @@ playground = Playground(
         fact_checker_agent,
         geo_agent,
         penyidik_polri,
+        penyidik_tipikor,
         trend_kejahatan,
         agen_perkaba,
         agen_bantek,
         agen_emp,
-        agen_wassidik
+        agen_wassidik,
+        agen_tipidkor
     ],
     workflows=[
         analisator_kejahatan,

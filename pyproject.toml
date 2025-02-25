@@ -48,7 +48,8 @@ dependencies = [
   "upstash-redis",
   "upstash-ratelimit",
   "crawl4ai",
-  "playwright"
+  "playwright",
+  "qdrant-client"
 
 
 ]

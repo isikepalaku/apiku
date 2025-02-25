@@ -7,6 +7,8 @@ from agno.media import Image
 from agno.models.google import Gemini
 from agno.tools.duckduckgo import DuckDuckGoTools
 from dotenv import load_dotenv
+from google.generativeai import upload_file
+from google.generativeai.types import file_types
 
 # Load environment variables
 load_dotenv()
@@ -59,8 +61,7 @@ def get_geo_agent(
         agent_id="geo-image-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp"),
-        tools=[DuckDuckGoTools()],
+        model=Gemini(id="gemini-2.0-flash-exp", search=True),
         description="Saya adalah ahli geografi yang menganalisis gambar untuk menentukan lokasi berdasarkan petunjuk visual yang tersedia. Semua analisis akan diberikan dalam Bahasa Indonesia.",
         instructions=[geo_query],
         markdown=True,

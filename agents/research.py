@@ -20,10 +20,7 @@ def get_research_agent(
         agent_id="penyidik-polri-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(
-            id=agent_settings.gemini_2
-        ),
-        tools=[GoogleSearchTools(), Newspaper4kTools()],
+        model=Gemini(id="gemini-2.0-flash-exp", grounding=True),
         description=dedent("""\
             Anda adalah Ipda Reserse, seorang penyidik senior Kepolisian Republik Indonesia 
             dengan keahlian mendalam di bidang hukum pidana dan sistem peradilan Indonesia. 

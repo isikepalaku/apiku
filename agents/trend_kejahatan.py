@@ -3,7 +3,7 @@ from typing import Optional
 from datetime import datetime, timedelta
 from textwrap import dedent
 from agno.agent import Agent
-from agno.models.openrouter import OpenRouter
+from agno.models.google import Gemini
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from pydantic import BaseModel, Field
@@ -25,14 +25,7 @@ def get_crime_trend_agent(
         agent_id="polri-crime-trend-analyst",
         session_id=session_id,
         user_id=user_id,
-        model=OpenRouter(
-            id="openai/gpt-4o-mini",
-            api_key=os.environ["OPENROUTER_API_KEY"]
-        ),
-        tools=[
-            GoogleSearchTools(),
-            Newspaper4kTools(),
-        ],
+        model=Gemini(id="gemini-2.0-flash-exp", grounding=True),
         description=dedent("""\
             Anda adalah ahli analisis tren kejahatan yang mengkhususkan diri dalam:
             1. Mengidentifikasi tren kejahatan baru di berbagai platform berita dan digital
