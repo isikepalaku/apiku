@@ -25,3 +25,6 @@ venv*
 aienv*
 
 .ipynb_checkpoints
+nltk_data
+tmp
+.config
