@@ -11,6 +11,7 @@ from agents.image import get_geo_agent
 from agents.tipidkor_chat import get_tipidkor_agent
 from agents.research import get_research_agent
 from agents.trend_kejahatan import get_crime_trend_agent
+from agents.p2sk_chat import get_p2sk_agent
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 from workflows.sentiment_analysis import get_sentiment_analyzer
 
@@ -18,6 +19,7 @@ from workflows.sentiment_analysis import get_sentiment_analyzer
 ## Router for the agent playground
 ######################################################
 trend_kejahatan = get_crime_trend_agent(debug_mode=True)
+agen_p2sk = get_p2sk_agent(debug_mode=True)
 agen_emp = get_emp_agent(debug_mode=True)
 agen_wassidik = get_wassidik_agent(debug_mode=True)
 agen_perkaba = get_perkaba_agent(debug_mode=True)
@@ -42,8 +44,9 @@ playground = Playground(
         agen_perkaba,
         agen_bantek,
         agen_emp,
-        agen_wassidik,
-        agen_tipidkor
+        agen_wassidik, 
+        agen_tipidkor,
+        agen_p2sk
     ],
     workflows=[
         analisator_kejahatan,
