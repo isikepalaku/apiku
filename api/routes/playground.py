@@ -1,6 +1,5 @@
 from os import getenv
 from agno.playground import Playground
-from agents.agen_polisi import get_police_agent
 from agents.agen_perkaba import get_perkaba_agent
 from agents.agen_bantek import get_perkaba_bantek_agent
 from agents.agen_emp import get_emp_agent
@@ -12,6 +11,10 @@ from agents.tipidkor_chat import get_tipidkor_agent
 from agents.research import get_research_agent
 from agents.trend_kejahatan import get_crime_trend_agent
 from agents.p2sk_chat import get_p2sk_agent
+from agents.kuhp_chat import get_kuhp_agent
+from agents.ite_chat import get_ite_agent
+from agents.ciptakerja_chat import get_cipta_kerja_agent
+from agents.kesehatan_chat import get_kesehatan_agent
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 from workflows.sentiment_analysis import get_sentiment_analyzer
 
@@ -20,11 +23,14 @@ from workflows.sentiment_analysis import get_sentiment_analyzer
 ######################################################
 trend_kejahatan = get_crime_trend_agent(debug_mode=True)
 agen_p2sk = get_p2sk_agent(debug_mode=True)
+agen_kuhp = get_kuhp_agent(debug_mode=True)
+agen_ite = get_ite_agent(debug_mode=True)
+agen_cipta_kerja = get_cipta_kerja_agent(debug_mode=True)
+agen_kesehatan = get_kesehatan_agent(debug_mode=True)
 agen_emp = get_emp_agent(debug_mode=True)
 agen_wassidik = get_wassidik_agent(debug_mode=True)
 agen_perkaba = get_perkaba_agent(debug_mode=True)
 agen_bantek = get_perkaba_bantek_agent(debug_mode=True)
-agen_polisi = get_police_agent(debug_mode=True)
 geo_agent = get_geo_agent(debug_mode=True)
 penyidik_polri = get_research_agent(debug_mode=True)
 penyidik_tipikor = get_corruption_investigator(debug_mode=True)
@@ -35,7 +41,6 @@ sentiment_analyzer = get_sentiment_analyzer(debug_mode=True)
 # Create a playground instance
 playground = Playground(
     agents=[
-        agen_polisi,
         fact_checker_agent,
         geo_agent,
         penyidik_polri,
@@ -46,7 +51,11 @@ playground = Playground(
         agen_emp,
         agen_wassidik, 
         agen_tipidkor,
-        agen_p2sk
+        agen_p2sk,
+        agen_kuhp,
+        agen_ite,
+        agen_cipta_kerja,
+        agen_kesehatan
     ],
     workflows=[
         analisator_kejahatan,

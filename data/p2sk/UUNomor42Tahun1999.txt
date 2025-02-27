@@ -298,18 +298,16 @@ Setiap janji yang memberi kewenangan kepada Pemberi Fidusia untuk memiliki  Bend
 - (2) Apabila  hasil  eksekusi  tidak  mencukupi  untuk  pelunasan  utang, debitor tetap bertanggung jawab atas utang yang belum terbayar.
 
 
-## BAB VI KETENTUAN PIDANA
-
+BAB VI KETENTUAN PIDANA
 ## Pasal 35
-
 Setiap orang yang dengan sengaja memalsukan, mengubah, menghilangkan atau dengan cara apapun memberikan keterangan secara menyesatkan,  
 yang  jika  hal  tersebut  diketahui  oleh  salah  satu  pihak tidak  melahirkan  perjanjian  Jaminan  Fidusia,  dipidana  dengan  pidana penjara paling singkat 1 (satu) tahun dan paling lama 5 (lima) tahun 
 dan denda  paling  sedikit  Rp.10.000.000,-(sepuluh  juta  rupiah)  dan  paling banyak Rp.100.000.000,- (seratus juta rupiah).
 
 ## Pasal 36
-
 Pemberi Fidusia  yang  mengalihkan,  menggadaikan,  atau  menyewakan Benda  yang  menjadi  objek  Jaminan  Fidusia  sebagaimana  dimaksud dalam  Pasal  23  ayat  (2)  yang  dilakukan  tanpa  persetujuan  
 tertulis terlebih dahulu dari Penerima Fidusia, dipidana dengan pidana penjara paling  lama  2  (dua)  tahun  dan  denda  paling  banyak  Rp.50.000.000,(lima puluh juta rupiah).
+
 
 ## BAB VII KETENTUAN PERALIHAN
 
@@ -700,23 +698,42 @@ Cukup jelas
 
 Pasal 34 Cukup jelas
 
-Sanksi pidana Pasal 35 dan pasal 36 UNDANG-UNDANG REPUBLIK INDONESIA NOMOR 42 TAHUN 1999 tentang fidusia 
+    1. Pasal 372 KUHP;
+       “Barang siapa dengan sengaja dan melawan hukum memiliki barang sesuatu yang
+       seluruhnya atau sebagian adalah kepunyaan orang lain, tetapi yang ada dalam
+       kekuasaannya bukan karena kejahatan diancam karena Penggelapan, dengan pidana
+       penjara paling lama Empat Tahun atau Pidana Denda paling banyak Sembilan Ratus
+       Rupiah.”
+    2. Pasal 378 KUHP;
+       “Barang siapa dengan maksud untuk menguntungkan diri sendiri atau orang lain secara
+       melawan hukum, dengan memakai nama palsu atau martabat palsu, dengan tipu muslihat,
+       ataupun rangkaian Kebohongan, menggerakkan orang laun untuk menyerahkan barang
+       sesuatu kepadanya, atau supaya memberi hutang maupun menghapuskan piutang, diancam
+       karena Penipuan dengan pidana penjara paling lama Empat Tahun.”
+    3. Pasal 35 Undang-Undang Nomor 42 Tahun 1999 Tentang Jaminan Fidusia
+       “Setiap orang yang dengan sengaja memalsukan, mengubah, menghilangkan atau dengan
+       cara apapun memberikan Keterangan secara Menyesatkan, yang jika hal tersebut diketahui
+       oleh salah satu pihak tidak melahirkan perjanjian Jaminan Fidusia, dipidana dengan Pidana
+       Penjara paling singkat 1 (satu) tahun dan Paling lama 5 (lima) tahun dan denda paling
+       sedikit Rp. 10.000.000,- (Sepuluh juta rupiah) dan paling banyak Rp. 100.000.000,- (seratus
+       juta rupiah).”
+    4. Pasal 36 Undang-Undang Nomor 42 Tahun 1999 Tentang Jaminan Fidusia
+       “Pemberi Fidusia yang mengalihkan, menggadaikan, atau menyewakan benda yang menjadi
+       obyek jaminan Fidusia sebagaimana dimaksud dalam pasal 23 ayat (2) yang dilakukan tanpa
+       persetujuan tertulis dahulu dari Penerima Fidusia, dipidana dengan Pidana Penjara paling
+       lama 2 (dua) Tahun dan dengan denda Paling Banyak Rp. 50.000.000,- (lima puluh juta
+       rupiah).”
 
-Pasal 35 UU fidusia berbunyi : 
-Setiap orang yang dengan sengaja memalsukan, mengubah, menghilangkan atau dengan cara apapun memberikan keterangan secara menyesatkan,  
-yang  jika  hal  tersebut  diketahui  oleh  salah  satu  pihak tidak  melahirkan  perjanjian  Jaminan  Fidusia,  dipidana  dengan  pidana penjara paling singkat 1 (satu) tahun dan paling lama 5 (lima) tahun 
-dan denda  paling  sedikit  Rp.10.000.000,-(sepuluh  juta  rupiah)  dan  paling banyak Rp.100.000.000,- (seratus juta rupiah).
 
-Pasal 36 UU fidusia berbunyi :
-Pemberi Fidusia  yang  mengalihkan,  menggadaikan,  atau  menyewakan Benda  yang  menjadi  objek  Jaminan  Fidusia  sebagaimana  dimaksud dalam  Pasal  23  ayat  (2)  yang  dilakukan  tanpa  persetujuan  
-tertulis terlebih dahulu dari Penerima Fidusia, dipidana dengan pidana penjara paling  lama  2  (dua)  tahun  dan  denda  paling  banyak  Rp.50.000.000,(lima puluh juta rupiah).
+         Berdasarkan Asas Hukum Lex Specialis Derogat Legi Generalis (Ketentuan yang lebih khusus
+/ spesifik menutup keberlakuan norma hukum yang bersifat umum / general), maka secara teoritis
+KUHP sudah tidak dapat lagi diberlakukan terhadap perkara Jaminan Fidusia, kenapa demikian?
 
-Pasal 37
-
-Ayat (1)
-
-Cukup jelas
-
+    1. Pasal 378 KUHP tentang penipuan (ancaman pidana penjara 4 tahun) sebenarnya telah
+       diatur secara spesifik di dalam Pasal 35 Undang-Undang Jaminan Fidusia (dengan ancaman
+       pidana paling singkat 1 (satu) tahun dan paling lama 5 (lima) tahun), serta;
+    2. Pasal 372 KUHP tentang penggelapan (ancaman pidana 4 tahun) telah diatur secara spesifik
+       dalam pasal 36 Undang-Undang Fidusia (dengan ancaman pidana paling lama 2 tahun).
 Ayat (2)
 
 Cukup jelas
