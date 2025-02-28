@@ -40,7 +40,7 @@ def get_kesehatan_agent(
         agent_id="uu-kesehatan-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp", grounding=True),
+        model=Gemini(id="gemini-2.0-flash", grounding=True),
         knowledge=knowledge_base,
         storage=kesehatan_agent_storage,
         search_knowledge=True,

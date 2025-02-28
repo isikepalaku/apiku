@@ -25,7 +25,7 @@ def get_crime_trend_agent(
         agent_id="polri-crime-trend-analyst",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp", grounding=True),
+        model=Gemini(id="gemini-2.0-flash", grounding=True),
         description=dedent("""\
             Anda adalah ahli analisis tren kejahatan yang mengkhususkan diri dalam:
             1. Mengidentifikasi tren kejahatan baru di berbagai platform berita dan digital

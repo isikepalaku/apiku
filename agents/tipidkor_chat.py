@@ -41,14 +41,14 @@ def get_tipidkor_agent(
         agent_id="tipidkor-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp", grounding=True),
+        model=Gemini(id="gemini-2.0-flash", grounding=True),
         knowledge=knowledge_base,
         storage=tipidkor_agent_storage,
         search_knowledge=True,
         read_chat_history=True,
         add_history_to_messages=True,
         num_history_responses=3,
-        description="Saya adalah penyidik kepolisian bidang tindak pidana korupsi.",
+        description="Anda adalah penyidik kepolisian bidang tindak pidana korupsi.",
         instructions=[
             "Berikan jawaban dengan panduan berikut:\n",
             

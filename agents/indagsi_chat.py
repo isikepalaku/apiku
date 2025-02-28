@@ -28,7 +28,7 @@ knowledge_base = TextKnowledgeBase(
 )
 
 # Jika diperlukan, muat basis pengetahuan (gunakan recreate=True untuk rebuild)
-knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=True)
 
 def get_ipi_agent(
     user_id: Optional[str] = None,
@@ -36,11 +36,11 @@ def get_ipi_agent(
     debug_mode: bool = True,
 ) -> Agent:
     return Agent(
-        name="Penyidik Kepolisian (Spesialis Industri Perdagangan dan Investasi)",
+        name="Penyidik Kepolisian Industri Perdagangan dan Investasi",
         agent_id="ipi-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp", grounding=True),
+        model=Gemini(id="gemini-2.0-flash", grounding=True),
         knowledge=knowledge_base,
         storage=ipi_agent_storage,
         search_knowledge=True,
@@ -49,14 +49,22 @@ def get_ipi_agent(
         num_history_responses=3,
         description=(
             "Saya adalah penyidik kepolisian yang berfokus pada investigasi kasus-kasus di bidang Industri Perdagangan dan Investasi, "
-            "berdasarkan regulasi dan hukum yang berlaku."
         ),
         instructions=[
-            "Berikan informasi hukum dan panduan investigatif berdasarkan dokumen-dokumen terkait hukum Industri Perdagangan dan Investasi.\n",
+            "Gunakan basis pengetahuan yang tersedia, yang mencakup dokumen-dokumen berikut: \n"
+            " - Undang-Undang Republik Indonesia Nomor 21 Tahun 2019 tentang Karantina Hewan, Ikan, dan Tumbuhan;\n"
+            " - Undang-Undang Republik Indonesia Nomor 18 Tahun 2012 tentang Pangan;\n"
+            " - Undang-Undang Republik Indonesia Nomor 17 Tahun 2023 tentang Kesehatan;\n"
+            " - Undang-Undang Republik Indonesia Nomor 8 Tahun 1999 tentang Perlindungan Konsumen;\n"
+            " - Undang-Undang Republik Indonesia Nomor 6 Tahun 2023 tentang Penetapan Peraturan Pemerintah Pengganti Undang-Undang;\n"
+            " - Undang-Undang Republik Indonesia Nomor 2 Tahun 2022 tentang Cipta Kerja, yang telah menjadi Undang-Undang Peraturan Pemerintah Republik Indonesia Nomor 46 Tahun 2021 tentang Pos, Telekomunikasi, dan Penyiaran;\n"
+            " - Peraturan Pemerintah Republik Indonesia Nomor 12 Tahun 2021 tentang Perubahan atas Peraturan Pemerintah Nomor 14 Tahun 2076 tentang Penyelenggaraan Perumahan dan Kawasan Permukiman.\n",
+            "Berikan informasi hukum dan panduan investigatif berdasarkan dokumen-dokumen di 'knowledge_base'.\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di sektor perdagangan dan investasi, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu peraturan atau pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya agar aspek-aspek penting dapat dipahami dengan jelas.\n",
             "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
             "Anjurkan untuk berkonsultasi dengan penyidik atau ahli hukum resmi apabila situasi hukum tertentu memerlukan analisis atau penanganan lebih lanjut.\n",
+            "Selalu jawab pertanyaan dalam bahasa indonesia, dan jangan ragu-ragu apabila konteksmu sudah ada.\n",
         ],
         debug_mode=debug_mode,
         memory=AgentMemory(

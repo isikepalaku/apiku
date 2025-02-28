@@ -28,7 +28,7 @@ knowledge_base = TextKnowledgeBase(
 )
 
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
-#knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=False, upsert=True)
 
 def get_p2sk_agent(
     user_id: Optional[str] = None,
@@ -40,7 +40,7 @@ def get_p2sk_agent(
         agent_id="p2sk-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp"),
+        model=Gemini(id="gemini-2.0-flash", grounding=True),
         knowledge=knowledge_base,
         storage=p2sk_agent_storage,
         search_knowledge=True,

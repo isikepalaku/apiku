@@ -40,7 +40,7 @@ def get_ite_agent(
         agent_id="ite-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp", grounding=True),
+        model=Gemini(id="gemini-2.0-flash", grounding=True),
         knowledge=knowledge_base,
         storage=ite_agent_storage,
         search_knowledge=True,
