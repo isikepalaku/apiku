@@ -11,6 +11,7 @@ from agents.tipidkor_chat import get_tipidkor_agent
 from agents.research import get_research_agent
 from agents.trend_kejahatan import get_crime_trend_agent
 from agents.p2sk_chat import get_p2sk_agent
+from agents.indagsi_chat import get_ipi_agent
 from agents.kuhp_chat import get_kuhp_agent
 from agents.ite_chat import get_ite_agent
 from agents.ciptakerja_chat import get_cipta_kerja_agent
@@ -27,6 +28,7 @@ agen_kuhp = get_kuhp_agent(debug_mode=True)
 agen_ite = get_ite_agent(debug_mode=True)
 agen_cipta_kerja = get_cipta_kerja_agent(debug_mode=True)
 agen_kesehatan = get_kesehatan_agent(debug_mode=True)
+agen_indagsi = get_ipi_agent(debug_mode=True)
 agen_emp = get_emp_agent(debug_mode=True)
 agen_wassidik = get_wassidik_agent(debug_mode=True)
 agen_perkaba = get_perkaba_agent(debug_mode=True)
@@ -55,7 +57,8 @@ playground = Playground(
         agen_kuhp,
         agen_ite,
         agen_cipta_kerja,
-        agen_kesehatan
+        agen_kesehatan,
+        agen_indagsi
     ],
     workflows=[
         analisator_kejahatan,
