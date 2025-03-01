@@ -8,6 +8,8 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.memory import AgentMemory
+from agno.memory.db.postgres import PgMemoryDb
 from db.session import db_url
 
 load_dotenv()  # Load environment variables from .env file
@@ -39,7 +41,7 @@ def get_perkaba_agent(
         agent_id="sop-reskrim-agent",
         session_id=session_id,
         user_id=user_id,
-        model=OpenAIChat(id="gpt-4o-mini"),
+        model=OpenAIChat(id="gpt-4o-mini"), # Fixed model name
         knowledge=knowledge_base,
     # Add a tool to search the knowledge base which enables agentic RAG.
     # This is enabled by default when `knowledge` is provided to the Agent.
@@ -57,7 +59,13 @@ def get_perkaba_agent(
             "Semua tindakan harus sesuai dengan pedoman SOP, termasuk penyusunan dokumen administrasi, pengelolaan barang bukti, proses wawancara, observasi, dan prosedur teknis lainnya.",
             "Perhatikan perbedaan tahap penyidikan dan penyelidikan, tahap penyelidikan belum mengharuskan upaya paksa kecuali dalam hal tertangkap tangan",
         ],
+        memory=AgentMemory(
+            db=PgMemoryDb(table_name="perkaba_memory", db_url=db_url),
+            create_user_memories=True,
+            create_session_summary=True,
+        ),
         debug_mode=debug_mode,
+        add_datetime_to_instructions=True,
         show_tool_calls=False,
         markdown=True,
     )
