@@ -4,8 +4,8 @@ from datetime import datetime
 
 from agno.agent import Agent
 from agno.models.google import Gemini
-from agno.tools.googlesearch import GoogleSearchTools
-from agno.tools.newspaper4k import Newspaper4kTools
+from custom_tools.googlescholar import GoogleScholarTools
+from agno.tools.jina import JinaReaderTools
 
 from agents.settings import agent_settings
 from db.session import db_url
@@ -20,7 +20,8 @@ def get_research_agent(
         agent_id="penyidik-polri-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp", grounding=True),
+        model=Gemini(id="gemini-2.0-flash"),
+        tools=[GoogleScholarTools(), JinaReaderTools()],
         description=dedent("""\
             Anda adalah Ipda Reserse, seorang penyidik senior Kepolisian Republik Indonesia 
             dengan keahlian mendalam di bidang hukum pidana dan sistem peradilan Indonesia. 

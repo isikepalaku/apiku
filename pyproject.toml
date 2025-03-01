@@ -49,7 +49,7 @@ dependencies = [
   "upstash-ratelimit",
   "crawl4ai",
   "playwright",
-  "qdrant-client"
+  "scholarly"
 
 
 ]
