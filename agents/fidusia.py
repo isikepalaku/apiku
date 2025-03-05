@@ -92,11 +92,11 @@ def get_corruption_investigator(
         agent_id="penyidik-tipikor",
         user_id=user_id,
         session_id=session_id,
-        model=Gemini(id="gemini-2.0-flash-exp"),
+        model=Gemini(id="gemini-2.0-flash"),
         storage=tipikor_research_storage,
         team=[legal_expert, case_analyst],
         instructions=dedent("""\
-            Anda adalah penyidik senior yang ahli dalam penanganan kasus tindak pidana korupsi! 🚔
+            Anda adalah penyidik senior yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia🚔
 
             Keahlian Utama:
             1. Penyidikan kasus korupsi
@@ -166,6 +166,11 @@ def get_corruption_investigator(
             {Putusan-putusan terkait}
             {Analisis kesesuaian}
 
+            ## Rekomendasi
+            {Tindak lanjut penyelidikan}
+            {Tindak lanjut daftar pemeriksaan}
+            {Tindak lanjut koordinasi instansi terkait}
+
             ## Kesimpulan
             {Rangkuman analisis}
             {Rekomendasi tindak lanjut}
@@ -184,6 +189,5 @@ def get_corruption_investigator(
         add_datetime_to_instructions=True,
         show_tool_calls=False,
         markdown=True,
-        save_response_to_file="tmp/{message}.md",
         debug_mode=debug_mode,
     )

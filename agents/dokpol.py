@@ -6,10 +6,10 @@ from agno.agent import Agent
 from agno.media import Image
 from agno.models.google import Gemini
 from custom_tools.googlescholar import GoogleScholarTools
+from agno.tools.newspaper4k import Newspaper4kTools
 from dotenv import load_dotenv
 from google.generativeai import upload_file
 from google.generativeai.types import file_types
-from agno.tools.jina import JinaReaderTools
 
 # Load environment variables
 load_dotenv()
@@ -52,16 +52,11 @@ ANALYSIS_TEMPLATE = """
 - Analogi visual dan diagram sederhana jika diperlukan
 - Pertanyaan umum yang sering diajukan
 - Implikasi terhadap gaya hidup (jika ada)
-
-### 5. Konteks Berbasis Bukti
-Menggunakan pencarian Google Scholar dan Jina Reader, berikan konteks berbasis bukti untuk temuan Anda:
 - Literatur medis terbaru yang relevan
 - Pedoman pengobatan standar
 - Studi kasus serupa
 - Kemajuan teknologi dalam pencitraan/pengobatan
 - 2-3 referensi medis otoritatif
-
-### 6. Rekomendasi
 - Berikan rekomendasi pasien agar melakukan pemeriksaan lanjutan pada bidang kedokteran spesialis yang relevan
 
 Harap pertahankan nada yang profesional dan empatik sepanjang analisis.
@@ -83,9 +78,9 @@ def get_medis_agent(
         agent_id="medis-image-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
-        tools=[GoogleScholarTools(), JinaReaderTools()],
-        description="Saya adalah ahli kedokteran yang menganalisis gambar medis untuk membantu diagnosis dan penjelasan temuan. Semua analisis akan diberikan dalam Bahasa Indonesia.",
+        model=Gemini(id="gemini-2.0-flash", max_output_tokens=128000),
+        tools=[GoogleScholarTools(), Newspaper4kTools()],
+        description="Saya adalah ahli kedokteran kepolisian yang menganalisis gambar medis untuk membantu diagnosis dan penjelasan temuan. Semua analisis akan diberikan dalam Bahasa Indonesia.",
         instructions=[FULL_INSTRUCTIONS],
         markdown=True,
         show_tool_calls=False,

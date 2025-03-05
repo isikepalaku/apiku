@@ -35,6 +35,9 @@ class ApiSettings(BaseSettings):
     # default cors origin list.
     cors_origin_list: Optional[List[str]] = Field(None, validate_default=True)
 
+    # Maximum upload file size in bytes (10MB default)
+    max_upload_size: int = Field(default=10 * 1024 * 1024, description="Maximum upload file size in bytes")
+
     @field_validator("runtime_env")
     def validate_runtime_env(cls, runtime_env):
         """Validate runtime_env."""
