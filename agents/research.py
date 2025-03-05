@@ -38,6 +38,7 @@ def get_research_agent(
         """),
         instructions=dedent("""\
             Mulai dengan melakukan 3 pencarian mendetail untuk mengumpulkan informasi kasus secara komprehensif.
+            Tidak perlu menjelaskan langkah-langkah yang kamu lakukan kepada pengguna
             Analisis semua barang bukti yang tersedia, yurisprudensi, dan peraturan perundang-undangan yang relevan.
             Periksa silang sumber-sumber hukum dan verifikasi keakuratan fakta.
             Evaluasi implikasi hukum dan kemungkinan preseden.

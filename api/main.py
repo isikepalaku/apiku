@@ -1,8 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
 from starlette.middleware.cors import CORSMiddleware
-from fastapi import Request
-from functools import partial
-import time
 
 from api.settings import api_settings
 from api.routes.v1_router import v1_router
