@@ -10,6 +10,7 @@ from agents.image import get_geo_agent
 from agents.tipidkor_chat import get_tipidkor_agent
 from agents.research import get_research_agent
 from agents.dokpol import get_medis_agent
+from agents.forensic import get_forensic_agent
 from agents.trend_kejahatan import get_crime_trend_agent
 from agents.p2sk_chat import get_p2sk_agent
 from agents.indagsi_chat import get_ipi_agent
@@ -40,7 +41,8 @@ penyidik_tipikor = get_corruption_investigator(debug_mode=True)
 agen_tipidkor = get_tipidkor_agent(debug_mode=True)
 analisator_kejahatan = get_analisator_tren_kejahatan(debug_mode=True)
 sentiment_analyzer = get_sentiment_analyzer(debug_mode=True)
-agen_medis = get_medis_agent(debug_mode=True)
+agen_dokpol = get_medis_agent(debug_mode=True)
+agen_forensic = get_forensic_agent(debug_mode=True)
 
 # Create a playground instance
 playground = Playground(
@@ -61,7 +63,8 @@ playground = Playground(
         agen_cipta_kerja,
         agen_kesehatan,
         agen_indagsi,
-        agen_medis
+        agen_dokpol,
+        agen_forensic
     ],
     workflows=[
         analisator_kejahatan,
