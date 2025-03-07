@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.media import Image
-from custom_tools.googlescholar import GoogleScholarTools
+from custom_tools.googlescholar import GoogleScholarTools  # Mengganti impor tools
+# from custom_tools.googlescholar import GoogleScholarTools  <-- sudah dihapus
 
 # Muat variabel lingkungan
 load_dotenv()
@@ -28,9 +29,9 @@ BASE_PROMPT = dedent("""\
 WORKFLOW = dedent("""\
     Alur Kerja:
     1. Fase Penelitian 🔍
-       - Telusuri literatur dan sumber otoritatif terkait kondisi medis dan pencitraan.
+       - Gunakan DuckDuckGoTools untuk menelusuri literatur dan sumber otoritatif terkait kondisi medis dan pencitraan.
        - Prioritaskan publikasi terbaru, pedoman klinis, dan opini ahli medis.
-       - Identifikasi sumber-sumber medis yang relevan, termasuk Google Scholar dan artikel klinis terkini.
+       - Identifikasi sumber-sumber medis yang relevan, termasuk DuckDuckGo dan artikel klinis terkini.
 
     2. Fase Analisis 📊
        - Evaluasi teknis gambar (jenis pencitraan, area anatomi, kualitas gambar).
@@ -76,6 +77,14 @@ ANALYSIS_TEMPLATE = dedent("""\
     - Jelaskan implikasi temuan terhadap gaya hidup atau perawatan pasien.
     - Cantumkan referensi medis otoritatif dan literatur terbaru yang mendukung.
     - Berikan rekomendasi agar pasien menjalani pemeriksaan lanjutan pada bidang kedokteran spesialis yang relevan.
+
+    ### 5. Konteks Berbasis Bukti
+    - Gunakan pencarian GoogleScholarTools untuk mencari literatur medis terkait.
+    - Cantumkan referensi sebagai hyperlink, misalnya:
+         - (https://europepmc.org/article/nbk/nbk482331)
+         - (https://asmedigitalcollection.asme.org/forensicsciences/article/45/6/1274/1184830)
+         - (https://www.nejm.org/doi/abs/10.1056/NEJMra0800887)
+         - (https://jamanetwork.com/journals/jamapediatrics/article-abstract/504596)
 """)
 
 # Gabungkan prompt dasar, workflow, dan template analisis menjadi satu instruksi lengkap
@@ -94,12 +103,12 @@ def get_medis_agent(
         agent_id="medis-image-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
-        tools=[GoogleScholarTools()],
+        model=Gemini(id="gemini-2.0-flash-exp"),
+        tools=[GoogleScholarTools()],  # Memanggil tool DuckDuckGo untuk pencarian referensi
         description="Saya adalah ahli kedokteran yang menganalisis gambar medis untuk membantu diagnosis dan penjelasan temuan. Semua analisis akan diberikan dalam Bahasa Indonesia dan berdasarkan standar medis terkini.",
         instructions=[FULL_INSTRUCTIONS],
         markdown=True,
-        show_tool_calls=False,
+        show_tool_calls=True,
         add_datetime_to_instructions=True,
         monitoring=True,
         debug_mode=debug_mode,
@@ -127,7 +136,6 @@ def analyze_image(image_path: Path) -> Optional[str]:
             3. Interpretasi klinis beserta diagnosis utama dan diagnosis banding
             4. Edukasi yang jelas untuk pasien terkait temuan gambar
             5. Konteks berbasis bukti dengan referensi medis yang relevan
-            6. Rekomendasi untuk pemeriksaan lanjutan
 
             PENTING: Berikan jawaban dalam Bahasa Indonesia.
         """)

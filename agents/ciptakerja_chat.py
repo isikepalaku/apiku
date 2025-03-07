@@ -48,7 +48,7 @@ def get_cipta_kerja_agent(
         add_history_to_messages=True,
         num_history_responses=3,
         description=(
-            "Saya adalah penyidik kepolisian yang memiliki spesialisasi dalam Undang-Undang Cipta Kerja. "
+            "Saya adalah penyidik kepolisian yang memiliki spesialisasi dalam Undang-undang Nomor 6 Tahun 2023 tentang Cipta Kerja. "
         ),
         instructions=[
             "Catatan: Undang-Undang Cipta Kerja telah diubah dengan:\n"

@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.media import Image
+from custom_tools.googlescholar import GoogleScholarTools
 
 # Muat variabel lingkungan
 load_dotenv()
@@ -72,6 +73,14 @@ ANALYSIS_TEMPLATE = dedent("""\
     - Sertakan referensi hukum dan pedoman forensik yang relevan sebagai dasar analisis.
     - Berikan rekomendasi langkah penyelidikan lebih lanjut untuk mendukung proses hukum.
     - Sajikan informasi secara sistematis untuk mendukung validitas bukti dalam pengadilan.
+
+    ### 5. Konteks Berbasis Bukti
+    - Gunakan pencarian GoogleScholarTools untuk mencari literatur medis terkait.
+    - Cantumkan referensi sebagai hyperlink, misalnya:
+         - (https://europepmc.org/article/nbk/nbk482331)
+         - (https://asmedigitalcollection.asme.org/forensicsciences/article/45/6/1274/1184830)
+         - (https://www.nejm.org/doi/abs/10.1056/NEJMra0800887)
+         - (https://jamanetwork.com/journals/jamapediatrics/article-abstract/504596)
 """)
 
 # Gabungkan prompt dasar, workflow, dan template analisis menjadi satu instruksi lengkap
@@ -90,7 +99,8 @@ def get_forensic_agent(
         agent_id="forensic-image-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp", search=True),
+        model=Gemini(id="gemini-2.0-flash-exp"),
+        tools=[GoogleScholarTools()],
         description="Saya adalah ahli forensik kedokteran yang menganalisis gambar medis sebagai bukti forensik untuk mendukung investigasi hukum. Semua analisis disajikan dalam Bahasa Indonesia dengan mengacu pada standar hukum dan forensik terkini.",
         instructions=[FULL_INSTRUCTIONS],
         markdown=True,

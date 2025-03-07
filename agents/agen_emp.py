@@ -6,9 +6,10 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
-from agno.vectordb.pgvector import PgVector, SearchType
+from agno.vectordb.search import SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
+from agno.vectordb.pgvector import PgVector, SearchType
 
 load_dotenv()  # Load environment variables from .env file
 

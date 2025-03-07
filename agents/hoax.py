@@ -12,7 +12,7 @@ fact_checker_agent = Agent(
     name="Hoax Checker Agent",
     agent_id="hoax-checker-agent",
     model=Groq(
-        id="llama-3.3-70b-specdec",
+        id="qwen-2.5-32b",
         api_key=os.getenv("GROQ_API_KEY"),
     ),
     tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
