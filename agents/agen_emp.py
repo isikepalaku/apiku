@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
-from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
+from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.search import SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
@@ -14,13 +14,13 @@ from agno.vectordb.pgvector import PgVector, SearchType
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-emp_agent_storage = PostgresAgentStorage(table_name="baru.emp_agent_sessions", db_url=db_url)
+emp_agent_storage = PostgresAgentStorage(table_name="101.emp_agent_sessions", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
-knowledge_base = PDFUrlKnowledgeBase(
-    urls=["https://celebesbot.com/pdf/LAMPIRANIVSOPEMPPERKABA1THN2022TGL27DES2022.pdf", "https://celebesbot.com/pdf/PERKABAPELAKSPENYIDIKANTPNO1TH2022TGL27DES2022.pdf"],
+knowledge_base = TextKnowledgeBase(
+    path=Path("data/emp"),
     vector_db=PgVector(
-        table_name="text_emp",
+        table_name="101_emp",
         db_url=db_url,
         search_type=SearchType.hybrid,
         embedder=OpenAIEmbedder(id="text-embedding-3-small"),

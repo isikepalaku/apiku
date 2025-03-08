@@ -3,7 +3,6 @@ from typing import Optional
 from agno.agent import Agent
 from agno.tools.crawl4ai import Crawl4aiTools
 from agno.tools.google_maps import GoogleMapTools
-from agno.models.google import Gemini
 
 def get_maps_agent(
     model_id: Optional[str] = None,
@@ -14,7 +13,6 @@ def get_maps_agent(
     return Agent(
         name="Agen Pemetaan",
         agent_id="maps-agent",
-        model=Gemini(id="gemini-2.0-flash-exp"),
         tools=[
         GoogleMapTools(),  # For  on Google Maps
         Crawl4aiTools(max_length=5000),  # For scraping business websites

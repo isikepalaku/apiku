@@ -16,7 +16,7 @@ def get_legal_expert_agent(debug_mode: bool = False) -> Agent:
     return Agent(
         name="Ahli Hukum Tipikor",
         role="Menganalisis penerapan pasal-pasal tindak pidana korupsi",
-        model=OpenAIChat(id="gpt-4o-mini"),
+        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
         tools=[
             ExaTools(
                 start_published_date=datetime.now().strftime("%Y-%m-%d"), 
@@ -49,13 +49,7 @@ def get_case_analyst_agent(debug_mode: bool = False) -> Agent:
     return Agent(
         name="Analis Kasus Tipikor",
         role="Menganalisis konstruksi kasus dan alat bukti",
-        model=OpenAIChat(id="gpt-4o-mini"),
-        tools=[
-            ExaTools(
-                start_published_date=datetime.now().strftime("%Y-%m-%d"),
-                type="keyword"
-            )
-        ],
+        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
         instructions=dedent("""\
             Anda adalah analis yang membantu penyidik membangun konstruksi kasus tipikor 🔍
 
@@ -92,7 +86,7 @@ def get_corruption_investigator(
         agent_id="penyidik-tipikor",
         user_id=user_id,
         session_id=session_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
         storage=tipikor_research_storage,
         team=[legal_expert, case_analyst],
         instructions=dedent("""\

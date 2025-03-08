@@ -7,6 +7,7 @@ from agents.agen_wassidik import get_wassidik_agent
 from agents.fidusia import get_corruption_investigator
 from agents.hoax import fact_checker_agent
 from agents.image import get_geo_agent
+from agents.agen_maps import get_maps_agent
 from agents.tipidkor_chat import get_tipidkor_agent
 from agents.research import get_research_agent
 from agents.dokpol import get_medis_agent
@@ -43,11 +44,12 @@ analisator_kejahatan = get_analisator_tren_kejahatan(debug_mode=True)
 sentiment_analyzer = get_sentiment_analyzer(debug_mode=True)
 agen_dokpol = get_medis_agent(debug_mode=True)
 agen_forensic = get_forensic_agent(debug_mode=True)
+agen_maps = get_maps_agent(debug_mode=True)
 
-# Create a playground instance
 playground = Playground(
     agents=[
         fact_checker_agent,
+        agen_maps,
         geo_agent,
         penyidik_polri,
         penyidik_tipikor,
