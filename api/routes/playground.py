@@ -16,7 +16,9 @@ from agents.trend_kejahatan import get_crime_trend_agent
 from agents.p2sk_chat import get_p2sk_agent
 from agents.indagsi_chat import get_ipi_agent
 from agents.kuhp_chat import get_kuhp_agent
+from agents.fismondev_chat import get_fismondev_agent
 from agents.ite_chat import get_ite_agent
+from agents.siber_chat import get_siber_agent
 from agents.ciptakerja_chat import get_cipta_kerja_agent
 from agents.kesehatan_chat import get_kesehatan_agent
 from workflows.modus_operandi import get_analisator_tren_kejahatan
@@ -45,6 +47,8 @@ sentiment_analyzer = get_sentiment_analyzer(debug_mode=True)
 agen_dokpol = get_medis_agent(debug_mode=True)
 agen_forensic = get_forensic_agent(debug_mode=True)
 agen_maps = get_maps_agent(debug_mode=True)
+agen_fismondev = get_fismondev_agent(debug_mode=True)
+agen_siber = get_siber_agent(debug_mode=True)
 
 playground = Playground(
     agents=[
@@ -66,7 +70,9 @@ playground = Playground(
         agen_kesehatan,
         agen_indagsi,
         agen_dokpol,
-        agen_forensic
+        agen_forensic,
+        agen_fismondev,
+        agen_siber
     ],
     workflows=[
         analisator_kejahatan,

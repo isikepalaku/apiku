@@ -3,9 +3,12 @@ import asyncio
 from typing import Iterator, Optional, List
 
 from agno.agent import Agent
-from agno.models.openrouter import OpenRouter
+from agno.models.openai import OpenAIChat
+from agno.models.google import Gemini
 from agno.storage.workflow.postgres import PostgresWorkflowStorage
 from agno.tools.googlesearch import GoogleSearchTools
+from custom_tools.googlescholar import GoogleScholarTools
+from agno.tools.newspaper4k import Newspaper4kTools
 from agno.utils.log import logger
 from agno.workflow import RunEvent, RunResponse, Workflow
 from pydantic import BaseModel, Field
@@ -37,15 +40,15 @@ class AnalisaTrenKejahatan(BaseModel):
 
 class SistemAnalisisIntelijen(Workflow):
     agen_analisis_modus: Agent = Agent(
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=OpenAIChat(id="gpt-4o-mini"),
         instructions=[
             "Analisis mendalam terhadap pola kejahatan dan modus operandi.",
-            "Gunakan data kasus nyata sebagai referensi.",
+            "Gunakan data kasus nyata sebagai referensi lampirkan link.",
             "Evaluasi tingkat ancaman dan pola operasional.",
             "Identifikasi bukti-bukti yang sering ditemukan.",
             "Tentukan karakteristik pelaku dan korban.",
         ],
-        tools=[GoogleSearchTools()],
+        tools=[GoogleScholarTools(), Newspaper4kTools()],
         add_history_to_messages=True,
         add_datetime_to_instructions=True,
         response_model=AnalisaPolisional,
@@ -53,7 +56,7 @@ class SistemAnalisisIntelijen(Workflow):
     )
 
     agen_analisis_tren: Agent = Agent(
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=OpenAIChat(id="gpt-4o-mini"),
         instructions=[
             "Analisis tren dan perubahan modus operandi kejahatan.",
             "Identifikasi faktor pendorong dan pola musiman.",
@@ -67,7 +70,7 @@ class SistemAnalisisIntelijen(Workflow):
     )
 
     agen_intel: Agent = Agent(
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=OpenAIChat(id="gpt-4o-mini"),
         instructions=[
             "Lakukan analisis intelijen mendalam:",
             "1. Identifikasi pola operasional pelaku",
@@ -76,7 +79,7 @@ class SistemAnalisisIntelijen(Workflow):
             "4. Identifikasi indikator awal kejahatan",
             "5. Pemetaan area dan waktu rawan",
         ],
-        tools=[GoogleSearchTools()],
+        tools=[GoogleSearchTools(), Newspaper4kTools()],
         add_history_to_messages=True,
         add_datetime_to_instructions=True,
         markdown=True,
@@ -84,7 +87,7 @@ class SistemAnalisisIntelijen(Workflow):
     )
 
     agen_laporan: Agent = Agent(
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=OpenAIChat(id="gpt-4o-mini"),
         instructions=[
             "Buat laporan analisis kejahatan yang objektif:",
             "1. Ringkasan eksekutif dengan kategori dan deskripsi",
