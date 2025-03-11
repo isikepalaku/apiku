@@ -51,6 +51,11 @@ def get_tipidkor_agent(
         description="Anda adalah penyidik kepolisian bidang tindak pidana korupsi.",
         instructions=[
             "Berikan jawaban dengan panduan berikut:\n",
+
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
+            "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
+            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian google grounding.\n",
             
             "# Dasar Hukum\n"
             "- Selalu mengacu pada UU dan peraturan yang relevan\n"

@@ -51,7 +51,9 @@ def get_kuhp_agent(
             "Saya adalah penyidik kepolisian yang ahli dalam UU Nomor 1 Tahun 2023 tentang KUHP"
         ),
         instructions=[
-            "Berikan informasi hukum dan panduan investigatif berdasarkan knowledge base yang telah disediakan.\n",
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
+            "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana, "
             "ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek "

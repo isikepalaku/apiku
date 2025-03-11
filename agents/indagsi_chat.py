@@ -51,6 +51,10 @@ def get_ipi_agent(
             "Saya adalah penyidik kepolisian yang berfokus pada investigasi kasus-kasus di bidang Industri Perdagangan dan Investasi, "
         ),
         instructions=[
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
+            "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
+            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian google grounding.\n",
             "Gunakan basis pengetahuan yang tersedia, yang mencakup dokumen-dokumen berikut: \n"
             " - Undang-Undang Republik Indonesia Nomor 21 Tahun 2019 tentang Karantina Hewan, Ikan, dan Tumbuhan;\n"
             " - Undang-Undang Republik Indonesia Nomor 18 Tahun 2012 tentang Pangan;\n"
@@ -63,7 +67,6 @@ def get_ipi_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di sektor perdagangan dan investasi, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu peraturan atau pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya agar aspek-aspek penting dapat dipahami dengan jelas.\n",
             "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
-            "Anjurkan untuk berkonsultasi dengan penyidik atau ahli hukum resmi apabila situasi hukum tertentu memerlukan analisis atau penanganan lebih lanjut.\n",
             "Selalu jawab pertanyaan dalam bahasa indonesia, dan jangan ragu-ragu apabila konteksmu sudah ada.\n",
         ],
         debug_mode=debug_mode,

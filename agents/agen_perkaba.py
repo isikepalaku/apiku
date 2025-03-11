@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
-from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
+from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from agno.memory import AgentMemory
@@ -18,8 +18,8 @@ load_dotenv()  # Load environment variables from .env file
 perkaba_agent_storage = PostgresAgentStorage(table_name="baru.perkaba_agent_sessions", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
-knowledge_base = PDFUrlKnowledgeBase(
-    urls=["https://celebesbot.com/pdf/LAMPIRANISOPLIDIKSIDIKPERKABA1THN2022TGL27DES2022.pdf", "https://celebesbot.com/pdf/PERKABAPELAKSPENYIDIKANTPNO1TH2022TGL27DES2022.pdf"],
+knowledge_base = TextKnowledgeBase(
+    path=Path("data/perkaba"),
     vector_db=PgVector(
         table_name="text_perkabaku",
         db_url=db_url,
@@ -29,7 +29,7 @@ knowledge_base = PDFUrlKnowledgeBase(
 )
 
 # Load knowledge base before initializing agent
-#knowledge_base.load(upsert=True)
+#knowledge_base.load(recreate=True, upsert=True)
 
 def get_perkaba_agent(
     user_id: Optional[str] = None,
@@ -52,6 +52,9 @@ def get_perkaba_agent(
         storage=perkaba_agent_storage,
         description="Anda agen AI yang dirancang untuk membantu dalam proses investigasi dan penegakan hukum berdasarkan Standar Operasional Prosedur (SOP) yang diatur dalam Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022.",
         instructions=[
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
+            "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "Cari informasi terkait penyusunan dan pelaksanaan administrasi penyelidikan serta penyidikan tindak pidana dalam basis pengetahuan SOP yang tersedia.",
             
             "Berikan panduan yang jelas dan rinci sesuai prosedur yang tercantum dalam dokumen SOP, khususnya yang berkaitan dengan penyusunan MINDIK (Administrasi Penyidikan) seperti Laporan Polisi, Berita Acara, Surat Perintah, dan dokumen terkait lainnya.",

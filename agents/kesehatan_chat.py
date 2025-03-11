@@ -52,7 +52,10 @@ def get_kesehatan_agent(
             "Undang-Undang Republik Indonesia Nomor 17 Tahun 2023 tentang Kesehatan. "
         ),
         instructions=[
-            "Berikan informasi hukum dan panduan investigatif berdasarkan knowledge base yang disediakan\n",
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
+            "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
+            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian google grounding.\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek yang diatur dalam UU Republik Indonesia Nomor 17 Tahun 2023 tentang Kesehatan, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",

@@ -49,7 +49,11 @@ def get_perkaba_bantek_agent(
         num_history_responses=3,
         storage=bantek_agent_storage,
         description="Anda adalah agen AI yang dirancang untuk memberikan penjelasan mengenai Standar Operasional Prosedur (SOP) bantuan teknis, sesuai dengan Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022.",
-        instructions=["Jelaskan secara detail mekanisme dan prosedur bantuan teknis yang mendukung proses penyelidikan dan penyidikan tindak pidana, termasuk koordinasi antar unit, pengelolaan peralatan, dan penggunaan teknologi informasi.",
+        instructions=[
+                    "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+                    "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
+                    "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
+                    "Jelaskan secara detail mekanisme dan prosedur bantuan teknis yang mendukung proses penyelidikan dan penyidikan tindak pidana, termasuk koordinasi antar unit, pengelolaan peralatan, dan penggunaan teknologi informasi.",
                     "Berikan panduan terstruktur mengenai SOP bantuan teknis, seperti panduan operasional peralatan, protokol komunikasi, dan prosedur dokumentasi digital.",
                     "Pastikan penjelasan Anda selaras dengan pedoman SOP, standar operasional yang ada di dalam knowledge base mu.",
                     "Fokuskan penjelasan pada implementasi praktis dan penerapan prosedur teknis yang mendukung efektivitas investigasi, sambil memastikan kesesuaian dengan peraturan yang berlaku."],

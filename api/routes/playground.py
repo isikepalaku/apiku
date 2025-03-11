@@ -6,6 +6,7 @@ from agents.agen_emp import get_emp_agent
 from agents.agen_wassidik import get_wassidik_agent
 from agents.fidusia import get_corruption_investigator
 from agents.hoax import fact_checker_agent
+from agents.perbankan import get_perbankan_agent
 from agents.image import get_geo_agent
 from agents.agen_maps import get_maps_agent
 from agents.tipidkor_chat import get_tipidkor_agent
@@ -49,6 +50,7 @@ agen_forensic = get_forensic_agent(debug_mode=True)
 agen_maps = get_maps_agent(debug_mode=True)
 agen_fismondev = get_fismondev_agent(debug_mode=True)
 agen_siber = get_siber_agent(debug_mode=True)
+agen_perbankan = get_perbankan_agent(debug_mode=True)
 
 playground = Playground(
     agents=[
@@ -72,7 +74,8 @@ playground = Playground(
         agen_dokpol,
         agen_forensic,
         agen_fismondev,
-        agen_siber
+        agen_siber,
+        agen_perbankan
     ],
     workflows=[
         analisator_kejahatan,
