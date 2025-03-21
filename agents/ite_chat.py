@@ -51,7 +51,7 @@ def get_ite_agent(
         add_history_to_messages=True,
         num_history_responses=3,
         description=(
-            "Saya adalah penyidik kepolisian spesialisasi (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE."
+            "Anda adalah penyidik kepolisian spesialisasi (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE."
         ),
         instructions=[
             "Berikan informasi hukum dan panduan investigatif berdasarkan knowledge base yang disediakan\n",

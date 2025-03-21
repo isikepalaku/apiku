@@ -7,7 +7,7 @@ from agno.models.openai import OpenAIChat
 from agno.models.google import Gemini
 from agno.storage.workflow.postgres import PostgresWorkflowStorage
 from agno.tools.googlesearch import GoogleSearchTools
-from custom_tools.googlescholar import GoogleScholarTools
+from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.utils.log import logger
 from agno.workflow import RunEvent, RunResponse, Workflow
@@ -40,15 +40,14 @@ class AnalisaTrenKejahatan(BaseModel):
 
 class SistemAnalisisIntelijen(Workflow):
     agen_analisis_modus: Agent = Agent(
-        model=OpenAIChat(id="gpt-4o-mini"),
+        tools=[TavilyTools(), Newspaper4kTools()],
         instructions=[
-            "Analisis mendalam terhadap pola kejahatan dan modus operandi.",
+            "Lakukan pencarian kata kunci untuk kasus yang pernah terjadi.",
             "Gunakan data kasus nyata sebagai referensi lampirkan link.",
             "Evaluasi tingkat ancaman dan pola operasional.",
             "Identifikasi bukti-bukti yang sering ditemukan.",
             "Tentukan karakteristik pelaku dan korban.",
         ],
-        tools=[GoogleScholarTools(), Newspaper4kTools()],
         add_history_to_messages=True,
         add_datetime_to_instructions=True,
         response_model=AnalisaPolisional,

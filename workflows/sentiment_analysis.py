@@ -66,7 +66,7 @@ class SentimentAnalysisSystem(Workflow):
     )
 
     sentiment_analyzer: Agent = Agent(
-        model=Gemini(id="gemini-1.5-flash"),
+        model=Gemini(id="gemini-2.0-flash"),
         instructions=[
             "Analisis sentimen mendalam dari konten yang ditemukan:",
             "1. Evaluasi tone dan konteks pembahasan",
@@ -81,7 +81,7 @@ class SentimentAnalysisSystem(Workflow):
     )
 
     trend_analyzer: Agent = Agent(
-        model=Gemini(id="gemini-1.5-flash"),
+        model=Gemini(id="gemini-2.0-flash"),
         instructions=[
             "Analisis tren dan pola sentimen:",
             "1. Identifikasi perubahan sentimen overtime",
@@ -96,7 +96,7 @@ class SentimentAnalysisSystem(Workflow):
     )
 
     reporter: Agent = Agent(
-        model=Gemini(id="gemini-2.0-flash-exp"),
+        model=Gemini(id="gemini-2.0-flash"),
         instructions=[
         "Buat Laporan Analisis Sentimen Komprehensif dengan Struktur Sebagai Berikut:",
         "1. **Ringkasan Eksekutif:**",

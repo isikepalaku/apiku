@@ -2,20 +2,19 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent
+from agno.agent import Agent, AgentMemory
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
-from agno.memory import AgentMemory
 from agno.memory.db.postgres import PgMemoryDb
 from db.session import db_url
 
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-perkaba_agent_storage = PostgresAgentStorage(table_name="baru.perkaba_agent_sessions", db_url=db_url)
+perkaba_agent_storage = PostgresAgentStorage(table_name="perkaba_agent_sessions", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(

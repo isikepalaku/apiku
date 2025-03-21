@@ -3,8 +3,10 @@ from pathlib import Path
 from typing import Optional
 
 from agno.agent import Agent
-from agno.models.openrouter import OpenRouter
+from agno.models.google import Gemini
 from agno.tools.tavily import TavilyTools
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.jina import JinaReaderTools
 from agno.tools.file import FileTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
@@ -21,11 +23,11 @@ def get_sentiment_team(
     # Web Search Agent
     web_searcher = Agent(
         name="Penelusur Web",
-        role="Mencari dan menganalisis konten web untuk sentimen publik",
-        model=OpenRouter(id="google/gemini-2.0-flash-exp:free"),
+        tools=[TavilyTools()],
+        description="kamu Mencari dan menganalisis konten web untuk isu terkait",
         instructions=[
             "Untuk setiap topik yang diberikan:",
-            "1. Buat 3 kata kunci pencarian yang relevan untuk menganalisis sentimen publik",
+            "1. lakukan 10 pencarian kata kunci pencarian yang relevan untuk menganalisis sentimen publik yang diberikan",
             "2. Lakukan pencarian mendalam untuk setiap kata kunci",
             "3. Identifikasi 10 URL terpercaya dengan fokus pada:",
             "   - Platform media sosial dengan diskusi aktif",
@@ -38,7 +40,6 @@ def get_sentiment_team(
             "   - Kebaruan informasi",
             "   - Relevansi dengan topik"
         ],
-        tools=[TavilyTools()],
         save_response_to_file=str(urls_file),
         add_datetime_to_instructions=True,
         show_tool_calls=True,
@@ -49,11 +50,10 @@ def get_sentiment_team(
     # Content Analysis Agent
     content_analyzer = Agent(
         name="Penganalisis Konten",
-        role="Mengekstrak dan menganalisis konten dari artikel dan diskusi",
-        model=OpenRouter(id="openai/gpt-4o-mini"),
-        description="Anda adalah analis senior yang ahli dalam mengekstrak dan menganalisis sentimen dari berbagai sumber konten.",
+        tools=[JinaReaderTools(), FileTools(base_dir=urls_file.parent)],
+        description="Mengekstrak dan menganalisis konten dari artikel dan diskusi",
         instructions=[
-            f"1. Baca semua URL yang tersimpan di {urls_file.name} menggunakan `get_article_text`",
+            f"1. Baca semua URL yang tersimpan di {urls_file.name} menggunakan `JinaReaderTools`",
             "2. Lakukan analisis mendalam untuk setiap konten:",
             "   - Ekstrak sentimen utama dan tone pembahasan",
             "   - Identifikasi pola opini dan argumentasi",
@@ -70,7 +70,6 @@ def get_sentiment_team(
             "   - Berikan konteks yang relevan",
             "   - Tunjukkan metodologi yang digunakan"
         ],
-        tools=[Newspaper4kTools(), FileTools(base_dir=urls_file.parent)],
         add_datetime_to_instructions=True,
         show_tool_calls=True,
         markdown=True,
@@ -82,7 +81,7 @@ def get_sentiment_team(
         name="Tim Analisis Sentimen",
         role="Menganalisis dan melaporkan sentimen publik",
         agent_id="sentiment-team",
-        model=OpenRouter(id="openai/gpt-4o-mini"),
+        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
         team=[web_searcher, content_analyzer],
         description="Anda adalah kepala tim analisis sentimen yang bertanggung jawab menghasilkan laporan sentimen komprehensif.",
         instructions=[

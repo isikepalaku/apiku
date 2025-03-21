@@ -2,20 +2,19 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent
+from agno.agent import Agent, AgentMemory
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory import AgentMemory
 from agno.memory.db.postgres import PgMemoryDb
 
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen ITE
-siber_agent_storage = PostgresAgentStorage(table_name="siber1_agent_sessions", db_url=db_url)
+siber_agent_storage = PostgresAgentStorage(table_name="siber_agent_sessions", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU ITE
 knowledge_base = TextKnowledgeBase(
@@ -48,7 +47,7 @@ def get_siber_agent(
         add_history_to_messages=True,
         num_history_responses=3,
         description=(
-            "Saya adalah penyidik kepolisian spesialisasi Tindak pidana Siber."
+            "Anda adalah penyidik kepolisian spesialisasi Tindak pidana Siber."
         ),
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
@@ -59,7 +58,7 @@ def get_siber_agent(
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
             "Selalu gunakan Knowledge Base dan tool yang disediakan untuk menjawab pertanyaan.\n",
-            "Knoeledge base mu dibekali (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE dan Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)"
+            "Knowledge base mu dibekali (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE dan Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)"
         ],
         debug_mode=debug_mode,
         memory=AgentMemory(

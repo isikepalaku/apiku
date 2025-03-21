@@ -2,20 +2,19 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent
+from agno.agent import Agent, AgentMemory
 from agno.embedder.google import GeminiEmbedder
 from agno.models.google import Gemini
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory import AgentMemory
 from agno.memory.db.postgres import PgMemoryDb
 
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-tipidkor_agent_storage = PostgresAgentStorage(table_name="tipidkor_agent_sessions", db_url=db_url)
+tipidkor_agent_storage = PostgresAgentStorage(table_name="tipidkor_agent_sesi", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(

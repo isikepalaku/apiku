@@ -14,7 +14,7 @@ from agno.vectordb.pgvector import PgVector, SearchType
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-emp_agent_storage = PostgresAgentStorage(table_name="101.emp_agent_sessions", db_url=db_url)
+emp_agent_storage = PostgresAgentStorage(table_name="emp_agent_sessions", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(

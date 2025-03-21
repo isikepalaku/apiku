@@ -22,8 +22,10 @@ from agents.ite_chat import get_ite_agent
 from agents.siber_chat import get_siber_agent
 from agents.ciptakerja_chat import get_cipta_kerja_agent
 from agents.kesehatan_chat import get_kesehatan_agent
+from agents.sentiment_analyzer import get_sentiment_team
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 from workflows.sentiment_analysis import get_sentiment_analyzer
+from workflows.analisis_hukum import get_sistem_penelitian_hukum
 
 ######################################################
 ## Router for the agent playground
@@ -45,6 +47,8 @@ penyidik_tipikor = get_corruption_investigator(debug_mode=True)
 agen_tipidkor = get_tipidkor_agent(debug_mode=True)
 analisator_kejahatan = get_analisator_tren_kejahatan(debug_mode=True)
 sentiment_analyzer = get_sentiment_analyzer(debug_mode=True)
+sentiment_team = get_sentiment_team(debug_mode=True)
+sistem_penelitian_hukum = get_sistem_penelitian_hukum(debug_mode=True)
 agen_dokpol = get_medis_agent(debug_mode=True)
 agen_forensic = get_forensic_agent(debug_mode=True)
 agen_maps = get_maps_agent(debug_mode=True)
@@ -75,11 +79,13 @@ playground = Playground(
         agen_forensic,
         agen_fismondev,
         agen_siber,
-        agen_perbankan
+        agen_perbankan,
+        sentiment_team
     ],
     workflows=[
         analisator_kejahatan,
-        sentiment_analyzer
+        sentiment_analyzer,
+        sistem_penelitian_hukum
     ],
 )
 

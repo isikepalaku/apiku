@@ -37,7 +37,7 @@ def get_legal_expert_agent(debug_mode: bool = False) -> Agent:
             1. Identifikasi pasal yang relevan
             2. Penjabaran unsur-unsur pasal
             3. Analisis kesesuaian fakta dengan unsur
-            4. Kajian yurisprudensi terkait
+            4. Kajian yurisprudensi dan contoh putusan
             5. Argumentasi penerapan pasal\
         """),
         show_tool_calls=True,

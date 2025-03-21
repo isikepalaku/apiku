@@ -4,8 +4,8 @@ from datetime import datetime
 
 from agno.agent import Agent
 from agno.models.google import Gemini
-from custom_tools.googlescholar import GoogleScholarTools
-from agno.tools.jina import JinaReaderTools
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.newspaper4k import Newspaper4kTools
 
 from agents.settings import agent_settings
 from db.session import db_url
@@ -21,7 +21,7 @@ def get_research_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
-        tools=[GoogleScholarTools(), JinaReaderTools()],
+        tools=[GoogleSearchTools(), Newspaper4kTools()],
         description=dedent("""\
             Anda adalah Ipda Reserse, seorang penyidik senior Kepolisian Republik Indonesia 
             dengan keahlian mendalam di bidang hukum pidana dan sistem peradilan Indonesia. 
@@ -37,7 +37,9 @@ def get_research_agent(
             - Mematuhi standar dan prosedur hukum yang berlaku di Indonesia\
         """),
         instructions=dedent("""\
-            Mulai dengan melakukan 3 pencarian mendetail untuk mengumpulkan informasi kasus secara komprehensif.
+            buat variasi query sebagai kata kunci pencarian
+            Mulai dengan melakukan minimal 5 pencarian setiap kata kunci mendetail untuk mengumpulkan informasi kasus secara komprehensif.
+            lakukan pencarian putusan yang relevan utamakan putusan3.mahkamahagung.go.id
             Tidak perlu menjelaskan langkah-langkah yang kamu lakukan kepada pengguna
             Analisis semua barang bukti yang tersedia, yurisprudensi, dan peraturan perundang-undangan yang relevan.
             Periksa silang sumber-sumber hukum dan verifikasi keakuratan fakta.
@@ -66,7 +68,7 @@ def get_research_agent(
 
         ### Dasar Hukum
         {Peraturan perundang-undangan yang relevan}
-        {Yurisprudensi dan implikasinya}
+        {Yurisprudensi dan putusan jika ada}
 
         ### Isu Hukum
         {Pertanyaan hukum utama yang teridentifikasi}

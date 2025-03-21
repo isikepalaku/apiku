@@ -101,7 +101,7 @@ def get_forensic_agent(
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash-exp"),
         tools=[GoogleScholarTools()],
-        description="Saya adalah ahli forensik kedokteran yang menganalisis gambar medis sebagai bukti forensik untuk mendukung investigasi hukum. Semua analisis disajikan dalam Bahasa Indonesia dengan mengacu pada standar hukum dan forensik terkini.",
+        description="Anda adalah ahli forensik kedokteran yang menganalisis gambar medis sebagai bukti forensik untuk mendukung investigasi hukum. Semua analisis disajikan dalam Bahasa Indonesia dengan mengacu pada standar hukum dan forensik terkini.",
         instructions=[FULL_INSTRUCTIONS],
         markdown=True,
         show_tool_calls=False,

@@ -2,20 +2,19 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent
+from agno.agent import Agent, AgentMemory
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.openai import OpenAIChat
 from agno.vectordb.pgvector import PgVector
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory import AgentMemory
 from agno.memory.db.postgres import PgMemoryDb
 
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen KUHP
-kuhp_agent_storage = PostgresAgentStorage(table_name="kuhp_agent_sessions", db_url=db_url)
+kuhp_agent_storage = PostgresAgentStorage(table_name="kuhp_agent_sesi", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait KUHP
 knowledge_base = TextKnowledgeBase(
@@ -48,7 +47,7 @@ def get_kuhp_agent(
         add_history_to_messages=True,
         num_history_responses=3,
         description=(
-            "Saya adalah penyidik kepolisian yang ahli dalam UU Nomor 1 Tahun 2023 tentang KUHP"
+            "Anda adalah penyidik kepolisian yang ahli dalam UU Nomor 1 Tahun 2023 tentang KUHP"
         ),
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",

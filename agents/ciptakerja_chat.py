@@ -2,20 +2,19 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent
+from agno.agent import Agent, AgentMemory
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory import AgentMemory
 from agno.memory.db.postgres import PgMemoryDb
 
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen UU Cipta Kerja
-cipta_kerja_agent_storage = PostgresAgentStorage(table_name="cipta_kerja_agent_sessions", db_url=db_url)
+cipta_kerja_agent_storage = PostgresAgentStorage(table_name="cipta_kerja_agent", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU Cipta Kerja
 knowledge_base = TextKnowledgeBase(
@@ -48,7 +47,7 @@ def get_cipta_kerja_agent(
         add_history_to_messages=True,
         num_history_responses=3,
         description=(
-            "Saya adalah penyidik kepolisian yang memiliki spesialisasi dalam Undang-undang Nomor 6 Tahun 2023 tentang Cipta Kerja. "
+            "Anda adalah penyidik kepolisian yang memiliki spesialisasi dalam Undang-undang Nomor 6 Tahun 2023 tentang Cipta Kerja. "
         ),
         instructions=[
             "Catatan: Undang-Undang Cipta Kerja telah diubah dengan:\n"

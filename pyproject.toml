@@ -50,7 +50,8 @@ dependencies = [
   "crawl4ai",
   "playwright",
   "scholarly",
-  "googlemaps"
+  "googlemaps",
+  "google-maps-places"
 
 
 ]

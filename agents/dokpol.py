@@ -2,11 +2,11 @@ from textwrap import dedent
 from pathlib import Path
 from typing import Optional
 from dotenv import load_dotenv
-
+from agno.tools.newspaper4k import Newspaper4kTools
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.media import Image
-from custom_tools.googlescholar import GoogleScholarTools  # Mengganti impor tools
+from agno.tools.duckduckgo import DuckDuckGoTools  # Mengganti impor tools
 # from custom_tools.googlescholar import GoogleScholarTools  <-- sudah dihapus
 
 # Muat variabel lingkungan
@@ -104,8 +104,8 @@ def get_medis_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash-exp"),
-        tools=[GoogleScholarTools()],  # Memanggil tool DuckDuckGo untuk pencarian referensi
-        description="Saya adalah ahli kedokteran yang menganalisis gambar medis untuk membantu diagnosis dan penjelasan temuan. Semua analisis akan diberikan dalam Bahasa Indonesia dan berdasarkan standar medis terkini.",
+        tools=[DuckDuckGoTools(), Newspaper4kTools()],  # Memanggil tool DuckDuckGo untuk pencarian referensi
+        description="Anda adalah ahli kedokteran yang menganalisis gambar medis untuk membantu diagnosis dan penjelasan temuan. Semua analisis akan diberikan dalam Bahasa Indonesia dan berdasarkan standar medis terkini.",
         instructions=[FULL_INSTRUCTIONS],
         markdown=True,
         show_tool_calls=True,
