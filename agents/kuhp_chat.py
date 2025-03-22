@@ -10,6 +10,8 @@ from agno.vectordb.pgvector import PgVector
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.memory.db.postgres import PgMemoryDb
+from agno.tools.tavily import TavilyTools
+from agno.tools.newspaper4k import Newspaper4kTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -40,6 +42,7 @@ def get_kuhp_agent(
         session_id=session_id,
         user_id=user_id,
         model=OpenAIChat(id="gpt-4o-mini"),
+        tools=[TavilyTools(), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=kuhp_agent_storage,
         search_knowledge=True,

@@ -16,6 +16,7 @@ from agents.forensic import get_forensic_agent
 from agents.trend_kejahatan import get_crime_trend_agent
 from agents.p2sk_chat import get_p2sk_agent
 from agents.indagsi_chat import get_ipi_agent
+from agents.tipidter_chat import get_tipidter_agent
 from agents.kuhp_chat import get_kuhp_agent
 from agents.fismondev_chat import get_fismondev_agent
 from agents.ite_chat import get_ite_agent
@@ -55,6 +56,7 @@ agen_maps = get_maps_agent(debug_mode=True)
 agen_fismondev = get_fismondev_agent(debug_mode=True)
 agen_siber = get_siber_agent(debug_mode=True)
 agen_perbankan = get_perbankan_agent(debug_mode=True)
+agen_tipidter = get_tipidter_agent(debug_mode=True)
 
 playground = Playground(
     agents=[
@@ -80,6 +82,7 @@ playground = Playground(
         agen_fismondev,
         agen_siber,
         agen_perbankan,
+        agen_tipidter,
         sentiment_team
     ],
     workflows=[

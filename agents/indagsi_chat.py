@@ -10,11 +10,13 @@ from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.memory.db.postgres import PgMemoryDb
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.newspaper4k import Newspaper4kTools
 
 load_dotenv()  # Memuat variabel lingkungan dari file .env
 
 # Inisialisasi penyimpanan sesi dengan tabel khusus untuk agen di bidang Industri Perdagangan dan Investasi
-ipi_agent_storage = PostgresAgentStorage(table_name="ipi_agent_sessions", db_url=db_url)
+ipi_agent_storage = PostgresAgentStorage(table_name="ipi_agent_smemory", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait hukum Industri Perdagangan dan Investasi
 knowledge_base = TextKnowledgeBase(
@@ -39,7 +41,8 @@ def get_ipi_agent(
         agent_id="ipi-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash", grounding=True),
+        model=Gemini(id="gemini-2.0-flash"),
+        tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=ipi_agent_storage,
         search_knowledge=True,

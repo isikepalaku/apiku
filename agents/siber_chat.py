@@ -6,6 +6,8 @@ from agno.agent import Agent, AgentMemory
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
+from agno.tools.tavily import TavilyTools
+from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
@@ -39,7 +41,8 @@ def get_siber_agent(
         agent_id="siber-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash", grounding=True),
+        model=Gemini(id="gemini-2.0-flash"),
+        tools=[TavilyTools(), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=siber_agent_storage,
         search_knowledge=True,
@@ -56,8 +59,6 @@ def get_siber_agent(
             "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian google grounding.\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di dunia digital, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
-            "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
-            "Selalu gunakan Knowledge Base dan tool yang disediakan untuk menjawab pertanyaan.\n",
             "Knowledge base mu dibekali (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE dan Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)"
         ],
         debug_mode=debug_mode,

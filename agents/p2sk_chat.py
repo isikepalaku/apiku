@@ -10,6 +10,8 @@ from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.memory.db.postgres import PgMemoryDb
+from agno.tools.tavily import TavilyTools
+from agno.tools.newspaper4k import Newspaper4kTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -39,7 +41,8 @@ def get_p2sk_agent(
         agent_id="p2sk-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash", grounding=True),
+        model=Gemini(id="gemini-2.0-flash"),
+        tools=[TavilyTools(), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=p2sk_agent_storage,
         search_knowledge=True,
