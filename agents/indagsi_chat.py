@@ -1,8 +1,10 @@
 import os
-from typing import Optional
+import asyncio
+from typing import Iterator, Optional  # noqa
+
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
+from agno.agent import Agent, AgentMemory, RunResponse
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini

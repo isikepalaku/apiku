@@ -6,7 +6,7 @@ from agno.agent import Agent, AgentMemory
 from agno.embedder.google import GeminiEmbedder
 from agno.models.google import Gemini
 from agno.knowledge.text import TextKnowledgeBase
-from agno.vectordb.pgvector import PgVector, SearchType
+from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.memory.db.postgres import PgMemoryDb
@@ -16,21 +16,21 @@ from agno.tools.newspaper4k import Newspaper4kTools
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-fismondev_agent_storage = PostgresAgentStorage(table_name="fismondev_agent_sesi", db_url=db_url)
+fismondev_agent_storage = PostgresAgentStorage(table_name="fismondev_agent_memory", db_url=db_url)
+COLLECTION_NAME = "fismondev"
 
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
     path=Path("data/p2sk"),
-    vector_db=PgVector(
-        table_name="text_fismondev",
-        db_url=db_url,
-        search_type=SearchType.hybrid,
+    vector_db = Qdrant(
+        collection=COLLECTION_NAME,
+        url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
         embedder=GeminiEmbedder(),
-    ),
+        api_key=os.getenv("QDRANT_API_KEY")
+    )
 )
-
 # Load knowledge base before initializing agent
-#knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=False)
 
 def get_fismondev_agent(
     user_id: Optional[str] = None,
@@ -75,7 +75,7 @@ tertulis terlebih dahulu dari Penerima Fidusia, dipidana dengan pidana penjara p
         debug_mode=debug_mode,
         # Store the memories and summary in a database
         memory=AgentMemory(
-        db=PgMemoryDb(table_name="fismondev_memory", db_url=db_url),
+        db=PgMemoryDb(table_name="fismondev_agent_memory", db_url=db_url),
         create_user_memories=True,
         create_session_summary=True,
     ),

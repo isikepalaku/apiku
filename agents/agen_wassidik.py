@@ -13,7 +13,7 @@ from db.session import db_url
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-wassidik_agent_storage = PostgresAgentStorage(table_name="baru.wassidik_agent_sessions", db_url=db_url)
+wassidik_agent_storage = PostgresAgentStorage(table_name="wassidik_agent_memory", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
 knowledge_base = PDFUrlKnowledgeBase(

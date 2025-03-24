@@ -10,7 +10,7 @@ from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 
 # Initialize storage for session management
-tipikor_research_storage = PostgresAgentStorage(table_name="tipikor_research", db_url=db_url)
+tipikor_research_storage = PostgresAgentStorage(table_name="tipikor_agent_memory", db_url=db_url)
 
 def get_legal_expert_agent(debug_mode: bool = False) -> Agent:
     return Agent(
@@ -75,6 +75,7 @@ def get_case_analyst_agent(debug_mode: bool = False) -> Agent:
 def get_corruption_investigator(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
+    team_session_id: Optional[str] = None,
     debug_mode: bool = False,
 ) -> Agent:
     legal_expert = get_legal_expert_agent(debug_mode)

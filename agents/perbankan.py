@@ -14,7 +14,7 @@ from agno.memory.db.postgres import PgMemoryDb
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-perbankan_agent_storage = PostgresAgentStorage(table_name="perbankan_agent_sessions", db_url=db_url)
+perbankan_agent_storage = PostgresAgentStorage(table_name="perbankan_agent_memory", db_url=db_url)
 
 # Initialize text knowledge base with banking law documents
 knowledge_base = TextKnowledgeBase(
@@ -95,7 +95,7 @@ def get_perbankan_agent(
             "6. Rekomendasi Tindakan\n"
         ],
         memory=AgentMemory(
-            db=PgMemoryDb(table_name="perbankan_memory", db_url=db_url),
+            db=PgMemoryDb(table_name="perbankan_agent_memory", db_url=db_url),
             create_user_memories=True,
             create_session_summary=True,
         ),

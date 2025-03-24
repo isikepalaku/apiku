@@ -16,7 +16,7 @@ from agno.memory.db.postgres import PgMemoryDb
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen ITE
-ite_agent_storage = PostgresAgentStorage(table_name="ite_sessions", db_url=db_url)
+ite_agent_storage = PostgresAgentStorage(table_name="ite_agent_memory", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU ITE
 knowledge_base = TextKnowledgeBase(
@@ -61,7 +61,7 @@ def get_ite_agent(
         ],
         debug_mode=debug_mode,
         memory=AgentMemory(
-            db=PgMemoryDb(table_name="ite_memory", db_url=db_url),
+            db=PgMemoryDb(table_name="ite_agent_memory", db_url=db_url),
             create_user_memories=True,
             create_session_summary=True,
         ),

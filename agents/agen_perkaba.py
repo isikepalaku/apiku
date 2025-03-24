@@ -14,7 +14,7 @@ from db.session import db_url
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
-perkaba_agent_storage = PostgresAgentStorage(table_name="perkaba_agent_sessions", db_url=db_url)
+perkaba_agent_storage = PostgresAgentStorage(table_name="perkaba_agent_memory", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
@@ -62,7 +62,7 @@ def get_perkaba_agent(
             "Perhatikan perbedaan tahap penyidikan dan penyelidikan, tahap penyelidikan belum mengharuskan upaya paksa kecuali dalam hal tertangkap tangan",
         ],
         memory=AgentMemory(
-            db=PgMemoryDb(table_name="perkaba_memory", db_url=db_url),
+            db=PgMemoryDb(table_name="perkaba_agent_memory", db_url=db_url),
             create_user_memories=True,
             create_session_summary=True,
         ),

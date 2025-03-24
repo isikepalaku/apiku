@@ -16,7 +16,7 @@ from agno.tools.newspaper4k import Newspaper4kTools
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen KUHP
-kuhp_agent_storage = PostgresAgentStorage(table_name="kuhp_agent_sesi", db_url=db_url)
+kuhp_agent_storage = PostgresAgentStorage(table_name="kuhp_agent_memory", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait KUHP
 knowledge_base = TextKnowledgeBase(
@@ -64,7 +64,7 @@ def get_kuhp_agent(
         ],
         debug_mode=debug_mode,
         memory=AgentMemory(
-            db=PgMemoryDb(table_name="kuhp_memory", db_url=db_url),
+            db=PgMemoryDb(table_name="kuhp_agent_memory", db_url=db_url),
             create_user_memories=True,
             create_session_summary=True,
         ),

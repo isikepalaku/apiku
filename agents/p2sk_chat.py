@@ -16,7 +16,7 @@ from agno.tools.newspaper4k import Newspaper4kTools
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen P2SK
-p2sk_agent_storage = PostgresAgentStorage(table_name="p2sk_agent_sessions", db_url=db_url)
+p2sk_agent_storage = PostgresAgentStorage(table_name="p2sk_agent_memory", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU P2SK
 knowledge_base = TextKnowledgeBase(
@@ -66,7 +66,7 @@ def get_p2sk_agent(
         ],
         debug_mode=debug_mode,
         memory=AgentMemory(
-            db=PgMemoryDb(table_name="p2sk_memory", db_url=db_url),
+            db=PgMemoryDb(table_name="p2sk_agent_memory", db_url=db_url),
             create_user_memories=True,
             create_session_summary=True,
         ),
