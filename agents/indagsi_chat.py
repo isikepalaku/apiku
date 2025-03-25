@@ -18,7 +18,7 @@ from agno.tools.newspaper4k import Newspaper4kTools
 load_dotenv()  # Memuat variabel lingkungan dari file .env
 
 # Inisialisasi penyimpanan sesi dengan tabel khusus untuk agen di bidang Industri Perdagangan dan Investasi
-ipi_agent_storage = PostgresAgentStorage(table_name="ipi_agent_smemory", db_url=db_url)
+ipi_agent_storage = PostgresAgentStorage(table_name="indagsi_agent_memory", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait hukum Industri Perdagangan dan Investasi
 knowledge_base = TextKnowledgeBase(
@@ -75,7 +75,7 @@ def get_ipi_agent(
         ],
         debug_mode=debug_mode,
         memory=AgentMemory(
-            db=PgMemoryDb(table_name="indagsi_memory", db_url=db_url),
+            db=PgMemoryDb(table_name="indagsi_agent_memory", db_url=db_url),
             create_user_memories=True,
             create_session_summary=True,
         ),

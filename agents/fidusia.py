@@ -6,6 +6,8 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.models.google import Gemini
 from agno.tools.exa import ExaTools
+from agno.tools.crawl4ai import Crawl4aiTools
+from agno.tools.calculator import CalculatorTools
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 
@@ -16,7 +18,7 @@ def get_legal_expert_agent(debug_mode: bool = False) -> Agent:
     return Agent(
         name="Ahli Hukum Tipikor",
         role="Menganalisis penerapan pasal-pasal tindak pidana korupsi",
-        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
+        model=Gemini(id="gemini-2.0-flash"),
         tools=[
             ExaTools(
                 start_published_date=datetime.now().strftime("%Y-%m-%d"), 
@@ -24,21 +26,24 @@ def get_legal_expert_agent(debug_mode: bool = False) -> Agent:
             )
         ],
         instructions=dedent("""\
-            Anda adalah ahli hukum yang membantu penyidik menganalisis penerapan pasal-pasal tipikor 👨‍⚖️
+            Anda adalah ahli hukum yang membantu penyidik menggunakan Exa tools untuk menganalisis kasus tindak pidana korupsi (Tipikor) 👨‍⚖️
 
-            Keahlian:
-            1. Analisis unsur delik
-            2. Penerapan pasal-pasal UU Tipikor
-            3. Penafsiran unsur pidana
-            4. Analisis kerugian negara
-            5. Penentuan subjek hukum\
+            Tugas Anda:
+
+            1. Mengidentifikasi pasal-pasal dalam Undang-Undang Tipikor yang relevan dengan kasus yang sedang dianalisis.
+            2. Menjabarkan secara jelas dan terperinci setiap unsur dari pasal-pasal yang teridentifikasi.
+            3. Menggunakan Exa tools untuk mencocokkan fakta kasus dengan unsur-unsur delik yang relevan secara sistematis.
+            4. Melakukan analisis mendalam terhadap kerugian negara dengan dukungan data konkret dari Exa tools.
+            5. Menentukan subjek hukum yang terlibat dengan menggunakan Exa tools untuk mengelompokkan dan mengidentifikasi peran masing-masing pihak dalam kasus.
+            6. Mengacu pada yurisprudensi terkini dan contoh putusan pengadilan sebelumnya yang relevan melalui bantuan Exa tools, untuk memperkuat argumentasi hukum Anda.
+            7. Menyusun argumentasi hukum yang logis dan komprehensif untuk mendukung penerapan pasal yang tepat berdasarkan hasil analisis Exa tools.\
             
             Fokus Analisis:
-            1. Identifikasi pasal yang relevan
-            2. Penjabaran unsur-unsur pasal
-            3. Analisis kesesuaian fakta dengan unsur
-            4. Kajian yurisprudensi dan contoh putusan
-            5. Argumentasi penerapan pasal\
+            1. Pasal UU Tipikor yang relevan
+            2. Unsur-unsur tindak pidana secara rinci
+            3. Kesesuaian fakta dengan unsur delik
+            4. Subjek hukum dan peranannya
+            5. Yurisprudensi dan contoh putusan terkait\
         """),
         show_tool_calls=True,
         markdown=True,
@@ -49,7 +54,19 @@ def get_case_analyst_agent(debug_mode: bool = False) -> Agent:
     return Agent(
         name="Analis Kasus Tipikor",
         role="Menganalisis konstruksi kasus dan alat bukti",
-        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
+        model=Gemini(id="gemini-2.0-flash", temperature=0),
+        tools=[
+        CalculatorTools(
+            add=True,
+            subtract=True,
+            multiply=True,
+            divide=True,
+            exponentiate=True,
+            factorial=True,
+            is_prime=True,
+            square_root=True,
+        )
+    ],
         instructions=dedent("""\
             Anda adalah analis yang membantu penyidik membangun konstruksi kasus tipikor 🔍
 
