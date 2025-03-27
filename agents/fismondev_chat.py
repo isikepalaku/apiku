@@ -2,14 +2,13 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
+from agno.agent import Agent
 from agno.embedder.google import GeminiEmbedder
 from agno.models.google import Gemini
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory.db.postgres import PgMemoryDb
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
@@ -37,6 +36,11 @@ def get_fismondev_agent(
     session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
+    additional_context = ""
+    if user_id:
+        additional_context += "<context>"
+        additional_context += f"Kamu sedang berinteraksi dengan user: {user_id}"
+        additional_context += "</context>"
     return Agent(
         name="fismondev Chat",
         agent_id="fismondev-chat",
@@ -72,13 +76,8 @@ Pasal 36 uu fidusia
 Pemberi Fidusia  yang  mengalihkan,  menggadaikan,  atau  menyewakan Benda  yang  menjadi  objek  Jaminan  Fidusia  sebagaimana  dimaksud dalam  Pasal  23  ayat  (2)  yang  dilakukan  tanpa  persetujuan  
 tertulis terlebih dahulu dari Penerima Fidusia, dipidana dengan pidana penjara paling  lama  2  (dua)  tahun  dan  denda  paling  banyak  Rp.50.000.000,(lima puluh juta rupiah)."""
         ],
+        additional_context=additional_context,
         debug_mode=debug_mode,
-        # Store the memories and summary in a database
-        memory=AgentMemory(
-        db=PgMemoryDb(table_name="fismondev_agent_memory", db_url=db_url),
-        create_user_memories=True,
-        create_session_summary=True,
-    ),
         show_tool_calls=False,
         markdown=True
     )

@@ -2,7 +2,7 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
+from agno.agent import Agent
 from agno.embedder.google import GeminiEmbedder
 from agno.models.google import Gemini
 from agno.knowledge.text import TextKnowledgeBase
@@ -37,6 +37,12 @@ def get_tipidkor_agent(
     session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
+    additional_context = ""
+    if user_id:
+        additional_context += "<context>"
+        additional_context += f"Kamu sedang berinteraksi dengan user: {user_id}"
+        additional_context += "</context>"
+
     return Agent(
         name="TIPIDKOR Chat",
         agent_id="tipidkor-chat",
@@ -57,7 +63,7 @@ def get_tipidkor_agent(
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
-            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian google grounding.\n",
+            "Lakukan pencarian internet dengan web_search_using_tavily jika tidak ditemukan jawaban di basis pengetahuanmu.\n",
             
             "# Dasar Hukum\n"
             "- Selalu mengacu pada UU dan peraturan yang relevan\n"
@@ -78,13 +84,8 @@ def get_tipidkor_agent(
             "- Menyertakan sumber hukum yang dirujuk\n"
             "- Mengutip yurisprudensi relevan\n",
         ],
+        additional_context=additional_context,
         debug_mode=debug_mode,
-        # Store the memories and summary in a database
-        memory=AgentMemory(
-        db=PgMemoryDb(table_name="tipidkor_agent_memory", db_url=db_url),
-        create_user_memories=True,
-        create_session_summary=True,
-    ),
         show_tool_calls=False,
         markdown=True
     )

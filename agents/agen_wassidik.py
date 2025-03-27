@@ -6,7 +6,7 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
-from agno.vectordb.pgvector import PgVector, SearchType
+from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 
@@ -14,20 +14,20 @@ load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
 wassidik_agent_storage = PostgresAgentStorage(table_name="wassidik_agent_memory", db_url=db_url)
-
+COLLECTION_NAME = "perkabapolri"
 # Initialize text knowledge base with multiple documents
 knowledge_base = PDFUrlKnowledgeBase(
     urls=["https://celebesbot.com/pdf/LAMPIRANVSOPWASSIDIKPERKABA1TH2022TGL27DES2022.pdf", "https://celebesbot.com/pdf/PERKABAPELAKSPENYIDIKANTPNO1TH2022TGL27DES2022.pdf"],
-    vector_db=PgVector(
-        table_name="text_wassidik",
-        db_url=db_url,
-        search_type=SearchType.hybrid,
-        embedder=OpenAIEmbedder(id="text-embedding-3-small"),
-    ),
+    vector_db = Qdrant(
+        collection=COLLECTION_NAME,
+        url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
+        embedder=OpenAIEmbedder(),
+        api_key=os.getenv("QDRANT_API_KEY")
+    )
 )
 
 # Load knowledge base before initializing agent
-#knowledge_base.load(upsert=True)
+#knowledge_base.load(recreate=False)
 
 def get_wassidik_agent(
     user_id: Optional[str] = None,

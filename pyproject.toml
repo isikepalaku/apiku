@@ -8,7 +8,7 @@ authors = [{ name = "Phidata Team", email = "hello@phidata.com" }]
 dependencies = [
    "alembic",
   "agno",
-  "agno-aws",
+  "agno[aws]",
   "agno-docker",
   "beautifulsoup4",
   "duckduckgo-search",

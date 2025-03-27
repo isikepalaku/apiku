@@ -2,7 +2,7 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
+from agno.agent import Agent
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from custom_tools.googlescholar import GoogleScholarTools
@@ -48,7 +48,7 @@ def get_ite_agent(
         search_knowledge=True,
         read_chat_history=True,
         add_history_to_messages=True,
-        num_history_responses=3,
+        num_history_responses=5,
         description=(
             "Anda adalah penyidik kepolisian spesialisasi (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE."
         ),
@@ -60,11 +60,6 @@ def get_ite_agent(
             "Anjurkan untuk berkonsultasi dengan penyidik atau ahli hukum resmi apabila situasi hukum tertentu memerlukan analisis atau penanganan lebih lanjut.\n",
         ],
         debug_mode=debug_mode,
-        memory=AgentMemory(
-            db=PgMemoryDb(table_name="ite_agent_memory", db_url=db_url),
-            create_user_memories=True,
-            create_session_summary=True,
-        ),
         show_tool_calls=False,
         markdown=True
     )

@@ -2,7 +2,7 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
+from agno.agent import Agent
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
@@ -40,6 +40,11 @@ def get_tipidter_agent(
     team_session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
+    additional_context = ""
+    if user_id:
+        additional_context += "<context>"
+        additional_context += f"Kamu sedang berinteraksi dengan user: {user_id}"
+        additional_context += "</context>"
     return Agent(
         name="Penyidik Tindak Pidana Tertentu (Tipidter) Polri",
         agent_id="tipidter-chat",
@@ -52,7 +57,7 @@ def get_tipidter_agent(
         search_knowledge=True,
         read_chat_history=True,
         add_history_to_messages=True,
-        num_history_responses=3,
+        num_history_responses=5,
         description=(
             "Anda adalah penyidik kepolisian yang bekerja di unit Tindak Pidana Tertentu (Tipidter) "
             "di bawah Subdit Tipidter Ditreskrimsus Polda. Anda bertugas menangani kasus-kasus khusus "
@@ -106,12 +111,8 @@ def get_tipidter_agent(
             "- Selalu klarifikasi bahwa informasi bersifat umum\n"
             "- Jawab pertanyaan dalam bahasa Indonesia\n",
         ],
+        additional_context=additional_context,
         debug_mode=debug_mode,
-        memory=AgentMemory(
-            db=PgMemoryDb(table_name="tipidter_memory_agent", db_url=db_url),
-            create_user_memories=True,
-            create_session_summary=True,
-        ),
         show_tool_calls=False,
         markdown=True
     )

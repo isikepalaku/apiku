@@ -1,12 +1,10 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
-from db.tables import Base
 from db.session import db_url
+from db.tables import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -26,7 +24,7 @@ config.set_main_option("sqlalchemy.url", db_url)
 target_metadata = Base.metadata
 
 
-# -*- Only include tables that are in the target_metadata
+# Only include tables that are in the target_metadata
 # See: https://alembic.sqlalchemy.org/en/latest/autogenerate.html#omitting-table-names-from-the-autogenerate-process
 def include_name(name, type_, parent_names):
     if type_ == "table":
@@ -45,7 +43,6 @@ def run_migrations_offline() -> None:
 
     Calls to context.execute() here emit the given string to the
     script output.
-
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
@@ -66,7 +63,6 @@ def run_migrations_online() -> None:
 
     In this scenario we need to create an Engine
     and associate a connection with the context.
-
     """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),

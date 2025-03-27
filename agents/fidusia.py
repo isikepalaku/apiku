@@ -1,150 +1,97 @@
+"""🔍 Penyidik Tipikor Agent - Your AI Legal Investigation Assistant!
+
+This specialized agent combines legal analysis expertise with investigative capabilities 
+for corruption cases. The agent conducts thorough legal research, analyzes case evidence,
+and delivers structured investigation reports focusing on corruption criminal law.
+
+Key capabilities:
+- Advanced legal research and analysis
+- Case evidence evaluation
+- Criminal law interpretation
+- Jurisprudence analysis
+- Loss calculation support
+
+Example prompts to try:
+- "Analyze potential corruption in government procurement case"
+- "Evaluate state financial losses in infrastructure project"
+- "Research relevant court decisions for bribery cases"
+- "Investigate gratification patterns in public service"
+- "Examine misuse of authority in budget allocation"
+"""
+
 from datetime import datetime
 from typing import Optional
 from textwrap import dedent
 
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
-from agno.models.google import Gemini
 from agno.tools.exa import ExaTools
-from agno.tools.crawl4ai import Crawl4aiTools
-from agno.tools.calculator import CalculatorTools
+from agno.tools.tavily import TavilyTools
+from agno.tools.jina import JinaReaderTools
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 
 # Initialize storage for session management
-tipikor_research_storage = PostgresAgentStorage(table_name="tipikor_agent_memory", db_url=db_url)
+tipikor_storage = PostgresAgentStorage(table_name="tipikor_agent_memory", db_url=db_url)
 
-def get_legal_expert_agent(debug_mode: bool = False) -> Agent:
-    return Agent(
-        name="Ahli Hukum Tipikor",
-        role="Menganalisis penerapan pasal-pasal tindak pidana korupsi",
-        model=Gemini(id="gemini-2.0-flash"),
-        tools=[
-            ExaTools(
-                start_published_date=datetime.now().strftime("%Y-%m-%d"), 
-                type="keyword"
-            )
-        ],
-        instructions=dedent("""\
-            Anda adalah ahli hukum yang membantu penyidik menggunakan Exa tools untuk menganalisis kasus tindak pidana korupsi (Tipikor) 👨‍⚖️
-
-            Tugas Anda:
-
-            1. Mengidentifikasi pasal-pasal dalam Undang-Undang Tipikor yang relevan dengan kasus yang sedang dianalisis.
-            2. Menjabarkan secara jelas dan terperinci setiap unsur dari pasal-pasal yang teridentifikasi.
-            3. Menggunakan Exa tools untuk mencocokkan fakta kasus dengan unsur-unsur delik yang relevan secara sistematis.
-            4. Melakukan analisis mendalam terhadap kerugian negara dengan dukungan data konkret dari Exa tools.
-            5. Menentukan subjek hukum yang terlibat dengan menggunakan Exa tools untuk mengelompokkan dan mengidentifikasi peran masing-masing pihak dalam kasus.
-            6. Mengacu pada yurisprudensi terkini dan contoh putusan pengadilan sebelumnya yang relevan melalui bantuan Exa tools, untuk memperkuat argumentasi hukum Anda.
-            7. Menyusun argumentasi hukum yang logis dan komprehensif untuk mendukung penerapan pasal yang tepat berdasarkan hasil analisis Exa tools.\
-            
-            Fokus Analisis:
-            1. Pasal UU Tipikor yang relevan
-            2. Unsur-unsur tindak pidana secara rinci
-            3. Kesesuaian fakta dengan unsur delik
-            4. Subjek hukum dan peranannya
-            5. Yurisprudensi dan contoh putusan terkait\
-        """),
-        show_tool_calls=True,
-        markdown=True,
-        debug_mode=debug_mode,
-    )
-
-def get_case_analyst_agent(debug_mode: bool = False) -> Agent:
-    return Agent(
-        name="Analis Kasus Tipikor",
-        role="Menganalisis konstruksi kasus dan alat bukti",
-        model=Gemini(id="gemini-2.0-flash", temperature=0),
-        tools=[
-        CalculatorTools(
-            add=True,
-            subtract=True,
-            multiply=True,
-            divide=True,
-            exponentiate=True,
-            factorial=True,
-            is_prime=True,
-            square_root=True,
-        )
-    ],
-        instructions=dedent("""\
-            Anda adalah analis yang membantu penyidik membangun konstruksi kasus tipikor 🔍
-
-            Keahlian:
-            1. Analisis modus operandi
-            2. Pemetaan alat bukti
-            3. Konstruksi perkara
-            4. Analisis saksi-saksi
-            5. Penilaian urgensi kasus\
-            
-            Fokus Analisis:
-            1. Pengumpulan bukti permulaan
-            2. Identifikasi saksi kunci
-            3. Pemetaan peran tersangka
-            4. Kronologi tindak pidana
-            5. Penghitungan kerugian negara\
-        """),
-        show_tool_calls=True,
-        markdown=True,
-        debug_mode=debug_mode,
-    )
-
+# Initialize the corruption investigator agent
 def get_corruption_investigator(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
-    team_session_id: Optional[str] = None,
     debug_mode: bool = False,
 ) -> Agent:
-    legal_expert = get_legal_expert_agent(debug_mode)
-    case_analyst = get_case_analyst_agent(debug_mode)
-    
     return Agent(
-        name="Penyidik Senior Tipikor",
-        role="Penyidik khusus tindak pidana korupsi",
         agent_id="penyidik-tipikor",
+        name="Penyidik Tipikor",
+        role="Penyidik khusus tindak pidana korupsi",
         user_id=user_id,
         session_id=session_id,
-        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
-        storage=tipikor_research_storage,
-        team=[legal_expert, case_analyst],
-        instructions=dedent("""\
-            Anda adalah penyidik senior yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia🚔
+        model=OpenAIChat(id="gpt-4o-mini"),
+        storage=tipikor_storage,
+        tools=[TavilyTools(), JinaReaderTools()],
+        description=dedent("""\
+            Anda adalah penyidik senior yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia.
+            Kredensial Anda meliputi: 👨‍⚖️
 
-            Keahlian Utama:
-            1. Penyidikan kasus korupsi
-            2. Penerapan hukum acara
-            3. Koordinasi tim penyidik
-            4. Pengumpulan alat bukti
-            5. Penyusunan berkas perkara
-            
-            Tahapan Analisis:
-            1. Analisis Kasus 🔍
-               - Telaah laporan/pengaduan
-               - Analisis bukti permulaan
-               - Identifikasi modus operandi
-               - Pemetaan pihak terkait
-               - Nilai kerugian negara
-            
-            2. Penerapan Hukum ⚖️
-               - Analisis unsur pidana
-               - Penentuan pasal yang tepat
-               - Dasar hukum penyidikan
-               - Yurisprudensi terkait
-               - Konstruksi perkara
-            
-            3. Penyusunan Hasil 📋
-               - Resume kasus
-               - Uraian kronologis
-               - Analisis yuridis
-               - Alat bukti dan barang bukti
-               - Kesimpulan dan saran tindak lanjut
-            
+            - Analisis hukum pidana korupsi
+            - Penyidikan kasus Tipikor
+            - Analisis forensik keuangan
+            - Evaluasi bukti
+            - Penelusuran aset
+            - Analisis yurisprudensi
+            - Penghitungan kerugian negara
+            - Pembuatan berkas perkara
+            - Koordinasi antar instansi
+            - Analisis modus operandi\
+        """),
+        instructions=dedent("""\
+            1. Metodologi Penelitian Hukum 🔍
+               - Lakukan pencarian web kasus terkait
+               - Fokus pada putusan pengadilan terkait
+               - Prioritaskan yurisprudensi terbaru
+               - Identifikasi pasal-pasal kunci dan penerapannya
+               - Telusuri pola modus operandi dari kasus serupa
+
+            2. Kerangka Analisis 📊
+               - ekstrak temuan dari berbagai sumber dengan JinaReaderTools
+               - Evaluasi penerapan unsur delik
+               - Identifikasi tren putusan dan pola pemidanaan
+               - Analisis dampak kerugian negara
+               - Pemetaan pelaku dan perannya
+
+            3. Struktur Laporan 📋
+               - Susun resume kasus yang komprehensif
+               - Tulis analisis yang sistematis
+               - Jabarkan konstruksi perkara
+               - Sajikan temuan secara terstruktur
+               - Berikan kesimpulan berbasis bukti
+
             4. Standar Pembuktian ✓
-               - Minimal 2 alat bukti
-               - Keterkaitan antar bukti
-               - Kesesuaian dengan unsur pasal
-               - Kelengkapan formal
-               - Keakuratan materiil\
+               - Pastikan akurasi kutipan pasal
+               - Jaga ketepatan analisis hukum
+               - Sajikan perspektif berimbang
+               - Dukung dengan yurisprudensi
+               - Lengkapi dengan analisis forensik\
         """),
         expected_output=dedent("""\
             # Laporan Analisis Perkara Tipikor 🏛️

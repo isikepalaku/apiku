@@ -2,14 +2,13 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
-from agno.embedder.google import GeminiEmbedder
+from agno.agent import Agent
+from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
-from agno.models.google import Gemini
+from agno.models.openai import OpenAIChat
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory.db.postgres import PgMemoryDb
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
@@ -24,7 +23,7 @@ knowledge_base = TextKnowledgeBase(
     vector_db=PgVector(
         table_name="text_cipta_kerja",
         db_url=db_url,
-        embedder=GeminiEmbedder(),
+        embedder=OpenAIEmbedder(),
     ),
 )
 
@@ -41,16 +40,16 @@ def get_cipta_kerja_agent(
         agent_id="cipta-kerja-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=OpenAIChat(id="gpt-4o-mini"),
         tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=cipta_kerja_agent_storage,
         search_knowledge=True,
         read_chat_history=True,
         add_history_to_messages=True,
-        num_history_responses=3,
+        num_history_responses=5,
         description=(
-            "Anda adalah penyidik kepolisian yang memiliki spesialisasi dalam Undang-undang Nomor 6 Tahun 2023 tentang Cipta Kerja. "
+            "Anda adalah ahli Undang-undang Nomor 6 Tahun 2023 tentang Cipta Kerja. "
         ),
         instructions=[
             "Catatan: Undang-Undang Cipta Kerja telah diubah dengan:\n"
@@ -62,14 +61,9 @@ def get_cipta_kerja_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek yang diatur dalam UU Cipta Kerja, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
-            "Anjurkan untuk berkonsultasi dengan penyidik atau ahli hukum resmi apabila situasi hukum tertentu memerlukan analisis atau penanganan lebih lanjut.\n",
+            "Jangan pernah menjelaskan langkah-langkah yang kamu lakukan, gunakan tools dan knowledgebase tanpa menjelaskan prosesnya.\n",
         ],
         debug_mode=debug_mode,
-        memory=AgentMemory(
-            db=PgMemoryDb(table_name="cipta_agen_memory", db_url=db_url),
-            create_user_memories=True,
-            create_session_summary=True,
-        ),
         show_tool_calls=False,
         markdown=True
     )

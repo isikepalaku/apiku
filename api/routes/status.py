@@ -6,16 +6,16 @@ from utils.dttm import current_utc_str
 ## Router for health checks
 ######################################################
 
-health_check_router = APIRouter(tags=["Health"])
+status_router = APIRouter(tags=["Status"])
 
 
-@health_check_router.get("/health")
+@status_router.get("/health")
 def get_health():
     """Check the health of the Api"""
 
     return {
         "status": "success",
-        "router": "health",
+        "router": "status",
         "path": "/health",
         "utc": current_utc_str(),
     }

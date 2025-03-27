@@ -2,14 +2,13 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
+from agno.agent import Agent
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory.db.postgres import PgMemoryDb
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
@@ -65,11 +64,6 @@ def get_p2sk_agent(
             """"""
         ],
         debug_mode=debug_mode,
-        memory=AgentMemory(
-            db=PgMemoryDb(table_name="p2sk_agent_memory", db_url=db_url),
-            create_user_memories=True,
-            create_session_summary=True,
-        ),
         show_tool_calls=False,
         markdown=True
     )

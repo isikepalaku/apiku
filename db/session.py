@@ -10,7 +10,6 @@ db_url: str = db_settings.get_db_url()
 db_engine: Engine = create_engine(db_url, pool_pre_ping=True)
 
 # Create a SessionLocal class
-# https://fastapi.tiangolo.com/tutorial/sql-databases/#create-a-sessionlocal-class
 SessionLocal: sessionmaker[Session] = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
 
 
