@@ -39,6 +39,7 @@ dependencies = [
   "googlesearch-python",
   "pycountry",
   "mistralai",
+  "mcp",
   "groq",
   "huggingface_hub",
   "tantivy",

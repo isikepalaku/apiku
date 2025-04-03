@@ -12,6 +12,8 @@ from db.session import db_url
 from agno.memory.db.postgres import PgMemoryDb
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -37,13 +39,27 @@ def get_kuhp_agent(
     session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
+    additional_context = ""
+    if user_id:
+        additional_context += "<context>"
+        additional_context += f"Kamu sedang berinteraksi dengan user: {user_id}"
+        additional_context += "</context>"
     return Agent(
         name="Penyidik Kepolisian (Ahli UU KUHP)",
         agent_id="kuhp-chat",
         session_id=session_id,
         user_id=user_id,
         model=OpenAIChat(id="gpt-4o-mini"),
-        tools=[TavilyTools(), Newspaper4kTools()],
+        tools=[
+            TavilyTools(), 
+            Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
+        ],
         knowledge=knowledge_base,
         storage=kuhp_agent_storage,
         search_knowledge=True,
@@ -63,6 +79,7 @@ def get_kuhp_agent(
             "penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Gunakan TavilyTools apabila pertanyaan tidak ditemukan di knowledge_base.\n",
         ],
+        additional_context=additional_context,
         debug_mode=debug_mode,
         memory=AgentMemory(
             db=PgMemoryDb(table_name="kuhp_agent_memory", db_url=db_url),

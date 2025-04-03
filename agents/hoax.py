@@ -25,7 +25,7 @@ fact_checker_agent = Agent(
     instructions=[
         "1. Terima klaim atau pernyataan yang perlu diverifikasi.",
         "2. Gunakan GoogleSearch untuk mencari minimal 10 hasil berita dari sumber yang beragam dan terpercaya.",
-        "3. Baca dan ekstrak informasi penting dari setiap artikel menggunakan Newspaper4k.",
+        "3. Baca dan ekstrak informasi penting dari setiap artikel menggunakan 'read_article' .",
         "4. Bandingkan informasi dari berbagai sumber dan periksa kredibilitas masing-masing situs berita.",
         "5. Evaluasi bukti berdasarkan konsistensi dan keandalan informasi: simpulkan 'Hoax' jika mayoritas sumber menyangkal klaim, 'Benar' jika mayoritas mendukung, atau 'Belum dapat diverifikasi' jika bukti kurang.",
         "6. Berikan penjelasan singkat yang merangkum analisis dan merujuk pada sumber-sumber yang telah diperiksa."

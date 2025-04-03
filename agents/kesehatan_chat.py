@@ -2,14 +2,17 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
-from agno.embedder.google import GeminiEmbedder
+from agno.agent import Agent
+from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory.db.postgres import PgMemoryDb
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -22,7 +25,7 @@ knowledge_base = TextKnowledgeBase(
     vector_db=PgVector(
         table_name="text_uu_kesehatan",
         db_url=db_url,
-        embedder=GeminiEmbedder(),
+        embedder=OpenAIEmbedder(),
     ),
 )
 
@@ -34,12 +37,27 @@ def get_kesehatan_agent(
     session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
+    additional_context = ""
+    if user_id:
+        additional_context += "<context>"
+        additional_context += f"Kamu sedang berinteraksi dengan user: {user_id}"
+        additional_context += "</context>"
     return Agent(
         name="Penyidik Kepolisian (Ahli UU Kesehatan)",
         agent_id="uu-kesehatan-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash", grounding=True),
+        model=Gemini(id="gemini-2.0-flash-001"),
+        tools=[
+            GoogleSearchTools(), 
+            Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
+        ],
         knowledge=knowledge_base,
         storage=kesehatan_agent_storage,
         search_knowledge=True,
@@ -60,12 +78,8 @@ def get_kesehatan_agent(
             "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
             "Anjurkan untuk berkonsultasi dengan penyidik atau ahli hukum resmi apabila situasi hukum tertentu memerlukan analisis atau penanganan lebih lanjut.\n",
         ],
+        additional_context=additional_context,
         debug_mode=debug_mode,
-        memory=AgentMemory(
-            db=PgMemoryDb(table_name="kesehatan_agent_memory", db_url=db_url),
-            create_user_memories=True,
-            create_session_summary=True,
-        ),
         show_tool_calls=False,
         markdown=True
     )

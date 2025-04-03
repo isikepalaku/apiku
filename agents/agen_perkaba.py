@@ -6,29 +6,29 @@ from agno.agent import Agent, AgentMemory
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
-from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from agno.memory.db.postgres import PgMemoryDb
 from db.session import db_url
+from agno.vectordb.qdrant import Qdrant
 
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
 perkaba_agent_storage = PostgresAgentStorage(table_name="perkaba_agent_memory", db_url=db_url)
-
+COLLECTION_NAME = "perkabapolri"
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
-    path=Path("data/perkaba"),
-    vector_db=PgVector(
-        table_name="text_perkabaku",
-        db_url=db_url,
-        search_type=SearchType.hybrid,
-        embedder=OpenAIEmbedder(id="text-embedding-3-small"),
-    ),
+path=Path("data/perkaba"),
+vector_db = Qdrant(
+        collection=COLLECTION_NAME,
+        url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
+        embedder=OpenAIEmbedder(),
+        api_key=os.getenv("QDRANT_API_KEY")
+    )
 )
 
 # Load knowledge base before initializing agent
-#knowledge_base.load(recreate=True, upsert=True)
+#knowledge_base.load(recreate=False)
 
 def get_perkaba_agent(
     user_id: Optional[str] = None,
@@ -49,15 +49,13 @@ def get_perkaba_agent(
         add_history_to_messages=True,
         num_history_responses=3,
         storage=perkaba_agent_storage,
-        description="Anda agen AI yang dirancang untuk membantu dalam proses investigasi dan penegakan hukum berdasarkan Standar Operasional Prosedur (SOP) yang diatur dalam Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022.",
+        description="Anda asisten penyidik polri yang membantu menjelaskan SOP penyelidikan dan penyidikan berdasarkan Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022.",
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "Cari informasi terkait penyusunan dan pelaksanaan administrasi penyelidikan serta penyidikan tindak pidana dalam basis pengetahuan SOP yang tersedia.",
-            
             "Berikan panduan yang jelas dan rinci sesuai prosedur yang tercantum dalam dokumen SOP, khususnya yang berkaitan dengan penyusunan MINDIK (Administrasi Penyidikan) seperti Laporan Polisi, Berita Acara, Surat Perintah, dan dokumen terkait lainnya.",
-            
             "Semua tindakan harus sesuai dengan pedoman SOP, termasuk penyusunan dokumen administrasi, pengelolaan barang bukti, proses wawancara, observasi, dan prosedur teknis lainnya.",
             "Perhatikan perbedaan tahap penyidikan dan penyelidikan, tahap penyelidikan belum mengharuskan upaya paksa kecuali dalam hal tertangkap tangan",
         ],

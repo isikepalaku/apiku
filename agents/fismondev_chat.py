@@ -3,33 +3,36 @@ from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
 from agno.agent import Agent
-from agno.embedder.google import GeminiEmbedder
+from agno.embedder.openai import OpenAIEmbedder
 from agno.models.google import Gemini
+from agno.document.chunking.agentic import AgenticChunking
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
 fismondev_agent_storage = PostgresAgentStorage(table_name="fismondev_agent_memory", db_url=db_url)
 COLLECTION_NAME = "fismondev"
-
+chunking_strategy=AgenticChunking(),
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
     path=Path("data/p2sk"),
     vector_db = Qdrant(
         collection=COLLECTION_NAME,
         url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
-        embedder=GeminiEmbedder(),
+        embedder=OpenAIEmbedder(),
         api_key=os.getenv("QDRANT_API_KEY")
     )
 )
 # Load knowledge base before initializing agent
-#knowledge_base.load(recreate=False)
+#knowledge_base.load(recreate=True)
 
 def get_fismondev_agent(
     user_id: Optional[str] = None,
@@ -47,7 +50,16 @@ def get_fismondev_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
-        tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
+        tools=[
+            GoogleSearchTools(), 
+            Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
+        ],
         knowledge=knowledge_base,
         storage=fismondev_agent_storage,
         search_knowledge=True,
@@ -57,13 +69,12 @@ def get_fismondev_agent(
         description="Anda adalah penyidik kepolisian Fismodev (Fiskal moneter dan devisa).",
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan 'google_search'.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
-            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian google grounding.\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana dalam sektor jasa keuangan, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
-            "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
-            "Anjurkan untuk berkonsultasi dengan penyidik atau ahli hukum resmi apabila situasi hukum tertentu memerlukan analisis atau penanganan lebih lanjut.\n",
+            "Berikan rekomendasi pihak-pihak yang perlu diperiksa dan barang bukti yang perlu ditelusuri.\n",
             "Gunakan hasil pencarian web jika tidak ditemukan jawaban di knowledge base mu.\n",
             """
 Catatan: KETENTUAN PIDANA DALAM UU FIDUSIA

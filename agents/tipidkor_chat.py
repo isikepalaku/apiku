@@ -3,30 +3,32 @@ from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
 from agno.agent import Agent
-from agno.embedder.google import GeminiEmbedder
+from agno.embedder.openai import OpenAIEmbedder
 from agno.models.google import Gemini
 from agno.knowledge.text import TextKnowledgeBase
-from agno.vectordb.pgvector import PgVector, SearchType
+from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.memory.db.postgres import PgMemoryDb
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize storage
 tipidkor_agent_storage = PostgresAgentStorage(table_name="tipidkor_agent_memory", db_url=db_url)
-
+COLLECTION_NAME = "tipidkorkb"
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
     path=Path("data/tipidkor"),
-    vector_db=PgVector(
-        table_name="text_tipidkor",
-        db_url=db_url,
-        search_type=SearchType.hybrid,
-        embedder=GeminiEmbedder(),
-    ),
+    vector_db = Qdrant(
+        collection=COLLECTION_NAME,
+        url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
+        embedder=OpenAIEmbedder(),
+        api_key=os.getenv("QDRANT_API_KEY")
+    )
 )
 
 # Load knowledge base before initializing agent
@@ -49,7 +51,16 @@ def get_tipidkor_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
-        tools=[TavilyTools(), Newspaper4kTools()],
+        tools=[
+            TavilyTools(), 
+            Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
+        ],
         knowledge=knowledge_base,
         storage=tipidkor_agent_storage,
         search_knowledge=True,
@@ -83,6 +94,10 @@ def get_tipidkor_agent(
             "# Referensi\n"
             "- Menyertakan sumber hukum yang dirujuk\n"
             "- Mengutip yurisprudensi relevan\n",
+
+            "# Klarifikasi dan Follow up\n"
+            "- setelah membuat jawaban, follow up pertanyaan user dan berikan rekomendasi topik terkait\n"
+            "- Tinjau respons Anda untuk memastikan kejelasan, kedalaman, dan keterlibatan. \n",
         ],
         additional_context=additional_context,
         debug_mode=debug_mode,

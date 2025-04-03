@@ -1,0 +1,369 @@
+![](_page_0_Picture_4.jpeg)
+
+![](_page_0_Picture_7.jpeg)
+
+![](_page_1_Picture_1.jpeg)
+
+![](_page_1_Picture_4.jpeg)
+
+LAMPIRAN IV PERATURAN KEPALA BADAN RESERSE KRIMINAL POLRI NOMOR 1 TAHUN 2022 TENTANG STANDAR OPERASIONAL PROSEDUR ELEKTRONIK MANAJEMEN PENYIDIKAN
+
+### BAB I PENDAHULUAN
+
+## 1. Umum
+
+Pelaksanaan tugas penyidikan perkara tindak pidana mengalami banyak permasalahan berkaitan dengan profesionalisme penyidik dan manajemen pengendalian perkara tindak pidana yang masih belum memadai seiring dengan perkembangan teknologi informasi mangakibatkan meningkatnya komplain masyarakat dalam penanganan perkara tindak pidana.
+
+Dalam upaya meningkatkan profesionalisme penyidik dan manajemen pengendalian perkara tindak pidana yang modern serta sistem manajemen kinerja penyidik yang transparan dan akuntabel diperlukan pedoman yang kemudian dituangkan dalam bentuk SOP tentang manajemen penyidikan berbasis teknologi informasi melalui sistem aplikasi Elektronik Manajemen Penyidikan (EMP).
+
+# 2. Maksud dan Tujuan
+
+- a. Maksud
+Lampiran Standar Operasional Prosedur Pelaksanaan Penyidikan Tindak Pidana pada Penyelenggaraan sistem aplikasi EMP ini dimaksudkan untuk dijadikan pedoman bagi Penyidik dan Penyidik Pembantu Polri dalam menggunakan sistem aplikasi EMP untuk membuat dokumen administrasi penyelidikan dan penyidikan suatu perkara pidana, pemanfaatan sistem aplikasi EMP oleh pihak eksternal, dan bahan pertimbangan pimpinan untuk melakukan peningkatan kemampuan sistem aplikasi EMP.
+
+# b. Tujuan
+
+Penyelenggaraan sistem aplikasi EMP bertujuan agar:
+
+- 1) Penyidik dan Penyidik Pembantu Polri tertib dalam menggunakan sistem aplikasi EMP untuk membuat dokumen administrasi penyelidikan dan penyidikan suatu perkara pidana;
+- 2) Pemanfaatan sistem aplikasi EMP oleh pihak eksternal berjalan dengan lancar dan bermanfaat bagi kepentingan negara;
+- 3) Memudahkan untuk membuat bahan pertimbangan pimpinan dalam melakukan peningkatan kemampuan sistem aplikasi EMP;
+- 4) Mendukung proses penyelidikan dan penyidikan melalui pengembangan dan implementasi inisiatif teknologi informasi kepada seluruh fungsi-fungsi Organisasi dari Polsek, Polres, Polda sampai dengan Mabes Polri;
+- 5) Melakukan pendekatan strategis dari pengimplementasian Pengendalian proses penyidikan berbasis teknologi informasi dan sistem kinerja;
+- 6) Perancangan dan pengembangan sistem aplikasi EMP berfokus kepada integrasi, otomatisasi proses dan *intelligent system*;
+- 7) Meningkatkan produktivitas penyidik dalam melaksanakan penyidikan yang terintegrasi sehingga dapat mengurangi adanya penyalahgunaan wewenang yang dilakukan oleh penyidik dan sumber data kriminal nasional Polri;
+- 8) Masyarakat dapat mengetahui perkembangan proses penyidikan secara lebih mudah;
+- 9) Penyidik dapat merasa diawasi setiap saat dan integritas penyidik dapat terjaga;
+- 10) Melakukan perubahan terhadap budaya penyidik dari cara bekerja yang manual menjadi bekerja secara digital;
+- 11) Meningkatkan kinerja penyidik dalam penanganan suatu perkara pidana;
+- 12) Membantu penyidik untuk berkerja secara profesional, modern dan transparan;
+- 13) Analisa dan evaluasi kinerja penyidik dan penyidik pembantu secara cepat dan efisien.
+- 3. Ruang Lingkup
+
+Ruang lingkup Penyelenggaraan sistem aplikasi EMP meliputi Pengaturan penggunaan sistem aplikasi EMP, Pengelolaan *user* dalam sistem aplikasi EMP, Pembuatan e-mindik di dalam sistem aplikasi EMP, Pengawasan penggunaan sistem aplikasi EMP, Evaluasi menggunakan sistem aplikasi EMP, Operator *Help Desk* pada sistem aplikasi EMP.
+
+# 4. Tata Urut
+
+Pelaksanaan Penyelenggaraan sistem aplikasi EMP disusun dengan tata urut sebagai berikut:
+
+- Bab I Pendahuluan;
+- Bab II Pengaturan penggunaan sistem aplikasi EMP: Pengelompokan *User*.
+- Bab III Pengelolaan *User* dalam sistem aplikasi EMP:
+	- 1. Pengelolaan *User* ;
+		- 2. Pengelompokan pengelolaan *User* :
+			- a. Registrasi *User* ;
+			- b. Penonaktifan User.
+		- 3. Hal-hal yang perlu diperhatikan.
+- Bab IV Pembuatan *e-mindik* di dalam sistem aplikasi EMP:
+	- 1. Pembuatan *e-mindik*;
+	- 2. Bentuk *e-form* dan prosedur pembuatan *e-mindik*;
+	- 3. Persiapan pembuatan *e-mindik*;
+	- 4. Pengisian data *e-form*;
+	- 5. Pembuatan *e-LP*;
+	- 6. Penanganan *e-LP*;
+	- 7. Hal-hal yang perlu diperhatikan.
+- Bab V Pengawasan penggunaan sistem aplikasi EMP;
+	- 1. Sebagai pedoman standar dalam melakukan pengawasan;
+		- 2. Pelaksanaan pengawasan;
+		- 3. Hal-hal yang perlu diperhatikan.
+- Bab VI Evaluasi menggunakan sistem aplikasi EMP:
+	- 1. Sebagai pedoman standar dalam melakukan penilaian kinerja;
+	- 2. Persiapan evaluasi;
+	- 3. Mekanisme pelaksanaan evaluasi;
+
+- 4. Hal-hal yang perlu diperhatikan.
+#### Bab VII Operator *Help Desk* pada sistem aplikasi EMP:
+
+- 1. Operator *Help Desk* ;
+- 2. Penyelenggaraan Operator *Help Desk* ;
+- 3. Tanggung jawab;
+- 4. Objek Operator *Help Desk* ;
+- 5. Tata cara;
+- 6. Operasional;
+- 7. Etika pelaksanaan tanya dan jawab;
+- 8. Hal-hal yang perlu diperhatikan.
+
+Bab VIII Penutup.
+
+## BAB II
+
+## Pengaturan penggunaan sistem aplikasi EMP
+
+Pengelompokan *User* dalam sistem aplikasi EMP:
+
+- 1. *Data Owner* atau pemilik data, yaitu *User*.
+- 2. *Process Owner* atau pemilik proses, yaitu sebagai berikut:
+	- a. Admin Utama adalah milik Pejabat Polri yang berdasarkan jabatannya sebagai admin tingkat tertinggi yang memiliki otorisasi terhadap semua fungsi yang berada di dalam sistem aplikasi EMP.
+		- 1) Admin Utama diberikan kepada Kapusiknas Bareskrim Polri, Kabid Bangsis Pusiknas Bareskrim Polri dan Kabid Yaninfokrim Pusiknas Bareskrim Polri;
+		- 2) Tugas dari pemilik Admin Utama:
+			- a) Melakukan registrasi dan pembaruan data terhadap pemilik Admin Satker masing-masing Direktorat tingkat Bareskrim Polri, Polda dan Polres;
+			- *b)* Melakukan registrasi dan pembaruan terhadap pemilik *User* pada tingkat Direktur Bareskrim Polri dan Polda;
+			- c) Melakukan penambahan dan pembaruan terhadap Satker baru;
+			- d) Mengumpulkan kendala yang dihadapi pemilik *User* pada saat menggunakan sistem aplikasi EMP;
+			- e) Melakukan pengembangan sistem aplikasi EMP dan perangkat pendukung lainnya berdasarkan perkembangan teknologi terbaru.
+	- b. Admin Satker pada tingkat direktorat Bareskrim Polri, Polda, dan Polres adalah milik Pejabat Polri yang berdasarkan jabatannya sebagai admin dalam tingkatan tertentu yang memiliki otorisasi terhadap beberapa fungsi yang berada di dalam sistem aplikasi EMP.
+		- 1) Admin Satker diberikan kepada:
+			- a) pada tingkat Direktorat Bareskrim Polri adalah Para Kasubbagops Direktorat Bareskrim Polri;
+			- b) pada tingkat Direktorat Reserse Polda adalah Kabagbinopsnal Ditreskrimum, Ditreskrimsus dan Ditresnarkoba; dan
+			- c) pada tingkat Satuan Polres adalah Kaurbinops Satreskrim dan Satresnarkoba
+		- 2) Tugas dari pemilik Admin Satker:
+			- a) Melakukan pembaruan dan penyegaran data terhadap pemilik *User* yang masuk dalam lingkup wilayah jabatannya;
+			- b) Melakukan registrasi pada *User* baru;
+			- c) Memiliki otorisasi pengalihan status *User* dari aktif menjadi tidak aktif atau dari status tidak aktif menjadi aktif;
+- d) Mengumpulkan kendala yang dihadapi oleh pemilik *User* pada saat menggunakan sistem aplikasi EMP.
+- 3. *System Owner* atau pemilik sistem, yaitu Kapusiknas Bareskrim Polri dan Kabid Bangsis Pusiknas Bareskrim Polri;
+- 4. *End Users* atau *User* akhir, yaitu:
+	- a. *User* Eksekutif adalah milik Pejabat Polri yang berdasarkan jabatannya sebagai pengguna yang melakukan pengawasan terhadap kegiatan penyidikan yang dilakukan penyidik dan penyidik pembantu di dalam sistem aplikasi EMP.
+		- 1) *User* Eksekutif diberikan kepada:
+			- a) pada tingkat Bareskrim Polri adalah Kabareskrim dan Wakabareskrim Polri;
+			- b) pada tingkat Polda adalah Kapolda dan Wakapolda; dan
+			- c) pada tingkat Polres adalah Kapolres dan Wakapolres.
+		- 2) Tugas dari pemilik *User* Eksekutif:
+			- a) Melakukan pengawasan penyelesaian perkara;
+			- b) Melakukan pengawasan kinerja penyidik/kesatuan; dan
+			- c) Melakukan pengawasan kepatuhan penyidik dalam menggunakan sistem aplikasi EMP.
+	- b. *User* adalah milik Pejabat Polri yang memiliki kewenangan oleh peraturan perundang-undangan untuk melaksanakan penyelidikan dan penyidikan sebagai pengguna yang mempunyai akses terhadap fungsi e-mindik dan penilaian kinerja penyidik yang berada di dalam sistem aplikasi EMP.
+		- 1) *User* diemban oleh penyidik dan penyidik pembantu;
+		- 2) Tugas dari *User* :
+			- a) Menerima penugasan penyelidikan dan penyidikan dari Atasan Penyidik melalui Admin Satker;
+			- b) Melakukan pembuatan dokumen administrasi penyelidikan dan penyidikan dengan menggunakan sistem aplikasi EMP;
+			- c) Memberikan persetujuan melalui e-mindik sesuai dengan tingkatan tugas dan tanggungjawabnya sebagai bagian dari suatu proses penyelidikan dan penyidikan suatu perkara pidana;
+			- d) Memberikan masukan dan saran terhadap sistem aplikasi EMP yang sudah ada saat ini untuk perbaikan pada masa yang akan datang.
+
+### BAB III
+
+### Pengelolaan *User* dalam sistem aplikasi EMP
+
+- 1. Pengelolaan *User* dibuat untuk mengatur proses dalam melakukan akses terhadap sistem aplikasi EMP meliputi registrasi dan penonaktifan *User* sebelum dan setelah pemilik *User* mutasi baik keluar maupun masuk di dalam fungsi reserse.
+- *2.* Pengelompokan pengelolaan *User*
+	- *a.* Registrasi *User*
+		- 1) *User* baru adalah milik penyidik dan penyidik pembantu yang belum pernah terdaftar dalam sistem aplikasi EMP dan tidak pernah mengakses sistem aplikasi EMP.
+			- a) Registrasi *User* baru dilaksanakan oleh Admin Satker masingmasing Direktorat tingkat Bareskrim Polri, Polda, dan Polres;
+			- b) Proses registrasi meliputi:
+- (1) Penyerahan dokumen pendukung pengisian data diri oleh Penyidik dan Penyidik Pembantu yaitu Surat Telegram mutasi, Daftar Riwayat Hidup lengkap, Skep dan atau Sertifikat Sertifikasi penyidik atau penyidik pembantu kepada Admin Satker;
+- (2) Setelah dokumen pendukung pengisian data diri tersebut lengkap Admin Satker melakukan registrasi ke dalam sistem aplikasi EMP;
+- (3) Admin Satker menambahkan *username* dengan memasukan NRP penyidik dan penyidik pembantu;
+- (4) Setelah menambahkan *username*, Admin Satker memberitahukan ke penyidik dan penyidik pembantu untuk memasukkan *password* yang merupakan karakter kombinasi terdiri dari huruf besar dan huruf kecil, simbol khusus dan angka sebanyak minimal 8 (delapan) karakter;
+- (5) Pada saat pertama kali akses ke dalam sistem aplikasi EMP, *User* wajib mengganti *password* dengan *password* baru yang aman dan mudah diingat;
+- (6) Sebelum pemilik *User* melakukan akses terhadap sistem aplikasi EMP, Admin Satker memberikan pelatihan awal kepada pemilik *User* untuk menggunakan sistem aplikasi EMP berupa:
+	- a. Pengenalan modul-modul yang ada di dalam sistem aplikasi EMP;
+	- b. Memberitahukan hak dan kewajiban pemilik *User* ;
+	- c. Penanganan awal apabila terjadi masalah atau kendala.
+- (7) Admin Satker melakukan pelatihan khusus kepada *User* baru tersebut selama minimal 1 (satu) bulan, guna memastikan *User*  baru tersebut dapat menggunakan aplikasi dengan baik dan benar.
+- 2) *User* pernah terdaftar adalah penyidik dan penyidik pembantu yang pernah terdaftar dalam sistem aplikasi EMP dan pernah mengakses sistem aplikasi EMP.
+	- a) Registrasi *User* pernah terdaftar dilaksanakan oleh Admin Satker masing-masing Direktorat tingkat Bareskrim Polri, Polda dan Polres sesuai dengan kesatuan baru penyidik dan penyidik pembantu;
+	- b) Proses registrasi meliputi:
+		- (1) Penyerahan dokumen pendukung pengisian data diri oleh Penyidik dan Penyidik Pembantu yaitu Surat Telegram mutasi, Daftar Riwayat Hidup lengkap, Skep dan atau Sertifikat Sertifikasi penyidik atau penyidik pembantu kepada Admin Satker;
+		- (2) Setelah dokumen pendukung pengisian data diri tersebut lengkap Admin Satker melakukan pengaktifan *User* ke dalam sistem aplikasi EMP.
+- 3) *User* Atasan Penyidik adalah *User* unsur pimpinan atau Atasan penyidik dan penyidik pembantu yang bertugas untuk melakukan persetujuan/menandatangani dokumen administrasi penyelidikan dan penyidikan, pengawasan, pengendalian, dan manajemen pelaksanaan penyelidikan dan penyidikan dalam sistem aplikasi EMP.
+	- a) *User* Atasan Penyidik khusus Direktur
+		- (1) Registrasi *User* Direktur dilaksanakan oleh Admin Utama untuk mengakses sistem aplikasi EMP;
+- (2) *User* Direktur diberikan pelajaran pelatihan khusus oleh Admin Utama selama 1 (satu) minggu sehingga *User* Direktur dapat memberikan contoh tanda tangan Direktur untuk dimasukkan ke dalam sistem aplikasi EMP sehingga semua *emindik* yang disetujui oleh *User* Direktur akan mendapat tanda tangan digital/tanda tangan elektronik, memahamimetode penggunaan sistem aplikasi EMP, modul-modul yang ada di sistem aplikasi EMP, bagaimana melakukan pengawasan dengan sistem aplikasi EMP, bagaimana melihat kinerja masing-masing penyidik atau kesatuan dalam sistem aplikasi EMP;
+- (3) Pengawasan *User* Direktur secara khusus dilakukan oleh *User* Eksekutif Bareskrim Polri, *User* Eksekutif Polda dan Admin Utama.
+- b) *User* Atasan Penyidik khusus Kasat
+	- (1) Registrasi *User* Kasat dilaksanakan oleh Admin Satker masing-masing Polres sesuai dengan kesatuan baru Kasat;
+	- (2) *User* Kasat diberikan pelajaran pelatihan khusus oleh Admin Utama selama 1 (satu) minggu sehingga *User* Kasat dapat memberikan contoh tanda tangan Kasat untuk dimasukkanke dalam sistem aplikasi EMP sehingga semua *e-mindik* yang disetujui oleh *User* Kasat akan mendapat tanda tangan digital/tanda tangan elektronik, memahami metode penggunaan sistem aplikasi EMP, modul-modul yang ada di sistem aplikasi EMP, bagaimana melakukan pengawasan dengan sistem aplikasi EMP, bagaimana melihat kinerja masing-masing penyidik atau kesatuan dalam sistem aplikasi EMP;
+	- *(3)* Pengawasan *User* Kasat secara khusus dilakukan oleh *User* Eksekutif Polda, Admin Utama dan Admin Satker.
+- c) *User* Atasan Penyidik khusus Ketua Tim
+	- (1) Registrasi *User* Ketua Tim dilaksanakan oleh Admin Satker masing-masing Direktorat tingkat Bareskrim Polri, Polda dan Polres sesuai dengan kesatuan baru Ketua Tim penyidik dan penyidik pembantu;
+	- (2) User Ketua Tim meliputi Kasubdit pada tingkat Bareskrim atau Polda, Kanit pada tingkat Polres;
+	- (3) Dokumen yang disetujui/ditandatangani oleh User Ketua Tim meliputi dokumen tanpa nomor Surat;
+	- (4) Pengawasan User Ketua Tim secara khusus dilakukan oleh User Direktur pada tingkat Bareskrim atau Polda, User Kasat pada tingkat Polres dan Admin Utama.
+- 4) Admin Satker merupakan admin yang diregistrasi oleh Admin Utama untuk mengakses sistem aplikasi EMP
+	- a) Admin Satker diberikan pelajaran pelatihan khusus oleh Admin Utama selama 1 (satu) minggu sehingga Admin Satker dapat memahami metode penggunaan sistem aplikasi EMP, modulmodul yang ada di sistem aplikasi EMP, bagaimana melakukan pengawasan dengan sistem aplikasi EMP, bagaimana melihat kinerja masing-masing penyidik atau kesatuan dalam sistem aplikasi EMP.
+	- b) Pengawasan Admin Satker dilakukan secara khusus oleh pemilik Admin Utama.
+- *b.* Penonaktifan *User*
+	- 1) Penonaktifan *User* dilakukan oleh Admin Satker;
+- 2) Pada saat *User* mutasi keluar dari fungsi reserse bidang penyidikan maka Admin Satker segera menonaktifkan *User* tersebut;
+- 3) Pada saat *User* mutasi akan tetapi tetap pada fungsi reserse bidang penyidikan maka Admin Satker akan memindahkan *User* tersebut ke kesatuan baru;
+- 4) Jika *User* menggunakan perangkat komputer atau laptop dinas maka perangkat tersebut harus diserahterimakan dengan dilengkapi Berita Acara Serah Terima ke Admin Satker pada saat proses penonaktifan atau serah terima tersebut;
+- 5) Admin Satker melakukan penyetelan ulang atau penghapusan terhadap semua data yang terdapat dalam perangkat dinas tersebut.
+- 3. Hal-hal yang perlu diperhatikan:
+	- a. *User* tidak boleh memberikan *username* dan *password* kepada *User* lain;
+	- b. *User* tidak boleh membocorkan atau menjual data ke pihak lain;
+	- c. *User* tidak boleh menggunakan jaringan komunikasi elektronik atau internet yang tidak aman;
+	- *d. User* dapat melaporkan kendala terkait sistem aplikasi EMP ke Operator *Help Desk.*
+
+## BAB IV
+
+Pembuatan e-mindik di dalam sistem aplikasi EMP
+
+- 1. Pembuatan *e-mindik* di dalam sistem aplikasi EMP sebagai pedoman dalam melakukan pengoperasian *e-form* yang dilakukan oleh *User* pada proses Penyelidikan dan Penyidikan di dalam sistem aplikasi EMP;
+- 2. Bentuk *e-form* dan prosedur pembuatan *e-mindik* pada sistem aplikasi EMP mengikuti aturan yang berlaku di KUHAP dan Perkap Nomor6 Tahun 2019 tentang penyidikan tindak pidana;
+- 3. Persiapan pembuatan *e-mindik* di dalam sistem aplikasi EMP meliputi:
+	- a. Komputer, Laptop dan Media Elektronik lainnya yang terhubung dengan jaringan komunikasi elektronik atau internet;
+	- *b.* Masuk atau *Login* ke dalam sistem aplikasi EMP menggunakan *User* masing-masing.
+- 4. *User* melakukan pengisian data *e-form*:
+	- a. Administrasi penyidikan yang masuk dalam berkas perkara;
+	- b. Administrasi penyidikan yang tidak masuk dalam berkas perkara;
+	- c. Administrasi penyelidikan;
+	- d. Data Personil Reserse pengemban sistem aplikasi EMP;
+	- e. Data penggunaan anggaran penyelidikan dan penyidikan;
+	- f. SP2HP; dan
+	- g. Dokumen penting yang lainnya terkait dengan penyelidikan dan penyidikan.
+- 5. Pembuatan *e-LP* dapat dilakukan melalui sistem aplikasi pembuatan LP yang sudah terintegrasi dengan sistem aplikasi EMP sejak 1 Juni 2020 yaitu sistem aplikasi *Daily Operation Reporting System* ( *DORS* ) milik SOPS Polri atau oleh *User* yang ditugaskan diluar kewenangannya sebagai penyidik dan penyidik pembantu;
+- 6. Penanganan *e-LP* terkait pembuatan *e-mindik*:
+	- a. Penyaluran *e-LP* dilakukan oleh Admin Satker dengan mengisi disposisi atau mengirimkan *e-LP* tersebut ke *User* khusus Atasan Penyidik;
+	- b. *User* khusus Atasan Penyidik mendisposisi kepada Tim yang ditunjuk untuk menangani *e-LP* tersebut kemudian di-Registrasi Tim melalui Admin Satker;
+- c. Salah satu anggota dari Tim yang telah ditunjuk dan di-Registrasi Tim, dengan menggunakan *User* masing-masing mendaftarkan *User* satu Timnya yang lain untuk dapat menangani dan mengakses *e-LP* dengan membuat *e-mindik* Surat Perintah Penyelidikan apabila dimulai dari Penyelidikan atau *e-mindik* Surat Perintah Penyidikan apabila dimulai dari Penyidikan melalui *e-form* yang tersedia dalam sistem aplikasi EMP;
+- d. Apabila *e-mindik* Surat Perintah yang dibuat telah diberi nomor register surat dan sudah disetujui oleh Admin Satker atau dokumen valid maka *User* dapat melakukan penambahan *e-mindik* lain dengan melakukan pengisian data pada *e-form* menggunakan *User* masingmasing;
+- e. *e-mindik* dalam sistem aplikasi EMP dapat dilakukan perubahan dengan menghubungi Operator *Help Desk* sistem aplikasi EMP melalui tombol bantuan yang ada dalam sistem aplikasi EMP atau nomor *Call Center* Operator *Help Desk* sistem aplikasi EMP dengan disertai alasan perubahan;
+- f. *User* dapat membuat *e-form* dan meletakkan pengingat (*alert*) kepada *User* khusus Atasan Penyidik dalam sistem aplikasi EMP sehingga *eform* tersebut mendapat urutan prioritas dalam daftar persetujuan yang ada di *User* khusus Atasan Penyidik untuk mendapatkan persetujuan.
+- 7. Hal-hal yang perlu diperhatikan:
+	- a. Setiap *User* pada sistem aplikasi EMP agar menyiapkan syarat formil saat memasukan data serta dokumen administrasi penyelidikan dan penyidikan dalam sistem aplikasi EMP;
+	- b. Dalam mengakses dan memasukan data *e-mindik* agar Penyidik dan Penyidik Pembantu melakukan koordinasi kepada Atasan Penyidik dan Admin Satker;
+	- c. Setiap *User* agar segera melakukan pembaruan data serta dokumen administrasi penyelidikan dan penyidikan setiap selesai melakukan tahapan kegiatan penyelidikan dan penyidikan.
+
+# BAB V
+
+# Pengawasan penggunaan sistem aplikasi EMP
+
+- 1. Sebagai pedoman standar dalam melakukan pengawasan terhadap pengguna, kegiatan, data serta dokumen administrasi penyelidikan dan penyidikan;
+- 2. Pelaksanaan pengawasan penggunaan sistem aplikasi EMP:
+	- a. Tugas dan tanggung jawab pimpinan selaku pengawas *user* pada sistem aplikasi EMP:
+		- 1) Melakukan pengawasan terhadap kepatuhan *User* dalam menggunakan sistem aplikasi EMP;
+		- 2) Melakukan pengawasan terhadap data masuk maupundokumen administrasi penyelidikan dan penyidikan yang dilakukan oleh Penyidik dan Penyidik Pembantu;
+		- 3) Melakukan pengawasan terhadap validasi data maupun dokumen administrasi penyelidikan dan penyidikan yang dimasukan oleh Penyidik dan Penyidik Pembantu.
+	- b. Kewajiban *User* sistem aplikasi EMP:
+		- 1) Menjaga kerahasiaan *username* dan *password* yang telah diberikan;
+		- 2) Menjaga kerahasiaan data maupun informasi dalam sistem aplikasi EMP;
+- 3) Melakukan tertib administrasi penginputan data dan dokumen ke dalam sistem aplikasi EMP;
+- 4) Selalu mengakses sistem aplikasi EMP untuk validasi dan memperbarui data.
+- c. Mekanisme pengawasan penggunaan sistem aplikasi EMP:
+	- 1) Tingkat Mabes:
+		- a) Pusiknas Bareskrim Polri:
+			- 1. Melakukan identifikasi keamanan terhadap *User* secara berkala per triwulan dengan melakukan otentifikasi melalui penerapan penggunaan *One Time Password* (OTP);
+			- 2. Melakukan analisa dan evaluasi terhadap hak akses *User* pada tingkat pusat maupun kewilayahan untuk menghindari adanya penyalahgunaan data pada sistem aplikasi EMP oleh *User* yang sudah tidak memiliki hak akses untuk masuk ke dalam dan mengoperasikan sistem aplikasi EMP;
+			- 3. Melakukan monitoring terhadap data yang dimasukan dan dokumen yang diunggah pada tingkat pusat maupun kewilayahan sehingga tidak terjadi perbedaan antara data pada sistem aplikasi EMP dengan data dokumen riil;
+			- 4. Pelaksanaan penyelenggaraan sistem aplikasi EMP dapat melakukan pertukaran data dan informasi dengan Satker Polri atau Stakeholder melalui persetujuan Kabareskrim Polri serta dengan Kementerian dan Lembaga melalui persetujuan Kapolri.
+		- b) Direktorat Bareskrim Polri:
+			- 1. Melakukan analisa dan evaluasi terhadap hak akses *User* pada tingkat Direktorat untuk menghindari adanya penyalahgunaan data pada sistem aplikasi EMP oleh *User* yang sudah tidak memiliki hak akses untuk masuk ke dalam dan mengoperasikan sistem aplikasi EMP;
+			- 2. Melakukan monitoring terhadap data yang dimasukan dan dokumen yang diunggah pada tingkat Direktorat Bareskrim Polri sehingga tidak terjadi perbedaan antara data pada sistem aplikasi EMP dengan data dokumen riil.
+		- 2) Tingkat Polda:
+			- a) Melakukan analisa dan evaluasi terhadap hak akses *User* pada tingkat Ditreskrimum, Ditreskrimsus dan Ditresnarkoba untuk menghindari adanya penyalahgunaan data pada sistem aplikasi EMP oleh *User* yang sudah tidak memiliki hak akses untuk masuk ke dalam dan mengoperasikan sistem aplikasi EMP;
+			- b) Melakukan monitoring terhadap data yang dimasukan dan dokumen yang diunggah oleh *User* pada tingkat Ditreskrimum, Ditreskrimsus dan Ditresnarkoba sehingga tidak terjadi perbedaan antara data pada sistem aplikasiEMP dengan data dokumen riil.
+		- 3) Tingkat Polres:
+			- *a)* Melakukan analisa dan evaluasi terhadap hak akses *User* pada tingkat Satreskrim, Satresnarkoba dan Polsek jajaran
+
+untuk menghindari adanya penyalahgunaan data pada sistem aplikasi EMP oleh *User* yang sudah tidak memiliki hak akses untuk masuk ke dalam dan mengoperasikan sistem aplikasi EMP;
+
+- b) Melakukan monitoring terhadap data yang dimasukan dan dokumen yang diunggah oleh *User* pada tingkat Satreskrim, Satresnarkoba dan Polsek jajaran sehingga tidak terjadi perbedaan antara data pada sistem aplikasiEMP dengan data dokumen riil;
+- 1. Hal-hal yang perlu diperhatikan:
+	- a. Melakukan supervisi untuk menginvetarisir kendala penggunaan sistem aplikasi EMP;
+	- b. Melakukan asistensi terhadap permasalahan yang timbul pada saat melaksanakan pengawasan penggunaan sistem aplikasi EMP;
+	- c. Melakukan pelatihan terhadap penyidik, penyidik pembantu dan Admin Satker pada tingkat pusat dan kewilayahan.
+
+## BAB VI
+
+### Evaluasi menggunakan sistem aplikasi EMP
+
+- 1. Sebagai pedoman standar dalam melakukan penilaian kinerja serta memberikan petunjuk dan arahan terhadap penyidik dan penyidik pembantu;
+- 2. Persiapan evaluasi menggunakan sistem aplikasi EMP:
+	- a. Melakukan pengumpulan permasalahan pada sistem aplikasi EMP;
+	- b. Melakukan komunikasi terhadap permasalahan kepada Satker terkait;
+	- c. Melakukan koordinasi untuk mengatasi permasalahan yang dihadapi Satker terkait.
+- 3. Mekanisme pelaksanaan evaluasi menggunakan sistem aplikasi EMP:
+	- a. Tingkat Pusat:
+		- 1) Pusiknas Bareskrim Polri
+			- a) Melakukan evaluasi secara menyeluruh terhadap pelaksanaan penyelenggaraan sistem aplikasi EMP pada Tingkat Pusat maupun Kewilayahan;
+			- b) Melakukan evaluasi harian, bulanan, triwulan, semester dan tahunan yang didapat dari hasil monitoring pada sistem aplikasi EMP.
+		- 2) Direktorat Bareskrim Polri
+			- a) Melakukan evaluasi secara menyeluruh terhadap pelaksanaan dan penggunaan sistem aplikasi EMP pada tingkat Direktorat Bareskrim Polri;
+			- b) Melakukan evaluasi mingguan, bulanan, triwulan, semester dan tahunan yang didapat dari hasil monitoring pada sistem aplikasi EMP.
+	- b. Tingkat Polda:
+		- 1) Melakukan evaluasi secara menyeluruh terhadap pelaksanaan dan penggunaan sistem aplikasi EMP pada tingkat Ditreskrimum, Ditreskrimsus dan Ditresnarkoba;
+		- 2) Melakukan evaluasi mingguan, bulanan, triwulan, semester dan tahunan yang didapat dari hasil monitoring pada sistem aplikasi EMP.
+	- c. Tingkat Polres:
+- 1) Melakukan evaluasi secara menyeluruh terhadap pelaksanaan dan penggunaan sistem aplikasi EMP pada tingkat Satreskrim, Satresnarkoba dan Polsek jajaran;
+- 2) Melakukan evaluasi mingguan, bulanan, triwulan, semester dan tahunan yang didapat dari hasil monitoring pada sistem aplikasi EMP.
+- 4. Hal-hal yang perlu diperhatikan:
+	- a. Evaluasi sistem aplikasi EMP diharapkan dapat menggambarkan situasi kriminalitas, Tren Kejahatan, Kasus Menonjol, ModusOperandi, Jam Rawan berdasarkan jenis kejahatan, peta kerawanan, Daftar Pencarian Orang (DPO) yang di tampilkan pada *Dashboard* sistem aplikasi EMP;
+	- b. Evaluasi sistem aplikasi EMP diharapkan dapat menggambarkan tentang kendala dan hambatan dalam penginputan data dan pengunggahan dokumen;
+	- c. Evaluasi sistem aplikasi EMP dikeluarkan atau disajikan dalam bentuk rekapitulasi:
+		- 1) Jumlah Total Tindak Pidana;
+		- 2) Jumlah Total Penyelesaian Tindak Pidana;
+		- 3) Jumlah Total Tindak Pidana berdasarkan Jenis Kejahatan;
+		- 4) Jumlah Total Penyelesaian Tindak Pidana berdasarkan Jenis Kejahatan;
+		- 5) Persentase Penyelesaian Tindak Pidana;
+		- 6) Jumlah Tunggakan Perkara;
+		- 7) Jumlah total kerugian;
+		- 8) Data lokasi dan peta kejahatan;
+		- 9) Data jumlah jenis barang bukti;
+		- 10) Data korban/tersangka berdasarkan jenis kelamin, umur, warganegara, pekerjaan, pendidikan dan jenis kejahatan; dan
+		- 11) Data lainnya yang diperlukan.
+
+# BAB VII
+
+## Operator *Help Desk* pada sistem aplikasi EMP
+
+- 1. Operator *Help Desk* sistem aplikasi EMP merupakan sarana untuk memberikan bantuan kepada *User* apabila terjadi hambatan dalam pelaksanaan penggunaan sistem aplikasi *EMP*, memastikan dan menjamin jalannya proses penyelidikan serta penyidikan yang dilakukan oleh *User* ;
+- 2. Penyelenggaraan Operator *Help Desk* dilaksanakan oleh KabidYaninfokrim Pusiknas Bareskrim Polri meliputi tanggung jawab terhadap operasionalisasi Operator *Help Desk* diantaranya analisa dan evaluasi:
+	- a. Data penyelidikan dan penyidikan;
+	- b. Data SPPT-TI; dan
+	- c. *User*.
+- 3. Objek Operator *Help Desk* :
+	- a. Data penyelidikan dan penyidikan;
+	- b. Data SPPT-TI;
+	- c. *User*.
+- 4. Tata cara:
+	- a. Pelaporan keluhan dan komplain oleh *User* yaitu dengan menghubungi Operator *Help Desk* melalui:
+		- 1) Nomor *Call Center* dengan nomor 08111611442 dan 08111611443;
+- 2) *Email* Polri atau Surel dengan alamat emp.bareskrim@polri.go.id;
+- 3) Fitur chat dalam sistem aplikasi EMP.
+- b. Penanganan oleh Operator *Help Desk* :
+	- 1) Mencatat keluhan dan komplain dari pemilik *User* ;
+		- *2)* Memberikan solusi atau jawaban melalui media pada poin nomor 4 huruf a di atas sesuai dengan kompetensi atau permasalahan yang dipahami. Bila diperlukan, jawaban dapat diberikan berupa layanan *remote desktop;*
+		- 3) Apabila di luar kompetensi ataupun permasalahan yang tidak dipahami segera menghubungi Tim Teknis.
+		- 4) Jika terjadi kendala diluar cakupan (*force majeure*) segera menginformasikan ke seluruh *User* pengguna sistem aplikasi EMP;
+		- 5) Setelah melaksanakan dinas, wajib membuat laporan secara lisan maupun tertulis kepada Kabid Yaninfokrim Pusiknas Bareskrim Polri.
+- c. Penanganan oleh Tim Teknis:
+	- 1) Memberikan layanan bantuan atau saran terhadap permasalahan teknis atas pemberitahuan dari Operator *Help Desk* ;
+	- 2) Mencatat keluhan dan komplain dari Operator *Help Desk* dan memberikan lamanya estimasi pekerjaan.
+- 5. Operasional sistem aplikasi EMP:
+	- a. Operator *Help Desk* mengoperasikan:
+		- 1) Monitoring operasional penyelidikan dan penyidikan:
+			- a) Status penanganan perkara;
+				- b) Pembuatan dokumen administrasi penyelidikan dan penyidikan serta administrasi umum;
+				- c) Status penyelesaian perkara.
+		- 2) Monitoring operasional SPPT-TI:
+			- a) Status pengiriman data;
+			- b) Status penerimaan data.
+		- 3) Penyajian data matrik, grafik dan peta dari dalam sistem aplikasi EMP.
+	- b. Tim Teknis mengoperasikan:
+		- 1) Monitoring sistem aplikasi EMP yang meliputi:
+			- a) Bahasa pemrograman sistem aplikasi EMP;
+			- b) *Database* sistem aplikasi EMP;
+			- c) Jaringan *data center* sistem aplikasi EMP;
+			- d) Keamanan sistem aplikasi EMP.
+		- 2) Pencadangan sistem aplikasi EMP secara berkala;
+		- 3) Pelaporan berkala hasil monitoring poin nomor 1) dan poinnomor 2);
+		- 4) Pemberian estimasi penyelesaian masalah kepada *Operator Help Desk* untuk menginformasikan kepada *User* apabila terdapat gangguan yang dilaporkan Operator *Help Desk* terkait dengan poin huruf b. nomor 1).
+- 6. Pelaksanaan tanya dan jawab terkait keluhan pada sistem aplikasi EMP:
+	- a. Menggunakan bahasa Indonesia yang sopan dan mudah dipahami;
+	- b. Mengucapkan salam, contoh: Selamat pagi, Selamat siang, Selamat sore, dan Selamat malam;
+	- c. Memperkenalkan identitas diri Operator *Help Desk* dengan menyebutkan nama, pangkat, dan jabatan;
+- d. Menanyakan identitas *User* dengan meminta informasi nama, nrp, pangkat, jabatan dan kesatuan;
+- e. Operator *Help Desk* melakukan pengecekan identitas *User* pada sistem informasi personil dalam sistem aplikasi EMP, jika tidak menjawab atau data yang disampaikan tidak sesuai dengan data personil pada sistem aplikasi EMP maka tidak akan dilayani;
+- f. Apabila data identitas sesuai maka Operator *Help Desk* menerima dan mencatat keluhan dari pemilik *User* ;
+- g. Memberikan solusi atau jawaban melalui poin nomor 4. huruf a. di atas sesuai dengan kompetensi atau permasalahan yang dipahami, bila diperlukan jawaban Operator *Help Desk* dapat memberikan layanan berupa *remote dekstop*;
+- h. Apabila di luar kompetensi ataupun permasalahan yang tidak dipahami, maka Operator *Help Desk* segera menghubungi Tim Teknis;
+- i. Apabila keluhan sudah selesai ditangani agar mengucapkan terimakasih dan salam penutup.
+- 7. Hal-hal yang perlu diperhatikan:
+	- a. Operator *Help Desk* :
+		- 1) Dilarang memberikan informasi *username* dan *password* yang digunakan kepada *User* lain atau pihak lain karena bersifat rahasia;
+		- 2) Dalam menjalankan tugas dilarang membuka situs-situs berbahaya dan dilarang oleh dinas.
+	- b. Tim Teknis:
+		- 1) Dilarang memperjual belikan informasi secara lisan atau melalui media elektronik dan memberikan informasi tanpa persetujuan Kapusiknas Bareskrim Polri selaku *system owner* ;
+		- 2) Menjaga kerahasiaan data baik dari dalam sistem aplikasi EMP maupun dari luar sistem aplikasi EMP;
+		- 3) Menjaga ketersediaan atau keutuhan data yang diperlukan untuk seluruh *User* pada sistem aplikasi EMP;
+		- 4) Menjaga dan memelihara fasilitas kerja milik Bareskrim Polri yang digunakan dan dipercayakan kepada Tim Teknis.
+
+### BAB VIII PENUTUP
+
+Demikian SOP Operasionalisasi sistem aplikasi EMP disusun untuk dijadikan pedoman dalam pelaksanaan tugas.
+
+> Ditetapkan di Jakarta pada tanggal 27 Desember 2022
+
+KEPALA BADAN RESERSE KRIMINAL POLRI
+
+Drs. AGUS ANDRIANTO, S.H., M.H. KOMISARIS JENDERAL POLISI

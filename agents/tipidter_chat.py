@@ -3,7 +3,7 @@ from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
 from agno.agent import Agent
-from agno.embedder.google import GeminiEmbedder
+from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.qdrant import Qdrant
@@ -13,6 +13,8 @@ from rich.json import JSON
 from agno.memory.db.postgres import PgMemoryDb
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 
 load_dotenv()  # Memuat variabel lingkungan dari file .env
 
@@ -26,13 +28,13 @@ knowledge_base = TextKnowledgeBase(
     vector_db = Qdrant(
         collection=COLLECTION_NAME,
         url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
-        embedder=GeminiEmbedder(),
+        embedder=OpenAIEmbedder(),
         api_key=os.getenv("QDRANT_API_KEY")
     )
 )
 
 # Jika diperlukan, muat basis pengetahuan (gunakan recreate=True untuk rebuild)
-#knowledge_base.load(recreate=False)
+#knowledge_base.load(recreate=True)
 
 def get_tipidter_agent(
     user_id: Optional[str] = None,
@@ -51,7 +53,16 @@ def get_tipidter_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
-        tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
+        tools=[
+            GoogleSearchTools(), 
+            Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
+        ],
         knowledge=knowledge_base,
         storage=tipidter_agent_storage,
         search_knowledge=True,
@@ -107,9 +118,7 @@ def get_tipidter_agent(
             "# Petunjuk Penggunaan:\n"
             "- Sertakan kutipan hukum dan referensi sumber resmi yang relevan\n"
             "- Jelaskan unsur-unsur hukum secara terperinci\n"
-            "- Berikan panduan investigatif yang jelas dan terstruktur\n"
-            "- Selalu klarifikasi bahwa informasi bersifat umum\n"
-            "- Jawab pertanyaan dalam bahasa Indonesia\n",
+            "- Berikan panduan investigatif yang jelas dan terstruktur\n",
         ],
         additional_context=additional_context,
         debug_mode=debug_mode,

@@ -3,7 +3,7 @@ from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
 from agno.agent import Agent
-from agno.embedder.google import GeminiEmbedder
+from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from custom_tools.googlescholar import GoogleScholarTools
 from agno.tools.newspaper4k import Newspaper4kTools
@@ -24,7 +24,7 @@ knowledge_base = TextKnowledgeBase(
     vector_db=PgVector(
         table_name="text_ite",
         db_url=db_url,
-        embedder=GeminiEmbedder(),
+        embedder=OpenAIEmbedder(),
     ),
 )
 
