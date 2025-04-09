@@ -1,37 +1,26 @@
 from datetime import datetime
-from typing import Optional
 from textwrap import dedent
 
 from agno.agent import Agent
 from agno.models.google import Gemini
-from agno.tools.exa import ExaTools
-from agno.tools.tavily import TavilyTools
-from agno.tools.jina import JinaReaderTools
+from agno.tools.duckduckgo import DuckDuckGoTools
+from agno.tools.newspaper4k import Newspaper4kTools
+from agno.tools.mcp import MCPTools
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.tools.mcp import MCPTools
 from mcp import StdioServerParameters
 
-# Initialize storage for session management
-tipikor_storage = PostgresAgentStorage(table_name="tipikor_agent_memory", db_url=db_url)
-
-# Initialize the corruption investigator agent
-def get_corruption_investigator(
-    user_id: Optional[str] = None,
-    session_id: Optional[str] = None,
-    debug_mode: bool = False,
-) -> Agent:
+# Fungsi untuk inisialisasi agen penyidik tipikor
+def get_corruption_investigator(debug_mode: bool = False) -> Agent:
     return Agent(
         agent_id="penyidik-tipikor",
         name="Penyidik Tipikor",
         role="Penyidik khusus tindak pidana korupsi",
-        user_id=user_id,
-        session_id=session_id,
-        model=Gemini(id="gemini-2.5-pro-exp-03-25"),
-        storage=tipikor_storage,
+        model=Gemini(id="gemini-2.0-flash"),
+        use_json_mode=True,
         tools=[
-            TavilyTools(), 
-            JinaReaderTools(),
+            DuckDuckGoTools(),
+            Newspaper4kTools(),
             MCPTools(
                 server_params=StdioServerParameters(
                     command="npx",
@@ -39,31 +28,17 @@ def get_corruption_investigator(
                 )
             )
         ],
-        description=dedent("""\
-            Anda adalah penyidik senior yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia.
-            Kredensial Anda meliputi: 👨‍⚖️
-
-            - Analisis hukum pidana korupsi
-            - Penyidikan kasus Tipikor
-            - Analisis forensik keuangan
-            - Evaluasi bukti
-            - Penelusuran aset
-            - Analisis yurisprudensi
-            - Penghitungan kerugian negara
-            - Pembuatan berkas perkara
-            - Koordinasi antar instansi
-            - Analisis modus operandi\
-        """),
+        description=dedent("""Anda adalah penyidik kepolisianj senior yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia."""),
         instructions=dedent("""\
             1. Metodologi Penelitian Hukum 🔍
-               - Lakukan pencarian web kasus terkait
+               - Lakukan pencarian web kasus terkait dengan 'duckduckgo_search'
                - Fokus pada putusan pengadilan terkait
                - Prioritaskan yurisprudensi terbaru
                - Identifikasi pasal-pasal kunci dan penerapannya
                - Telusuri pola modus operandi dari kasus serupa
 
             2. Kerangka Analisis 📊
-               - ekstrak temuan dari berbagai sumber menggunakan 'read_url'
+               - ekstrak URL web temuan dengan 'read_article'
                - Evaluasi penerapan unsur delik
                - Identifikasi tren putusan dan pola pemidanaan
                - Analisis dampak kerugian negara
@@ -82,6 +57,53 @@ def get_corruption_investigator(
                - Sajikan perspektif berimbang
                - Dukung dengan yurisprudensi
                - Lengkapi dengan analisis forensik\
+        """),
+        expected_output=dedent("""\
+            # Laporan Analisis Perkara Tipikor 🏛️
+
+            ## Resume Kasus
+            {Ringkasan fakta dan temuan utama}
+
+            ## Analisis Perkara
+            ### Modus Operandi
+            {Uraian cara dan tahapan tindak pidana}
+
+            ### Pihak Terlibat
+            {Identifikasi dan peran para pihak}
+
+            ### Kerugian Negara
+            {Penghitungan dan rincian kerugian}
+
+            ## Analisis Yuridis
+            ### Pasal yang Diterapkan
+            {Daftar dan penjelasan pasal}
+
+            ### Analisis Unsur Pidana
+            {Penjabaran unsur delik, actus reus, mens rea, causalitas}
+
+            ### Alat Bukti
+            {Daftar dan analisis alat bukti}
+
+            ## Yurisprudensi
+            {Putusan-putusan terkait dan analisisnya}
+
+            ## Rekomendasi
+            {Tindak lanjut penyelidikan}
+
+            ## Kesimpulan
+            {Rangkuman analisis}
+            {Daftar Link URL berita sumber}
+
+            ## Lampiran
+            1. Matriks Analisis Unsur Pidana
+            2. Daftar Alat Bukti
+            3. Kronologi Perkara
+            4. Ringkasan Yurisprudensi
+
+            ---
+            Disusun oleh Penyidik Tipikor
+            Tanggal: {current_date}
+            Pembaruan: {current_time}\
         """),
         add_datetime_to_instructions=True,
         show_tool_calls=False,

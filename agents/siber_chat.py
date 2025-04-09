@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
 from agno.models.google import Gemini
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
@@ -14,6 +12,7 @@ from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.memory.db.postgres import PgMemoryDb
+from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -52,14 +51,9 @@ def get_siber_agent(
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
         tools=[
+            ThinkingTools(add_instructions=True),
             TavilyTools(), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
         ],
         knowledge=knowledge_base,
         storage=siber_agent_storage,
@@ -68,7 +62,7 @@ def get_siber_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         description=(
-            "Anda adalah penyidik kepolisian spesialisasi Tindak pidana Siber."
+            "Anda adalah asisten penyidik kepolisian spesialisasi Tindak pidana Siber."
         ),
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
@@ -77,10 +71,11 @@ def get_siber_agent(
             "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian TavilyTools.\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di dunia digital, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
-            "Lakukan pencarian internet dengan web_search_using_tavily jika tidak ditemukan jawaban di basis pengetahuanmu.\n",
+            "Kamu adalah asisten penyidik kepolisian sehingga buat dirimu layaknya mentor anggota kepolisian yang sangat ahli tindaak pidana siber.\n",
             "Knowledge base mu dibekali (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE dan Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)"
         ],
         additional_context=additional_context,
+        use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
         markdown=True

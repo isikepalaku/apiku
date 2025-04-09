@@ -12,8 +12,7 @@ from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+from agno.tools.reasoning import ReasoningTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -50,15 +49,11 @@ def get_fismondev_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
+        use_json_mode=True,
         tools=[
+            ReasoningTools(),
             GoogleSearchTools(), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
         ],
         knowledge=knowledge_base,
         storage=fismondev_agent_storage,

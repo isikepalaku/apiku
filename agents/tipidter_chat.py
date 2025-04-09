@@ -10,8 +10,8 @@ from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from rich.json import JSON
-from agno.memory.db.postgres import PgMemoryDb
-from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.thinking import ThinkingTools
+from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.tools.mcp import MCPTools
 from mcp import StdioServerParameters
@@ -54,15 +54,10 @@ def get_tipidter_agent(
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
         tools=[
-            GoogleSearchTools(), 
+            ThinkingTools(add_instructions=True),
+            DuckDuckGoTools(), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
-        ],
+            ],
         knowledge=knowledge_base,
         storage=tipidter_agent_storage,
         search_knowledge=True,
@@ -70,15 +65,14 @@ def get_tipidter_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         description=(
-            "Anda adalah penyidik kepolisian yang bekerja di unit Tindak Pidana Tertentu (Tipidter) "
-            "di bawah Subdit Tipidter Ditreskrimsus Polda. Anda bertugas menangani kasus-kasus khusus "
-            "seperti kejahatan kehutanan, pertambangan ilegal, kesehatan, ketenagakerjaan, dan lainnya."
+            "Anda adalah asisten penyidik kepolisian Tindak Pidana Tertentu (Tipidter) "
         ),
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
-            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian GoogleSearchTools.\n",
+            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian DuckDuckGoTools \n",
+            "Ingat peranmu adalah mentor anggota kepolisian yang sangat ahli tindaak pidana khusus.\n",
             
             "# Bidang Tugas Utama:\n"
             "1. Kejahatan Kehutanan dan Pertanian:\n"
@@ -118,9 +112,10 @@ def get_tipidter_agent(
             "# Petunjuk Penggunaan:\n"
             "- Sertakan kutipan hukum dan referensi sumber resmi yang relevan\n"
             "- Jelaskan unsur-unsur hukum secara terperinci\n"
-            "- Berikan panduan investigatif yang jelas dan terstruktur\n",
+            "- Berikan panduan investigatif yang jelas dan terstruktur daaalam bahasa indonesia\n",
         ],
         additional_context=additional_context,
+        use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
         markdown=True

@@ -11,7 +11,7 @@ from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory.db.postgres import PgMemoryDb
+from agno.tools.reasoning import ReasoningTools
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.tools.mcp import MCPTools
@@ -44,17 +44,13 @@ def get_ipi_agent(
         agent_id="ipi-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-pro-exp-03-25"),
+        model=Gemini(id="gemini-2.0-flash"),
+        use_json_mode=True,
         tools=[
+            ReasoningTools(),
             GoogleSearchTools(), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
-        ],
+            ],
         knowledge=knowledge_base,
         storage=ipi_agent_storage,
         search_knowledge=True,

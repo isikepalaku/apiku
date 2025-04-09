@@ -12,8 +12,7 @@ from db.session import db_url
 from agno.memory.db.postgres import PgMemoryDb
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -30,7 +29,6 @@ knowledge_base = TextKnowledgeBase(
         api_key=os.getenv("QDRANT_API_KEY")
     )
 )
-
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
 #knowledge_base.load(recreate=False)
 
@@ -51,18 +49,11 @@ def get_kuhp_agent(
         user_id=user_id,
         model=OpenAIChat(id="gpt-4o-mini"),
         tools=[
+            ThinkingTools(add_instructions=True),
             TavilyTools(), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
         ],
-        knowledge=knowledge_base,
         storage=kuhp_agent_storage,
-        search_knowledge=True,
         read_chat_history=True,
         add_history_to_messages=True,
         num_history_responses=3,

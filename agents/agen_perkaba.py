@@ -10,6 +10,7 @@ from agno.storage.agent.postgres import PostgresAgentStorage
 from agno.memory.db.postgres import PgMemoryDb
 from db.session import db_url
 from agno.vectordb.qdrant import Qdrant
+from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -41,6 +42,9 @@ def get_perkaba_agent(
         session_id=session_id,
         user_id=user_id,
         model=OpenAIChat(id="gpt-4o-mini"), # Fixed model name
+        tools=[
+            ThinkingTools(add_instructions=True),
+        ],
         knowledge=knowledge_base,
     # Add a tool to search the knowledge base which enables agentic RAG.
     # This is enabled by default when `knowledge` is provided to the Agent.
