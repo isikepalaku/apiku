@@ -2,16 +2,18 @@ from textwrap import dedent
 from pathlib import Path
 from typing import Optional
 from dotenv import load_dotenv
+from agno.tools.thinking import ThinkingTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.media import Image
-from agno.tools.duckduckgo import DuckDuckGoTools  # Mengganti impor tools
-# from custom_tools.googlescholar import GoogleScholarTools  <-- sudah dihapus
+from agno.tools.tavily import TavilyTools
+from agno.storage.agent.postgres import PostgresAgentStorage
+from db.session import db_url
 
 # Muat variabel lingkungan
 load_dotenv()
-
+dokpol_agent_storage = PostgresAgentStorage(table_name="dokpol_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 # Prompt dasar yang mendefinisikan keahlian ahli citra medis dan analisis kedokteran
 BASE_PROMPT = dedent("""\
     Anda adalah seorang ahli citra medis dan analis kedokteran yang berpengalaman dengan keahlian tinggi di bidang radiologi, diagnostik pencitraan, dan evaluasi klinis.
@@ -29,9 +31,10 @@ BASE_PROMPT = dedent("""\
 WORKFLOW = dedent("""\
     Alur Kerja:
     1. Fase Penelitian 🔍
-       - Gunakan DuckDuckGoTools untuk menelusuri literatur dan sumber otoritatif terkait kondisi medis dan pencitraan.
+       - Gunakan 'TavilyTools' untuk menelusuri literatur dan sumber otoritatif terkait kondisi medis dan pencitraan.
        - Prioritaskan publikasi terbaru, pedoman klinis, dan opini ahli medis.
-       - Identifikasi sumber-sumber medis yang relevan, termasuk DuckDuckGo dan artikel klinis terkini.
+       - Identifikasi sumber-sumber medis yang relevan dan artikel klinis terkini.
+       - untuk setiap link berita, baca informasinya dengan tools 'read_url'
 
     2. Fase Analisis 📊
        - Evaluasi teknis gambar (jenis pencitraan, area anatomi, kualitas gambar).
@@ -79,8 +82,7 @@ ANALYSIS_TEMPLATE = dedent("""\
     - Berikan rekomendasi agar pasien menjalani pemeriksaan lanjutan pada bidang kedokteran spesialis yang relevan.
 
     ### 5. Konteks Berbasis Bukti
-    - Gunakan pencarian GoogleScholarTools untuk mencari literatur medis terkait.
-    - Cantumkan referensi sebagai hyperlink, misalnya:
+    - Cantumkan referensi sebagai URL, misalnya:
          - (https://europepmc.org/article/nbk/nbk482331)
          - (https://asmedigitalcollection.asme.org/forensicsciences/article/45/6/1274/1184830)
          - (https://www.nejm.org/doi/abs/10.1056/NEJMra0800887)
@@ -103,12 +105,18 @@ def get_medis_agent(
         agent_id="medis-image-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp"),
-        tools=[DuckDuckGoTools(), Newspaper4kTools()],  # Memanggil tool DuckDuckGo untuk pencarian referensi
+        model=Gemini(id="gemini-2.0-flash"),
+        tools=[
+            ThinkingTools(add_instructions=True), # Removed to prevent potential tool override
+            TavilyTools(),
+            Newspaper4kTools()
+        ],  # Using GoogleSearchTools for references
         description="Anda adalah ahli kedokteran yang menganalisis gambar medis untuk membantu diagnosis dan penjelasan temuan. Semua analisis akan diberikan dalam Bahasa Indonesia dan berdasarkan standar medis terkini.",
         instructions=[FULL_INSTRUCTIONS],
+        storage=dokpol_agent_storage,
+        use_json_mode=True,
         markdown=True,
-        show_tool_calls=True,
+        show_tool_calls=False,
         add_datetime_to_instructions=True,
         monitoring=True,
         debug_mode=debug_mode,

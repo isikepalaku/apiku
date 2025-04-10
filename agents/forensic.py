@@ -6,7 +6,9 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.media import Image
-from custom_tools.googlescholar import GoogleScholarTools
+from agno.tools.duckduckgo import DuckDuckGoTools
+from agno.tools.thinking import ThinkingTools
+from agno.tools.newspaper4k import Newspaper4kTools
 
 # Muat variabel lingkungan
 load_dotenv()
@@ -31,6 +33,7 @@ WORKFLOW = dedent("""\
        - Telusuri literatur dan sumber otoritatif terkait forensik kedokteran dan teknik pencitraan forensik.
        - Prioritaskan pedoman forensik terbaru, jurnal forensik, dan opini ahli dalam investigasi kriminal.
        - Identifikasi sumber-sumber yang relevan, termasuk Google Scholar dan artikel terkait teknik analisis bukti.
+       - untuk setiap link berita, baca informasinya dengan tools 'read_url'
 
     2. Fase Analisis 📊
        - Evaluasi teknis gambar (jenis pencitraan forensik, area anatomi, kualitas bukti digital).
@@ -75,7 +78,6 @@ ANALYSIS_TEMPLATE = dedent("""\
     - Sajikan informasi secara sistematis untuk mendukung validitas bukti dalam pengadilan.
 
     ### 5. Konteks Berbasis Bukti
-    - Gunakan pencarian GoogleScholarTools untuk mencari literatur medis terkait.
     - Cantumkan referensi sebagai hyperlink, misalnya:
          - (https://europepmc.org/article/nbk/nbk482331)
          - (https://asmedigitalcollection.asme.org/forensicsciences/article/45/6/1274/1184830)
@@ -99,9 +101,13 @@ def get_forensic_agent(
         agent_id="forensic-image-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp"),
-        tools=[GoogleScholarTools()],
-        description="Anda adalah ahli forensik kedokteran yang menganalisis gambar medis sebagai bukti forensik untuk mendukung investigasi hukum. Semua analisis disajikan dalam Bahasa Indonesia dengan mengacu pada standar hukum dan forensik terkini.",
+        model=Gemini(id="gemini-2.0-flash"),
+        tools=[
+            ThinkingTools(add_instructions=True),
+            DuckDuckGoTools(),
+            Newspaper4kTools()
+        ],  # Using GoogleSearchTools for references
+        description="Anda adalah ahli forensik kedokteran yang menganalisis gambar medis sebagai bukti forensik untuk mendukung investigasi hukum.",
         instructions=[FULL_INSTRUCTIONS],
         markdown=True,
         show_tool_calls=False,

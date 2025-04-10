@@ -45,7 +45,6 @@ def get_ipi_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
-        use_json_mode=True,
         tools=[
             ReasoningTools(),
             GoogleSearchTools(), 
@@ -70,6 +69,7 @@ def get_ipi_agent(
             "Ketika menjawab mengenai suatu peraturan atau pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya agar aspek-aspek penting dapat dipahami dengan jelas.\n",
             "Selalu lampirkan link sumber jika memberikan jawaban dari internet.\n",
         ],
+        use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
         markdown=True

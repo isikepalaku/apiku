@@ -17,7 +17,7 @@ from agno.tools.thinking import ThinkingTools
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen ITE
-siber_agent_storage = PostgresAgentStorage(table_name="siber_agent_memory", db_url=db_url)
+siber_agent_storage = PostgresAgentStorage(table_name="siber_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 COLLECTION_NAME = "siber"
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU ITE
 knowledge_base = TextKnowledgeBase(

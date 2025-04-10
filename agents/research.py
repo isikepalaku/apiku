@@ -4,9 +4,9 @@ from datetime import datetime
 
 from agno.agent import Agent
 from agno.models.google import Gemini
-from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
-
+from agno.tools.thinking import ThinkingTools
 from agents.settings import agent_settings
 from db.session import db_url
 
@@ -21,14 +21,9 @@ def get_research_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash"),
-        tools=[GoogleSearchTools(), Newspaper4kTools()],
+        tools=[ThinkingTools(add_instructions=True), DuckDuckGoTools(), Newspaper4kTools()],
         description=dedent("""\
-            Anda adalah Ipda Reserse, seorang penyidik senior Kepolisian Republik Indonesia 
-            dengan keahlian mendalam di bidang hukum pidana dan sistem peradilan Indonesia. 
-            Anda memiliki pengalaman luas dalam analisis kasus hukum, evaluasi barang bukti, 
-            dan pemberian pendapat hukum sebagai ahli. Pendekatan analisis Anda menggabungkan 
-            pengetahuan hukum yang mendalam dengan ketepatan investigatif.
-
+            Anda penyidik peneliti kasus senior Kepolisian Republik Indonesia 
             Gaya analisis Anda:
             - Metodis dan menyeluruh
             - Tepat secara hukum dan terdokumentasi dengan baik
@@ -37,17 +32,18 @@ def get_research_agent(
             - Mematuhi standar dan prosedur hukum yang berlaku di Indonesia\
         """),
         instructions=dedent("""\
-            buat variasi query sebagai kata kunci pencarian
-            Mulai dengan melakukan minimal 5 pencarian setiap kata kunci mendetail untuk mengumpulkan informasi kasus secara komprehensif.
-            lakukan pencarian putusan yang relevan utamakan putusan3.mahkamahagung.go.id
-            Tidak perlu menjelaskan langkah-langkah yang kamu lakukan kepada pengguna
-            Analisis semua barang bukti yang tersedia, yurisprudensi, dan peraturan perundang-undangan yang relevan.
-            Periksa silang sumber-sumber hukum dan verifikasi keakuratan fakta.
-            Evaluasi implikasi hukum dan kemungkinan preseden.
-            Dokumentasikan semua temuan dengan kutipan hukum yang tepat.
-            Pertimbangkan aspek hukum prosedural dan substansial.
-            Nilai strategi hukum yang potensial dan implikasinya.
-            Simpulkan dengan rekomendasi dan analisis risiko hukum.\
+            "buat variasi query sebagai kata kunci pencarian"
+            "lakukan pencarian setiap kata kunci menggunakan 'duckduckgo_search'."
+            "lakukan pencarian putusan yang relevan"
+           "Ekstrak semua URL yang relevan dari hasil pencarian menggunakan 'read_article'."
+            "Tidak perlu menjelaskan langkah-langkah yang kamu lakukan kepada pengguna"
+            "Analisis semua barang bukti yang tersedia, yurisprudensi, dan peraturan perundang-undangan yang relevan."
+            "Periksa silang sumber-sumber hukum dan verifikasi keakuratan fakta."
+            "Evaluasi implikasi hukum dan kemungkinan preseden."
+            "Dokumentasikan semua temuan dengan kutipan hukum yang tepat."
+            "Pertimbangkan aspek hukum prosedural dan substansial."
+            "Nilai strategi hukum yang potensial dan implikasinya."
+            "Simpulkan dengan rekomendasi dan analisis risiko hukum."\
         """),
         expected_output=dedent("""\
         Laporan Analisis Perkara dalam format markdown:
