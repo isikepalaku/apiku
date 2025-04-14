@@ -2,21 +2,23 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
+from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.openai import OpenAIChat
 from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.memory.db.postgres import PgMemoryDb
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
-# Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen KUHP
+# Inisialisasi memory v2 dan storage
+memory = Memory(db=PostgresMemoryDb(table_name="kuhp_agent_memories", db_url=db_url))
 kuhp_agent_storage = PostgresAgentStorage(table_name="kuhp_agent_memory", db_url=db_url)
 COLLECTION_NAME = "kuhp"
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait KUHP
@@ -54,9 +56,6 @@ def get_kuhp_agent(
             Newspaper4kTools(),
         ],
         storage=kuhp_agent_storage,
-        read_chat_history=True,
-        add_history_to_messages=True,
-        num_history_responses=3,
         description=(
             "Anda adalah penyidik kepolisian yang ahli dalam UU Nomor 1 Tahun 2023 tentang KUHP"
         ),
@@ -72,11 +71,12 @@ def get_kuhp_agent(
         ],
         additional_context=additional_context,
         debug_mode=debug_mode,
-        memory=AgentMemory(
-            db=PgMemoryDb(table_name="kuhp_agent_memory", db_url=db_url),
-            create_user_memories=True,
-            create_session_summary=True,
-        ),
+        add_history_to_messages=True,
+        num_history_responses=5,
+        read_chat_history=True,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
         show_tool_calls=False,
         markdown=True
     )

@@ -10,12 +10,14 @@ from agno.tools.newspaper4k import Newspaper4kTools
 from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from db.session import db_url
-from agno.memory.db.postgres import PgMemoryDb
 
 load_dotenv()  # Load environment variables from .env file
 
-# Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen ITE
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="ite_agent_memories", db_url=db_url))
 ite_agent_storage = PostgresAgentStorage(table_name="ite_agent_memory", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU ITE
@@ -46,9 +48,12 @@ def get_ite_agent(
         knowledge=knowledge_base,
         storage=ite_agent_storage,
         search_knowledge=True,
-        read_chat_history=True,
         add_history_to_messages=True,
         num_history_responses=5,
+        read_chat_history=True,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
         description=(
             "Anda adalah penyidik kepolisian spesialisasi (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE."
         ),

@@ -8,6 +8,8 @@ from agno.models.google import Gemini
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from db.session import db_url
 from agno.tools.mcp import MCPTools
 from mcp import StdioServerParameters
@@ -16,7 +18,8 @@ from agno.tools.newspaper4k import Newspaper4kTools
 
 load_dotenv()  # Load environment variables from .env file
 
-# Initialize storage
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="perbankan_agent_memories", db_url=db_url))
 perbankan_agent_storage = PostgresAgentStorage(table_name="perbankan_agent_memory", db_url=db_url)
 
 # Initialize text knowledge base with banking law documents
@@ -57,9 +60,9 @@ def get_perbankan_agent(
         knowledge=knowledge_base,
         storage=perbankan_agent_storage,
         search_knowledge=True,
-        read_chat_history=True,
-        add_history_to_messages=True,
-        num_history_responses=3,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
         description="Anda adalah penyidik kepolisian yang ahli menjelaskan tindak pidana di bidang perbankan berdasarkan UU No. 10 Tahun 1998.",
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",

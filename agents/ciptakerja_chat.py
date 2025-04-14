@@ -5,12 +5,13 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
-from agno.models.openai import OpenAIChat
+from agno.models.openrouter import OpenRouter
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
+from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -40,8 +41,8 @@ def get_cipta_kerja_agent(
         agent_id="cipta-kerja-chat",
         session_id=session_id,
         user_id=user_id,
-        model=OpenAIChat(id="gpt-4o-mini"),
-        tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
+         model=OpenRouter(id="openrouter/optimus-alpha"),
+        tools=[ThinkingTools(add_instructions=True), GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=cipta_kerja_agent_storage,
         search_knowledge=True,
@@ -63,6 +64,7 @@ def get_cipta_kerja_agent(
             "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
             "Jangan pernah menjelaskan langkah-langkah yang kamu lakukan, gunakan tools dan knowledgebase tanpa menjelaskan prosesnya.\n",
         ],
+        use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
         markdown=True

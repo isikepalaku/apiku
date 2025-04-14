@@ -12,11 +12,15 @@ from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.reasoning import ReasoningTools
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 
 load_dotenv()  # Load environment variables from .env file
 
-# Initialize storage
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="fismondev_agent_memories", db_url=db_url))
 fismondev_agent_storage = PostgresAgentStorage(table_name="fismondev_agent_memory", db_url=db_url)
 COLLECTION_NAME = "fismondev"
 chunking_strategy=AgenticChunking(),
@@ -51,16 +55,18 @@ def get_fismondev_agent(
         model=Gemini(id="gemini-2.0-flash"),
         use_json_mode=True,
         tools=[
-            ReasoningTools(),
-            GoogleSearchTools(), 
+            GoogleSearchTools(),
             Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
         ],
         knowledge=knowledge_base,
         storage=fismondev_agent_storage,
         search_knowledge=True,
-        read_chat_history=True,
-        add_history_to_messages=True,
-        num_history_responses=3,
         description="Anda adalah penyidik kepolisian Fismodev (Fiskal moneter dan devisa).",
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
@@ -70,7 +76,18 @@ def get_fismondev_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana dalam sektor jasa keuangan, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Berikan rekomendasi pihak-pihak yang perlu diperiksa dan barang bukti yang perlu ditelusuri.\n",
-            "Gunakan hasil pencarian web jika tidak ditemukan jawaban di knowledge base mu.\n",
+            "Gunakan hasil pencarian web jika tidak ditemukan jawaban di knowledge base\n",
+            "Berikan panduan investigatif yang jelas dan terstruktur dalam bahasa indonesia tanpa menjelaskan langkah-langkah dan tool yang kamu gunakan\n",
+            "## Menggunakan think tool",
+"Sebelum mengambil tindakan atau memberikan respons setelah menerima hasil dari alat, gunakan think tool sebagai tempat mencatat sementara untuk:",
+"- Menuliskan aturan spesifik yang berlaku untuk permintaan saat ini\n",
+"- Memeriksa apakah semua informasi yang dibutuhkan sudah dikumpulkan\n",
+"- Memastikan bahwa rencana tindakan sesuai dengan semua kebijakan yang berlaku\n", 
+"- Meninjau ulang hasil dari alat untuk memastikan kebenarannya\n",
+"## Aturan",
+"- Diharapkan kamu akan menggunakan think tool ini secara aktif untuk mencatat pemikiran dan ide.\n",
+"- Gunakan tabel jika memungkinkan\n",
+"- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
             """
 Catatan: KETENTUAN PIDANA DALAM UU FIDUSIA
 ## Pasal 35 uu fidusia
@@ -85,5 +102,11 @@ tertulis terlebih dahulu dari Penerima Fidusia, dipidana dengan pidana penjara p
         additional_context=additional_context,
         debug_mode=debug_mode,
         show_tool_calls=False,
-        markdown=True
+        add_history_to_messages=True,
+        num_history_responses=5,
+        read_chat_history=True,
+        markdown=True,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
     )

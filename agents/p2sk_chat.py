@@ -8,6 +8,8 @@ from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from db.session import db_url
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
@@ -15,7 +17,8 @@ from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
-# Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen P2SK
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="p2sk_agent_memories", db_url=db_url))
 p2sk_agent_storage = PostgresAgentStorage(table_name="p2sk_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 COLLECTION_NAME = "fismondev"
 # Initialize text knowledge base with multiple documents
@@ -47,9 +50,12 @@ def get_p2sk_agent(
         knowledge=knowledge_base,
         storage=p2sk_agent_storage,
         search_knowledge=True,
-        read_chat_history=True,
         add_history_to_messages=True,
-        num_history_responses=3,
+        num_history_responses=5,
+        read_chat_history=True,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
         description=(
             "Anda adalah ahli Undang-undang (UU) Nomor 4 Tahun 2023 tentang Pengembangan dan Penguatan Sektor Keuangan (p2sk)."
         ),

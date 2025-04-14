@@ -10,6 +10,8 @@ from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from rich.json import JSON
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from agno.tools.thinking import ThinkingTools
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
@@ -18,7 +20,8 @@ from mcp import StdioServerParameters
 
 load_dotenv()  # Memuat variabel lingkungan dari file .env
 
-# Inisialisasi penyimpanan sesi dengan tabel khusus untuk agen Tipidter
+# Inisialisasi memory v2 dan storage
+memory = Memory(db=PostgresMemoryDb(table_name="tipidter_agent_memories", db_url=db_url))
 tipidter_agent_storage = PostgresAgentStorage(table_name="tipidter_memory_agent", db_url=db_url)
 COLLECTION_NAME = "tipidter"
 
@@ -61,9 +64,6 @@ def get_tipidter_agent(
         knowledge=knowledge_base,
         storage=tipidter_agent_storage,
         search_knowledge=True,
-        read_chat_history=True,
-        add_history_to_messages=True,
-        num_history_responses=5,
         description=(
             "Anda adalah asisten penyidik kepolisian Tindak Pidana Tertentu (Tipidter) "
         ),
@@ -73,6 +73,7 @@ def get_tipidter_agent(
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian DuckDuckGoTools \n",
             "Ingat peranmu adalah mentor anggota kepolisian yang sangat ahli tindaak pidana khusus.\n",
+            "Jangan pernah menjelaskan langkah-langkah dan tools yang kamu gunakan dalam proses.\n",
             
             "# Bidang Tugas Utama:\n"
             "1. Kejahatan Kehutanan dan Pertanian:\n"
@@ -112,11 +113,17 @@ def get_tipidter_agent(
             "# Petunjuk Penggunaan:\n"
             "- Sertakan kutipan hukum dan referensi sumber resmi yang relevan\n"
             "- Jelaskan unsur-unsur hukum secara terperinci\n"
-            "- Berikan panduan investigatif yang jelas dan terstruktur daaalam bahasa indonesia\n",
+            "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
         ],
         additional_context=additional_context,
         use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
-        markdown=True
+        add_history_to_messages=True,
+        num_history_responses=5,
+        read_chat_history=True,
+        markdown=True,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
     )

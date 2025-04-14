@@ -8,11 +8,14 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
 from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from db.session import db_url
 
 load_dotenv()  # Load environment variables from .env file
 
-# Initialize storage
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="wassidik_agent_memories", db_url=db_url))
 wassidik_agent_storage = PostgresAgentStorage(table_name="wassidik_agent_memory", db_url=db_url)
 COLLECTION_NAME = "perkabapolri"
 # Initialize text knowledge base with multiple documents
@@ -43,9 +46,12 @@ def get_wassidik_agent(
         knowledge=knowledge_base,
         storage=wassidik_agent_storage,
         search_knowledge=True,
-        read_chat_history=True,
         add_history_to_messages=True,
-        num_history_responses=3,
+        num_history_responses=5,
+        read_chat_history=True,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
         description="Anda adalah agen AI yang ahli dalam pengawasan penyidik (WASSIDIK) berdasarkan Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022. Anda memahami seluruh aspek pengawasan dan evaluasi kinerja penyidik dalam proses penyidikan.",
         instructions=[
             "Berikan panduan tentang prosedur pengawasan penyidik sesuai dengan SOP WASSIDIK yang berlaku.",

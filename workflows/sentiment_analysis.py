@@ -6,12 +6,12 @@ from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.models.openai import OpenAIChat
 from agno.storage.workflow.postgres import PostgresWorkflowStorage
-from agno.tools.tavily import TavilyTools
+from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.utils.log import logger
 from agno.workflow import RunEvent, RunResponse, Workflow
 from pydantic import BaseModel, Field
-
+from workflows.settings import workflow_settings
 from db.session import db_url
 
 class SentimentSource(BaseModel):
@@ -50,7 +50,7 @@ class TrendAnalysis(BaseModel):
 
 class SentimentAnalysisSystem(Workflow):
     web_analyzer: Agent = Agent(
-        model=OpenAIChat(id="gpt-4o-mini"),
+        model=OpenAIChat(id=workflow_settings.gpt_4_mini),
         instructions=[
             "Penelusuran mendalam konten web untuk analisis sentimen:",
             "1. Cari 5-10 sumber berita, gabungan social media dan forum terkait topik",
@@ -59,7 +59,7 @@ class SentimentAnalysisSystem(Workflow):
             "4. Evaluasi kredibilitas dan relevansi sumber",
             "5. Ekstrak data engagement dan metrics",
         ],
-        tools=[TavilyTools(), Newspaper4kTools()],
+        tools=[GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
         add_datetime_to_instructions=True,
         response_model=WebContentAnalysis,
         structured_outputs=True,

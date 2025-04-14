@@ -11,16 +11,18 @@ from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
-from agno.tools.reasoning import ReasoningTools
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from agno.tools.mcp import MCPTools
 from mcp import StdioServerParameters
 
 load_dotenv()  # Memuat variabel lingkungan dari file .env
 
-# Inisialisasi penyimpanan sesi dengan tabel khusus untuk agen di bidang Industri Perdagangan dan Investasi
-ipi_agent_storage = PostgresAgentStorage(table_name="indagsi_agent_memory", db_url=db_url)
+# Inisialisasi memory v2 dan storage
+memory = Memory(db=PostgresMemoryDb(table_name="indagsi_agent_memories", db_url=db_url))
+ipi_agent_storage = PostgresAgentStorage(table_name="indagsi_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait hukum Industri Perdagangan dan Investasi
 knowledge_base = TextKnowledgeBase(
     path=Path("data/indagsi"),  # Pastikan folder ini berisi dokumen-dokumen terkait hukum dan regulasi perdagangan serta investasi
@@ -32,7 +34,7 @@ knowledge_base = TextKnowledgeBase(
 )
 
 # Jika diperlukan, muat basis pengetahuan (gunakan recreate=True untuk rebuild)
-#knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=False)
 
 def get_ipi_agent(
     user_id: Optional[str] = None,
@@ -44,18 +46,20 @@ def get_ipi_agent(
         agent_id="ipi-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
         tools=[
-            ReasoningTools(),
-            GoogleSearchTools(), 
+            GoogleSearchTools(),
             Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
             ],
         knowledge=knowledge_base,
         storage=ipi_agent_storage,
         search_knowledge=True,
-        read_chat_history=True,
-        add_history_to_messages=True,
-        num_history_responses=3,
         description=(
             "Penyidik kepolisian yang berfokus pada investigasi kasus-kasus di bidang Industri Perdagangan dan Investasi, "
         ),
@@ -68,9 +72,26 @@ def get_ipi_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di sektor perdagangan dan investasi, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu peraturan atau pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya agar aspek-aspek penting dapat dipahami dengan jelas.\n",
             "Selalu lampirkan link sumber jika memberikan jawaban dari internet.\n",
+            "## Menggunakan think tool",
+"Sebelum mengambil tindakan atau memberikan respons setelah menerima hasil dari alat, gunakan think tool sebagai tempat mencatat sementara untuk:",
+"- Menuliskan aturan spesifik yang berlaku untuk permintaan saat ini\n",
+"- Memeriksa apakah semua informasi yang dibutuhkan sudah dikumpulkan\n",
+"- Memastikan bahwa rencana tindakan sesuai dengan semua kebijakan yang berlaku\n", 
+"- Meninjau ulang hasil dari alat untuk memastikan kebenarannya\n",
+"## Aturan",
+"- Diharapkan kamu akan menggunakan think tool ini secara aktif untuk mencatat pemikiran dan ide.\n",
+"- Gunakan tabel jika memungkinkan\n",
+"- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
+
         ],
+        add_history_to_messages=True,
+        num_history_responses=5,
+        read_chat_history=True,
         use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
-        markdown=True
+        markdown=True,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
     )

@@ -8,11 +8,14 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from db.session import db_url
 
 load_dotenv()  # Load environment variables from .env file
 
-# Initialize storage
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="bantek_agent_memories", db_url=db_url))
 bantek_agent_storage = PostgresAgentStorage(table_name="bantek_agent_memory", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
@@ -41,13 +44,11 @@ def get_perkaba_bantek_agent(
         user_id=user_id,
         model=OpenAIChat(id="gpt-4o-mini"),
         knowledge=knowledge_base,
-    # Add a tool to search the knowledge base which enables agentic RAG.
-    # This is enabled by default when `knowledge` is provided to the Agent.
         search_knowledge=True,
-        read_chat_history=True,
-        add_history_to_messages=True,
-        num_history_responses=3,
         storage=bantek_agent_storage,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
         description="Anda adalah agen AI yang dirancang untuk memberikan penjelasan mengenai Standar Operasional Prosedur (SOP) bantuan teknis, sesuai dengan Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022.",
         instructions=[
                     "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
@@ -58,6 +59,9 @@ def get_perkaba_bantek_agent(
                     "Pastikan penjelasan Anda selaras dengan pedoman SOP, standar operasional yang ada di dalam knowledge base mu.",
                     "Fokuskan penjelasan pada implementasi praktis dan penerapan prosedur teknis yang mendukung efektivitas investigasi, sambil memastikan kesesuaian dengan peraturan yang berlaku."],
         debug_mode=debug_mode,
+        add_history_to_messages=True,
+        num_history_responses=5,
+        read_chat_history=True,
         show_tool_calls=False,
         markdown=True,
     )

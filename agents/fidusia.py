@@ -16,7 +16,7 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
         agent_id="penyidik-tipikor",
         name="Penyidik Tipikor",
         role="Penyidik khusus tindak pidana korupsi",
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.5-pro-preview-03-25"),
         use_json_mode=True,
         tools=[
             DuckDuckGoTools(),
@@ -28,7 +28,7 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
                 )
             )
         ],
-        description=dedent("""Anda adalah penyidik kepolisianj senior yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia."""),
+        description=dedent("""Anda adalah penyidik kepolisian yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia."""),
         instructions=dedent("""\
             1. Metodologi Penelitian Hukum 🔍
                - Lakukan pencarian web kasus terkait dengan 'duckduckgo_search'
@@ -56,7 +56,9 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
                - Jaga ketepatan analisis hukum
                - Sajikan perspektif berimbang
                - Dukung dengan yurisprudensi
-               - Lengkapi dengan analisis forensik\
+               - Lengkapi dengan analisis forensik
+
+            5. Penting!!! selaku gunakan bahasa indonesia daan huruf indonesia yang benar daalam menyajikan hasil analisis
         """),
         expected_output=dedent("""\
             # Laporan Analisis Perkara Tipikor 🏛️

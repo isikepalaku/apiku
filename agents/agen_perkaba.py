@@ -2,19 +2,21 @@ import os
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
-from agno.agent import Agent, AgentMemory
+from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.storage.agent.postgres import PostgresAgentStorage
-from agno.memory.db.postgres import PgMemoryDb
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from db.session import db_url
 from agno.vectordb.qdrant import Qdrant
 from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
-# Initialize storage
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="perkaba_agent_memories", db_url=db_url))
 perkaba_agent_storage = PostgresAgentStorage(table_name="perkaba_agent_memory", db_url=db_url)
 COLLECTION_NAME = "perkabapolri"
 # Initialize text knowledge base with multiple documents
@@ -46,13 +48,8 @@ def get_perkaba_agent(
             ThinkingTools(add_instructions=True),
         ],
         knowledge=knowledge_base,
-    # Add a tool to search the knowledge base which enables agentic RAG.
-    # This is enabled by default when `knowledge` is provided to the Agent.
-        search_knowledge=True,
-        read_chat_history=True,
-        add_history_to_messages=True,
-        num_history_responses=3,
         storage=perkaba_agent_storage,
+        search_knowledge=True,
         description="Anda asisten penyidik polri yang membantu menjelaskan SOP penyelidikan dan penyidikan berdasarkan Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022.",
         instructions=[
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
@@ -63,11 +60,12 @@ def get_perkaba_agent(
             "Semua tindakan harus sesuai dengan pedoman SOP, termasuk penyusunan dokumen administrasi, pengelolaan barang bukti, proses wawancara, observasi, dan prosedur teknis lainnya.",
             "Perhatikan perbedaan tahap penyidikan dan penyelidikan, tahap penyelidikan belum mengharuskan upaya paksa kecuali dalam hal tertangkap tangan",
         ],
-        memory=AgentMemory(
-            db=PgMemoryDb(table_name="perkaba_agent_memory", db_url=db_url),
-            create_user_memories=True,
-            create_session_summary=True,
-        ),
+        memory=memory,
+        enable_user_memories=True,
+        add_history_to_messages=True,
+        num_history_responses=5,
+        read_chat_history=True,
+        enable_session_summaries=True,
         debug_mode=debug_mode,
         add_datetime_to_instructions=True,
         show_tool_calls=False,

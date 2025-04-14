@@ -8,12 +8,15 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.search import SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from db.session import db_url
 from agno.vectordb.pgvector import PgVector, SearchType
 
 load_dotenv()  # Load environment variables from .env file
 
-# Initialize storage
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="emp_agent_memories", db_url=db_url))
 emp_agent_storage = PostgresAgentStorage(table_name="emp_agent_memory", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
@@ -44,9 +47,9 @@ def get_emp_agent(
         knowledge=knowledge_base,
         storage=emp_agent_storage,
         search_knowledge=True,
-        read_chat_history=True,
-        add_history_to_messages=True,
-        num_history_responses=3,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
         description="Anda adalah agen AI yang ahli dalam aplikasi E-Manajemen Penyidikan (EMP) berdasarkan Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022. Anda memahami seluruh aspek penggunaan aplikasi EMP untuk pengelolaan administrasi penyidikan secara elektronik.",
         instructions=[
             "Berikan panduan dan informasi detail tentang penggunaan aplikasi E-Manajemen Penyidikan (EMP) sesuai dengan SOP yang berlaku.",
@@ -55,6 +58,9 @@ def get_emp_agent(
             "Berikan solusi untuk masalah teknis yang mungkin timbul dalam penggunaan aplikasi EMP sesuai dengan panduan resmi yang tersedia."
         ],
         debug_mode=debug_mode,
+        add_history_to_messages=True,
+        num_history_responses=5,
+        read_chat_history=True,
         show_tool_calls=False,
         markdown=True
     )

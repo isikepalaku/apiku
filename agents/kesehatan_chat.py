@@ -10,16 +10,19 @@ from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.memory import Memory
 from db.session import db_url
 from agno.tools.mcp import MCPTools
 from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
-# Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen UU Kesehatan
+# Initialize memory v2 and storage
+memory = Memory(db=PostgresMemoryDb(table_name="kesehatan_agent_memories", db_url=db_url))
 kesehatan_agent_storage = PostgresAgentStorage(table_name="kesehatan_agent_memory", db_url=db_url)
 
-# Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU Kesehatan
+# Initialize knowledge base with health law documents
 knowledge_base = TextKnowledgeBase(
     path=Path("data/kesehatan"),  # Pastikan folder ini berisi dokumen-dokumen terkait UU Kesehatan
     vector_db=PgVector(
@@ -60,10 +63,13 @@ def get_kesehatan_agent(
         ],
         knowledge=knowledge_base,
         storage=kesehatan_agent_storage,
-        search_knowledge=True,
-        read_chat_history=True,
         add_history_to_messages=True,
-        num_history_responses=3,
+        num_history_responses=5,
+        read_chat_history=True,
+        search_knowledge=True,
+        memory=memory,
+        enable_user_memories=True,
+        enable_session_summaries=True,
         description=(
             "Anda adalah penyidik kepolisian yang memiliki spesialisasi dalam "
             "Undang-Undang Republik Indonesia Nomor 17 Tahun 2023 tentang Kesehatan. "
