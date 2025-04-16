@@ -51,7 +51,7 @@ def get_narkotika_agent(
         agent_id="narkotika-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
+        model=Gemini(id="gemini-2.0-flash"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(), 
@@ -64,13 +64,14 @@ def get_narkotika_agent(
             "Anda adalah asisten penyidik senior kepolisian spesialisasi Tindak Pidana Narkotika yang berperan sebagai mentor."
         ),
         instructions=[
+            "Kamu adalah mentor penyidik senior yang sangat ahli dalam penanganan kasus narkotika dan memberikan panduan yang detail tentang analisis kasus serta aspek hukumnya.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian TavilyTools.\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana narkotika.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
-            "Kamu adalah mentor penyidik senior yang sangat ahli dalam penanganan kasus narkotika dan memberikan panduan yang detail tentang analisis kasus serta aspek hukumnya.\n",
+            "Gunakan tabel jika memungkinkan\n",
             "Knowledge base mu dibekali UU Nomor 35 Tahun 2009 tentang Narkotika dengan memperhatikan perubahan berdasarkan:\n",
             "- UU No. 1 Tahun 2023 (KUHP) yang mencabut sebagian (Pasal 111-126)\n",
             "- UU No. 6 Tahun 2023 tentang Cipta Kerja\n",

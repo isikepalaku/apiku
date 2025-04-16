@@ -16,29 +16,19 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
         agent_id="penyidik-tipikor",
         name="Penyidik Tipikor",
         role="Penyidik khusus tindak pidana korupsi",
-        model=Gemini(id="gemini-2.5-pro-preview-03-25"),
+        model=Gemini(id="gemini-2.5-pro-preview-03-25", grounding=True),
         use_json_mode=True,
-        tools=[
-            DuckDuckGoTools(),
-            Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
-        ],
-        description=dedent("""Anda adalah penyidik kepolisian yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia."""),
+        description=dedent("""Anda adalah asisten penyidik kepolisian yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia."""),
         instructions=dedent("""\
             1. Metodologi Penelitian Hukum 🔍
-               - Lakukan pencarian web kasus terkait dengan 'duckduckgo_search'
+               - Lakukan pencarian web kasus terkait
                - Fokus pada putusan pengadilan terkait
                - Prioritaskan yurisprudensi terbaru
                - Identifikasi pasal-pasal kunci dan penerapannya
                - Telusuri pola modus operandi dari kasus serupa
 
             2. Kerangka Analisis 📊
-               - ekstrak URL web temuan dengan 'read_article'
+               - ekstrak URL web temuan
                - Evaluasi penerapan unsur delik
                - Identifikasi tren putusan dan pola pemidanaan
                - Analisis dampak kerugian negara
@@ -50,6 +40,7 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
                - Jabarkan konstruksi perkara
                - Sajikan temuan secara terstruktur
                - Berikan kesimpulan berbasis bukti
+               - Buat dalam tabel jika memungkinkan
 
             4. Standar Pembuktian ✓
                - Pastikan akurasi kutipan pasal
@@ -59,6 +50,7 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
                - Lengkapi dengan analisis forensik
 
             5. Penting!!! selaku gunakan bahasa indonesia daan huruf indonesia yang benar daalam menyajikan hasil analisis
+            6. Lakukan anailisis dengan sangat mendetil dan berikan penjelasan dengan terstruktur dan jelas
         """),
         expected_output=dedent("""\
             # Laporan Analisis Perkara Tipikor 🏛️
@@ -84,7 +76,7 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
             {Penjabaran unsur delik, actus reus, mens rea, causalitas}
 
             ### Alat Bukti
-            {Daftar dan analisis alat bukti}
+            {Daftar dan analisis alat bukti dalam tabel jika memungkinkan}
 
             ## Yurisprudensi
             {Putusan-putusan terkait dan analisisnya}

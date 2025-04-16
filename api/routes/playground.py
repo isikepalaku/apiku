@@ -25,6 +25,7 @@ from agents.ciptakerja_chat import get_cipta_kerja_agent
 from agents.kesehatan_chat import get_kesehatan_agent
 from agents.sentiment_analyzer import get_sentiment_team
 from agents.narkotika_chat import get_narkotika_agent
+from agents.ppa_ppo_chat import get_ppa_ppo_agent
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 from workflows.sentiment_analysis import get_sentiment_analyzer
 from workflows.analisis_hukum import get_sistem_penelitian_hukum
@@ -60,6 +61,7 @@ agen_siber = get_siber_agent(debug_mode=True)
 agen_perbankan = get_perbankan_agent(debug_mode=True)
 agen_tipidter = get_tipidter_agent(debug_mode=True)
 agen_narkotika = get_narkotika_agent(debug_mode=True)
+agen_ppa_ppo = get_ppa_ppo_agent(debug_mode=True)
 #penyidik_tipikor_team = get_corruption_investigator_team(debug_mode=True) # Instantiate the team
 
 playground = Playground(
@@ -88,7 +90,8 @@ playground = Playground(
         agen_perbankan,
         agen_tipidter,
         sentiment_team,
-        agen_narkotika
+        agen_narkotika,
+        agen_ppa_ppo
     ],
     workflows=[
         analisator_kejahatan,

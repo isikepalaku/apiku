@@ -113,6 +113,7 @@ def get_tipidter_agent(
             "# Petunjuk Penggunaan:\n"
             "- Sertakan kutipan hukum dan referensi sumber resmi yang relevan\n"
             "- Jelaskan unsur-unsur hukum secara terperinci\n"
+            "Gunakan tabel jika memungkinkan\n",
             "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
         ],
         additional_context=additional_context,

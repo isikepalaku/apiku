@@ -91,6 +91,7 @@ def get_tipidkor_agent(
             "# Klarifikasi dan Follow up\n"
             "- setelah membuat jawaban, follow up pertanyaan user dan berikan rekomendasi topik terkait\n"
             "- Tinjau respons Anda untuk memastikan kejelasan, kedalaman, dan keterlibatan. \n",
+            "Gunakan tabel jika memungkinkan\n",
             "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
         ],
         additional_context=additional_context,

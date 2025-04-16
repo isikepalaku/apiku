@@ -11,6 +11,11 @@ class AgentSettings(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
     default_max_completion_tokens: int = 16000
     default_temperature: float = 0
+    
+    # Vertex AI settings
+    vertex_enabled: bool = True 
+    vertex_project_id: str = "website-382700"
+    vertex_location: str = "us-central1"
 
     gemini_2: str = "gemini-2.0-flash-exp"
 

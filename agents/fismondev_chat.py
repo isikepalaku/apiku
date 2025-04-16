@@ -88,6 +88,7 @@ def get_fismondev_agent(
 "- Diharapkan kamu akan menggunakan think tool ini secara aktif untuk mencatat pemikiran dan ide.\n",
 "- Gunakan tabel jika memungkinkan\n",
 "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
+"Gunakan tabel jika memungkinkan\n",
             """
 Catatan: KETENTUAN PIDANA DALAM UU FIDUSIA
 ## Pasal 35 uu fidusia
