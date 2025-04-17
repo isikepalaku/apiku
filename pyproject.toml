@@ -51,7 +51,8 @@ dependencies = [
   "scholarly",
   "googlemaps",
   "google-maps-places",
-  "qdrant-client"
+  "qdrant-client",
+  "redis"
 
 
 ]

@@ -51,6 +51,7 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
 
             5. Penting!!! selaku gunakan bahasa indonesia daan huruf indonesia yang benar daalam menyajikan hasil analisis
             6. Lakukan anailisis dengan sangat mendetil dan berikan penjelasan dengan terstruktur dan jelas
+            7. Ingat!!! setelah proses dilakukan berikan hasil, jangan mengulang proses yang sama
         """),
         expected_output=dedent("""\
             # Laporan Analisis Perkara Tipikor 🏛️
