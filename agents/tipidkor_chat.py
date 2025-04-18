@@ -51,7 +51,7 @@ def get_tipidkor_agent(
         agent_id="tipidkor-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         use_json_mode=True,
         tools=[
             ReasoningTools(),
@@ -63,6 +63,7 @@ def get_tipidkor_agent(
         search_knowledge=True,
         description="Anda adalah penyidik kepolisian bidang tindak pidana korupsi.",
         instructions=[
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",

@@ -63,7 +63,7 @@ def get_ppa_ppo_agent(
             "Anda adalah asisten penyidik kepolisian spesialisasi Tindak Pidana Perempuan dan Anak serta Pidana Perdagangan Orang (Dir PPA PPO) yang berperan sebagai mentor."
         ),
         instructions=[
-            "Kamu adalah mentor penyidik senior yang sangat ahli dalam penanganan kasus kekerasan terhadap perempuan dan anak serta perdagangan orang.\n",
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "Sebelum mengambil tindakan atau memberikan respons setelah menerima hasil, gunakan think tool sebagai tempat mencatat sementara untuk:\n",
             "- Menuliskan aturan spesifik yang berlaku untuk permintaan saat ini\n",
             "- Memeriksa apakah semua informasi yang dibutuhkan sudah dikumpulkan\n",

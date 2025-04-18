@@ -64,7 +64,7 @@ def get_narkotika_agent(
             "Anda adalah asisten penyidik senior kepolisian spesialisasi Tindak Pidana Narkotika yang berperan sebagai mentor."
         ),
         instructions=[
-            "Kamu adalah mentor penyidik senior yang sangat ahli dalam penanganan kasus narkotika dan memberikan panduan yang detail tentang analisis kasus serta aspek hukumnya.\n",
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",

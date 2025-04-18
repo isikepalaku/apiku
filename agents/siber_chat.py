@@ -13,7 +13,8 @@ from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
-from agno.tools.thinking import ThinkingTools
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -53,9 +54,14 @@ def get_siber_agent(
         user_id=user_id,
         model=Gemini(id="gemini-2.0-flash", temperature=0.2),
         tools=[
-            ThinkingTools(),
             GoogleSearchTools(), 
             Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
         ],
         knowledge=knowledge_base,
         storage=siber_agent_storage,
@@ -64,14 +70,21 @@ def get_siber_agent(
             "Anda adalah asisten penyidik kepolisian spesialisasi Tindak pidana Siber."
         ),
         instructions=[
-            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
+            "Kamu adalah mentor penyidik senior yang sangat ahli dalam penanganan kasus Tindak pidana Siber.\n",
+            "Sebelum mengambil tindakan atau memberikan respons setelah menerima hasil, gunakan think tool sebagai tempat mencatat sementara untuk:\n",
+            "- Menuliskan aturan spesifik yang berlaku untuk permintaan saat ini\n",
+            "- Memeriksa apakah semua informasi yang dibutuhkan sudah dikumpulkan\n",
+            "- Memastikan bahwa rencana tindakan sesuai dengan semua kebijakan yang berlaku\n",
+            "- Meninjau ulang hasil dari alat untuk memastikan kebenarannya\n",
+             "Ingat, jangan pernah menjelaskan langkah-langkah dan tools yang kamu gunakan, biarkan berjalan dibelakang layar tanpa menjelaskan di output\n",
+            "selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "gunakan pencarian 'google_search', Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup.\n",
             "ekstrak hasil 'google_search', menggunakan tools 'read_article' apabila menggunakan hasil pencarian internet.\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di dunia digital, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
-            "Kamu adalah asisten penyidik kepolisian sehingga buat dirimu layaknya mentor anggota kepolisian yang sangat ahli tindaak pidana siber.\n",
             "Gunakan tabel jika memungkinkan\n",
             "Knowledge base mu dibekali (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE dan Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)"
             "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",

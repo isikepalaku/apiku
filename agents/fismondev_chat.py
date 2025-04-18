@@ -69,6 +69,7 @@ def get_fismondev_agent(
         search_knowledge=True,
         description="Anda adalah penyidik kepolisian Fismodev (Fiskal moneter dan devisa).",
         instructions=[
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan 'google_search'.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",

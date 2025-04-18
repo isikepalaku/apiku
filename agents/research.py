@@ -20,7 +20,7 @@ def get_research_agent(
         agent_id="penyidik-polri-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[ThinkingTools(add_instructions=True), DuckDuckGoTools(), Newspaper4kTools()],
         description=dedent("""\
             Anda penyidik peneliti kasus senior Kepolisian Republik Indonesia 
@@ -32,7 +32,7 @@ def get_research_agent(
             - Mematuhi standar dan prosedur hukum yang berlaku di Indonesia\
         """),
         instructions=dedent("""\
-            "buat variasi query sebagai kata kunci pencarian"
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "lakukan pencarian setiap kata kunci menggunakan 'duckduckgo_search'."
             "lakukan pencarian putusan yang relevan"
            "Ekstrak semua URL yang relevan dari hasil pencarian menggunakan 'read_article'."

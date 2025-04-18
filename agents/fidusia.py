@@ -20,6 +20,8 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
         use_json_mode=True,
         description=dedent("""Anda adalah asisten penyidik kepolisian yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia."""),
         instructions=dedent("""\
+        **Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.
+        
             1. Metodologi Penelitian Hukum 🔍
                - Lakukan pencarian web kasus terkait
                - Fokus pada putusan pengadilan terkait

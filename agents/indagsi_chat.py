@@ -46,7 +46,7 @@ def get_ipi_agent(
         agent_id="ipi-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             GoogleSearchTools(),
             Newspaper4kTools(),
@@ -64,6 +64,7 @@ def get_ipi_agent(
             "Penyidik kepolisian yang berfokus pada investigasi kasus-kasus di bidang Industri Perdagangan dan Investasi, "
         ),
         instructions=[
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan 'search_knowledge_base' tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
