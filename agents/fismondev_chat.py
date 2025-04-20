@@ -52,10 +52,10 @@ def get_fismondev_agent(
         agent_id="fismondev-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         use_json_mode=True,
         tools=[
-            GoogleSearchTools(),
+            GoogleSearchTools(cache_results=True),
             Newspaper4kTools(),
             MCPTools(
                 server_params=StdioServerParameters(

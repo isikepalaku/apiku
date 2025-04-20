@@ -50,10 +50,10 @@ def get_ppa_ppo_agent(
         agent_id="ppa-ppo-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             ThinkingTools(add_instructions=True),
-            GoogleSearchTools(), 
+            GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
         ],
         knowledge=knowledge_base,

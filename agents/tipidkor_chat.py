@@ -55,7 +55,7 @@ def get_tipidkor_agent(
         use_json_mode=True,
         tools=[
             ReasoningTools(),
-            GoogleSearchTools(), 
+            GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
         ],
         knowledge=knowledge_base,

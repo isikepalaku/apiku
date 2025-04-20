@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
-from agno.models.openai import OpenAIChat
+from agno.models.google import Gemini
 from agno.vectordb.qdrant import Qdrant
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
@@ -49,12 +49,13 @@ def get_kuhp_agent(
         agent_id="kuhp-chat",
         session_id=session_id,
         user_id=user_id,
-        model=OpenAIChat(id="gpt-4o-mini"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             ThinkingTools(add_instructions=True),
             TavilyTools(), 
             Newspaper4kTools(),
         ],
+        knowledge=knowledge_base,
         storage=kuhp_agent_storage,
         description=(
             "Anda adalah penyidik kepolisian yang ahli dalam UU Nomor 1 Tahun 2023 tentang KUHP"

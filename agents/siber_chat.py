@@ -1,7 +1,9 @@
 import os
-from typing import Optional
+from typing import Optional, List
 from pathlib import Path
 from dotenv import load_dotenv
+from google import genai
+from agno.media import File
 from agno.agent import Agent
 from agno.embedder.google import GeminiEmbedder
 from agno.knowledge.text import TextKnowledgeBase
@@ -36,10 +38,14 @@ knowledge_base = TextKnowledgeBase(
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
 #knowledge_base.load(recreate=True)
 
+# Initialize Google GenAI client
+genai_client = genai.Client()
+
 def get_siber_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     debug_mode: bool = True,
+    files: Optional[List[File]] = None,
 ) -> Agent:
     additional_context = ""
     if user_id:
@@ -52,9 +58,11 @@ def get_siber_agent(
         agent_id="siber-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash", temperature=0.2),
+        model=Gemini(
+            id="gemini-2.5-flash-preview-04-17"
+        ),
         tools=[
-            GoogleSearchTools(), 
+            GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
             MCPTools(
                 server_params=StdioServerParameters(

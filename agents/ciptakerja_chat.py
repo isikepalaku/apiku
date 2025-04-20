@@ -53,6 +53,7 @@ def get_cipta_kerja_agent(
             "Anda adalah ahli Undang-undang Nomor 6 Tahun 2023 tentang Cipta Kerja. "
         ),
         instructions=[
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "Catatan: Undang-Undang Cipta Kerja telah diubah dengan:\n"
             "- UU No. 66 Tahun 2024 tentang Perubahan Ketiga atas Undang-Undang Nomor 17 Tahun 2008 tentang Pelayaran\n"
             "- UU No. 65 Tahun 2024 tentang Perubahan Ketiga atas Undang-Undang Nomor 13 Tahun 2016 tentang Paten\n"

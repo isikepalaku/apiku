@@ -54,7 +54,7 @@ def get_narkotika_agent(
         model=Gemini(id="gemini-2.0-flash"),
         tools=[
             ThinkingTools(add_instructions=True),
-            GoogleSearchTools(), 
+            GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
         ],
         knowledge=knowledge_base,
