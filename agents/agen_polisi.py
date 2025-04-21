@@ -13,7 +13,7 @@ def get_police_agent(
         name="Police Agent",
         agent_id="police-agent",
         model=Gemini(
-            id="gemini-1.5-flash",
+            id="gemini-2.0-flash",
             api_key=os.environ["GOOGLE_API_KEY"]
         ),
         description="Anda adalah anggota kepolisian yang khusus melakukan analisa laporan atau kejadian.",

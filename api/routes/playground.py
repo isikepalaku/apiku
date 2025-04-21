@@ -39,6 +39,7 @@ from agents.kesehatan_chat import get_kesehatan_agent
 from agents.sentiment_analyzer import get_sentiment_team
 from agents.narkotika_chat import get_narkotika_agent
 from agents.ppa_ppo_chat import get_ppa_ppo_agent
+from agents.dit_reskrimum_chat import get_dit_reskrimum_agent # Import Dit Reskrimum agent
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 from workflows.sentiment_analysis import get_sentiment_analyzer
 from workflows.analisis_hukum import get_sistem_penelitian_hukum
@@ -77,6 +78,7 @@ agen_perbankan = get_perbankan_agent(debug_mode=True)
 agen_tipidter = get_tipidter_agent(debug_mode=True)
 agen_narkotika = get_narkotika_agent(debug_mode=True)
 agen_ppa_ppo = get_ppa_ppo_agent(debug_mode=True)
+agen_dit_reskrimum = get_dit_reskrimum_agent(debug_mode=True) # Instantiate Dit Reskrimum agent
 #penyidik_tipikor_team = get_corruption_investigator_team(debug_mode=True) # Instantiate the team
 
 playground = Playground(
@@ -107,7 +109,8 @@ playground = Playground(
         agen_tipidter,
         sentiment_team,
         agen_narkotika,
-        agen_ppa_ppo
+        agen_ppa_ppo,
+        agen_dit_reskrimum # Add Dit Reskrimum agent instance
     ],
     workflows=[
         analisator_kejahatan,
@@ -232,6 +235,7 @@ async def agent_with_files(
         "bantek-agent": get_perkaba_bantek_agent,
         "emp-agent": get_emp_agent,
         "wassidik-agent": get_wassidik_agent,
+        "dit-reskrimum-chat": get_dit_reskrimum_agent, # Add Dit Reskrimum agent function mapping
     }
     
     # Get the agent creation function or return 404 if not found

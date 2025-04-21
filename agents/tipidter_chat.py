@@ -37,7 +37,7 @@ knowledge_base = TextKnowledgeBase(
 )
 
 # Jika diperlukan, muat basis pengetahuan (gunakan recreate=True untuk rebuild)
-#knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=False)
 
 def get_tipidter_agent(
     user_id: Optional[str] = None,

@@ -5,10 +5,14 @@ from pathlib import Path
 from agno.agent import Agent
 from agno.media import Image
 from agno.models.google import Gemini
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 from agno.tools.duckduckgo import DuckDuckGoTools
+from agno.tools.newspaper4k import Newspaper4kTools
 from dotenv import load_dotenv
 from google.generativeai import upload_file
 from google.generativeai.types import file_types
+from agno.tools.googlesearch import GoogleSearchTools
 
 # Load environment variables
 load_dotenv()
@@ -39,7 +43,7 @@ def get_geo_agent(
        Lihat semua detail yang tersedia dalam gambar.
 
     2. **Buat Dugaan Lokasi:**  
-       Berikan dugaan lokasi yang mencakup nama jalan (jika terlihat), kota, provinsi (jika relevan), dan negara.
+       Lakukan pencarian 'DuckDuckGoTools' untuk mengetahui informasi lokasi yang relevan. Berikan dugaan lokasi yang mencakup nama jalan (jika terlihat), kota, provinsi (jika relevan), dan negara.
 
     3. **Jelaskan Alasan Secara Detail:**  
        Sertakan penjelasan mendalam mengenai petunjuk visual yang mendukung kesimpulan Anda.
@@ -61,7 +65,17 @@ def get_geo_agent(
         agent_id="geo-image-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash-exp", search=True),
+        model=Gemini(id="gemini-2.0-flash"),
+        tools=[
+            GoogleSearchTools(cache_results=True), 
+            Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
+        ],
         description="Anda adalah ahli geografi yang menganalisis gambar untuk menentukan lokasi berdasarkan petunjuk visual yang tersedia. Semua analisis akan diberikan dalam Bahasa Indonesia.",
         instructions=[geo_query],
         markdown=True,
