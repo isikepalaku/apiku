@@ -7,11 +7,7 @@ from agno.media import File as AgnoFile
 import os # Import os for file operations
 from google import genai # Re-import genai
 from time import sleep # Re-import sleep
-import logging # Import logging
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from agno.utils.log import logger # Menggunakan logger dari agno
 from agents.agen_perkaba import get_perkaba_agent
 from agents.agen_bantek import get_perkaba_bantek_agent
 from agents.agen_emp import get_emp_agent
