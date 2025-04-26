@@ -9,7 +9,7 @@ from agno.models.google import Gemini
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.pgvector import PgVector, SearchType
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
@@ -19,7 +19,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi memory v2 dan storage
 memory = Memory(db=PostgresMemoryDb(table_name="ppa_ppo_agent_memories", db_url=db_url))
-ppa_ppo_agent_storage = PostgresAgentStorage(table_name="ppa_ppo_agent_memory", db_url=db_url, auto_upgrade_schema=True)
+ppa_ppo_agent_storage = PostgresStorage(table_name="ppa_ppo_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU PPA PPO
 knowledge_base = TextKnowledgeBase(
@@ -50,7 +50,7 @@ def get_ppa_ppo_agent(
         agent_id="ppa-ppo-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(cache_results=True), 
@@ -86,6 +86,7 @@ def get_ppa_ppo_agent(
             "Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar.\n",
             "Berikan panduan investigatif yang jelas dan terstruktur.\n",
             "Diharapkan kamu akan menggunakan think tool secara aktif untuk mencatat pemikiran dan ide.\n",
+            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
         use_json_mode=True,

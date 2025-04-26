@@ -7,19 +7,20 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.qdrant import Qdrant
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.thinking import ThinkingTools
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi memory v2 dan storage
 memory = Memory(db=PostgresMemoryDb(table_name="kuhp_agent_memories", db_url=db_url))
-kuhp_agent_storage = PostgresAgentStorage(table_name="kuhp_agent_memory", db_url=db_url)
+kuhp_agent_storage = PostgresStorage(table_name="kuhp_agent_memory", db_url=db_url)
 COLLECTION_NAME = "kuhp"
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait KUHP
 knowledge_base = TextKnowledgeBase(
@@ -49,16 +50,21 @@ def get_kuhp_agent(
         agent_id="kuhp-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         tools=[
-            ThinkingTools(add_instructions=True),
             TavilyTools(), 
             Newspaper4kTools(),
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
         ],
         knowledge=knowledge_base,
         storage=kuhp_agent_storage,
         description=(
-            "Anda adalah penyidik kepolisian yang ahli dalam UU Nomor 1 Tahun 2023 tentang KUHP"
+            "Ahli UU Nomor 1 Tahun 2023 tentang KUHP"
         ),
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",

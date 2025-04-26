@@ -1,4 +1,5 @@
 import os
+import asyncio
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
@@ -7,7 +8,7 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.models.google import Gemini
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.qdrant import Qdrant
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
@@ -19,7 +20,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
 memory = Memory(db=PostgresMemoryDb(table_name="tipidkor_agent_memories", db_url=db_url))
-tipidkor_agent_storage = PostgresAgentStorage(table_name="tipidkor_agent_memory", db_url=db_url)
+tipidkor_agent_storage = PostgresStorage(table_name="tipidkor_agent_memory", db_url=db_url)
 COLLECTION_NAME = "tipidkorkb"
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
@@ -33,7 +34,7 @@ knowledge_base = TextKnowledgeBase(
 )
 
 # Load knowledge base before initializing agent
-#knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=False)
 
 def get_tipidkor_agent(
     user_id: Optional[str] = None,
@@ -51,7 +52,7 @@ def get_tipidkor_agent(
         agent_id="tipidkor-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         use_json_mode=True,
         tools=[
             ReasoningTools(),
@@ -61,13 +62,14 @@ def get_tipidkor_agent(
         knowledge=knowledge_base,
         storage=tipidkor_agent_storage,
         search_knowledge=True,
-        description="Anda adalah penyidik kepolisian bidang tindak pidana korupsi.",
+        description="Penyidik kepolisian tindak pidana korupsi.",
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
+            "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang sudah memiliki keahlian mendalam di bidang penyidikkan, jawabanmu harus teliti, akurat dan mendalam.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
-            "Lakukan pencarian internet dengan web_search_using_tavily jika tidak ditemukan jawaban di basis pengetahuanmu.\n",
+            "Lakukan pencarian internet dengan google_search jika tidak ditemukan jawaban di basis pengetahuanmu.\n",
             "Berikan panduan selayaknya mentor penyidik kepolsian yang ahli pada tindak pidana korupsi\n",
             
             "# Dasar Hukum\n"
@@ -94,6 +96,7 @@ def get_tipidkor_agent(
             "- Tinjau respons Anda untuk memastikan kejelasan, kedalaman, dan keterlibatan. \n",
             "Gunakan tabel jika memungkinkan\n",
             "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
+            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
         debug_mode=debug_mode,

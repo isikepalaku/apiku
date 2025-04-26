@@ -9,17 +9,18 @@ from agno.models.google import Gemini
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.pgvector import PgVector, SearchType
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
-from agno.tools.thinking import ThinkingTools
+from agno.tools.mcp import MCPTools
+from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi memory v2 dan storage
 memory = Memory(db=PostgresMemoryDb(table_name="narkotika_agent_memories", db_url=db_url))
-narkotika_agent_storage = PostgresAgentStorage(table_name="narkotika_agent_memory", db_url=db_url, auto_upgrade_schema=True)
+narkotika_agent_storage = PostgresStorage(table_name="narkotika_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 COLLECTION_NAME = "narkotika"
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU Narkotika
@@ -33,7 +34,7 @@ knowledge_base = TextKnowledgeBase(
 )
 
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
-#knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=False)
 
 def get_narkotika_agent(
     user_id: Optional[str] = None,
@@ -51,12 +52,17 @@ def get_narkotika_agent(
         agent_id="narkotika-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         tools=[
-            ThinkingTools(add_instructions=True),
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
-        ],
+            MCPTools(
+                server_params=StdioServerParameters(
+                    command="npx",
+                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                )
+            )
+            ],
         knowledge=knowledge_base,
         storage=narkotika_agent_storage,
         search_knowledge=True,
@@ -77,6 +83,7 @@ def get_narkotika_agent(
             "- UU No. 6 Tahun 2023 tentang Cipta Kerja\n",
             "Berikan penjelasan yang komprehensif dengan mempertimbangkan status terkini dari peraturan tersebut."
             "Berikan panduan investigatif yang jelas dan terstruktur dalam bahasa indonesia\n",
+            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
         use_json_mode=True,

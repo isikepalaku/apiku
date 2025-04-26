@@ -1,19 +1,18 @@
 import os
+import asyncio
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.models.google import Gemini
-from agno.document.chunking.agentic import AgenticChunking
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.qdrant import Qdrant
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+from agno.tools.thinking import ThinkingTools
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 
@@ -21,9 +20,8 @@ load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
 memory = Memory(db=PostgresMemoryDb(table_name="fismondev_agent_memories", db_url=db_url))
-fismondev_agent_storage = PostgresAgentStorage(table_name="fismondev_agent_memory", db_url=db_url)
+fismondev_agent_storage = PostgresStorage(table_name="fismondev_agent_memory", db_url=db_url)
 COLLECTION_NAME = "fismondev"
-chunking_strategy=AgenticChunking(),
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
     path=Path("data/p2sk"),
@@ -35,7 +33,7 @@ knowledge_base = TextKnowledgeBase(
     )
 )
 # Load knowledge base before initializing agent
-#knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=False)
 
 def get_fismondev_agent(
     user_id: Optional[str] = None,
@@ -52,17 +50,12 @@ def get_fismondev_agent(
         agent_id="fismondev-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         use_json_mode=True,
         tools=[
-            GoogleSearchTools(cache_results=True),
+            ThinkingTools(add_instructions=True),
+            GoogleSearchTools(),
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
         ],
         knowledge=knowledge_base,
         storage=fismondev_agent_storage,
@@ -70,6 +63,7 @@ def get_fismondev_agent(
         description="Anda adalah penyidik kepolisian Fismodev (Fiskal moneter dan devisa).",
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
+            "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang sudah memiliki keahlian mendalam di bidang penyidikkan, jawabanmu harus teliti, akurat dan mendalam.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan 'google_search'.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
@@ -77,8 +71,9 @@ def get_fismondev_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana dalam sektor jasa keuangan, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Berikan rekomendasi pihak-pihak yang perlu diperiksa dan barang bukti yang perlu ditelusuri.\n",
-            "Gunakan hasil pencarian web jika tidak ditemukan jawaban di knowledge base\n",
+            "Aturan khusus mengesampingkan undang-undang p2sk penyidikan sektor jasa keuangan ada di dokumen PP nomor 5 tahun 2023 yang dilaksanakan baik oleh Kepolisian Negara Republik Indonesia maupun Penyidik Otoritas Jasa Keuangan.\n",
             "Berikan panduan investigatif yang jelas dan terstruktur dalam bahasa indonesia tanpa menjelaskan langkah-langkah dan tool yang kamu gunakan\n",
+            "Ingat!!! selalu utamakan ketentuan pidana khusus (lex specialis) dibandingkan lex generalis dalam menelaah penerapan pasal dan undang-undang\n",
             "## Menggunakan think tool",
 "Sebelum mengambil tindakan atau memberikan respons setelah menerima hasil dari alat, gunakan think tool sebagai tempat mencatat sementara untuk:",
 "- Menuliskan aturan spesifik yang berlaku untuk permintaan saat ini\n",
@@ -90,6 +85,7 @@ def get_fismondev_agent(
 "- Gunakan tabel jika memungkinkan\n",
 "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
 "Gunakan tabel jika memungkinkan\n",
+"- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
             """
 Catatan: KETENTUAN PIDANA DALAM UU FIDUSIA
 ## Pasal 35 uu fidusia

@@ -1,17 +1,18 @@
 import os
+import asyncio
 from typing import Optional, List
 from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
 from agno.media import File
 from agno.agent import Agent
-from agno.embedder.google import GeminiEmbedder
+from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.qdrant import Qdrant
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
@@ -22,7 +23,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi memory v2 dan storage
 memory = Memory(db=PostgresMemoryDb(table_name="siber_agent_memories", db_url=db_url))
-siber_agent_storage = PostgresAgentStorage(table_name="siber_agent_memory", db_url=db_url, auto_upgrade_schema=True)
+siber_agent_storage = PostgresStorage(table_name="siber_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 COLLECTION_NAME = "siber"
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU ITE
 knowledge_base = TextKnowledgeBase(
@@ -30,13 +31,13 @@ knowledge_base = TextKnowledgeBase(
     vector_db = Qdrant(
         collection=COLLECTION_NAME,
         url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
-        embedder=GeminiEmbedder(),
+        embedder=OpenAIEmbedder(),
         api_key=os.getenv("QDRANT_API_KEY")
     )
 )
 
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
-#knowledge_base.load(recreate=True)
+#knowledge_base.load(recreate=False)
 
 # Initialize Google GenAI client
 genai_client = genai.Client()
@@ -75,11 +76,11 @@ def get_siber_agent(
         storage=siber_agent_storage,
         search_knowledge=True,
         description=(
-            "Anda adalah asisten penyidik kepolisian spesialisasi Tindak pidana Siber."
+            "Asisten penyidik kepolisian spesialisasi Tindak pidana Siber."
         ),
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
-            "Kamu adalah mentor penyidik senior yang sangat ahli dalam penanganan kasus Tindak pidana Siber.\n",
+            "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang sudah memiliki keahlian mendalam di bidang penyidikkan, jawabanmu harus teliti, akurat dan mendalam.\n",
             "Sebelum mengambil tindakan atau memberikan respons setelah menerima hasil, gunakan think tool sebagai tempat mencatat sementara untuk:\n",
             "- Menuliskan aturan spesifik yang berlaku untuk permintaan saat ini\n",
             "- Memeriksa apakah semua informasi yang dibutuhkan sudah dikumpulkan\n",
@@ -94,8 +95,10 @@ def get_siber_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di dunia digital, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Gunakan tabel jika memungkinkan\n",
+            "Ingat!!! selalu utamakan ketentuan pidana khusus (lex specialis) dibandingkan lex generalis dalam menelaah penerapan pasal dan undang-undang\n",
             "Knowledge base mu dibekali (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE dan Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)"
             "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
+            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
         use_json_mode=True,

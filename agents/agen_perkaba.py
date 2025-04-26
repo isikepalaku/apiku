@@ -6,7 +6,7 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from db.session import db_url
@@ -17,7 +17,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
 memory = Memory(db=PostgresMemoryDb(table_name="perkaba_agent_memories", db_url=db_url))
-perkaba_agent_storage = PostgresAgentStorage(table_name="perkaba_agent_memory", db_url=db_url)
+perkaba_agent_storage = PostgresStorage(table_name="perkaba_agent_memory", db_url=db_url)
 COLLECTION_NAME = "perkabapolri"
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(

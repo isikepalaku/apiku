@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
-from agno.models.openrouter import OpenRouter
+from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.agent.postgres import PostgresAgentStorage
 from db.session import db_url
@@ -41,7 +41,7 @@ def get_cipta_kerja_agent(
         agent_id="cipta-kerja-chat",
         session_id=session_id,
         user_id=user_id,
-         model=OpenRouter(id="openrouter/optimus-alpha"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         tools=[ThinkingTools(add_instructions=True), GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=cipta_kerja_agent_storage,

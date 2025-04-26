@@ -7,7 +7,7 @@ from agno.models.openai import OpenAIChat
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.pdf_url import PDFUrlKnowledgeBase
 from agno.vectordb.pgvector import PgVector, SearchType
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from db.session import db_url
@@ -16,7 +16,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
 memory = Memory(db=PostgresMemoryDb(table_name="bantek_agent_memories", db_url=db_url))
-bantek_agent_storage = PostgresAgentStorage(table_name="bantek_agent_memory", db_url=db_url)
+bantek_agent_storage = PostgresStorage(table_name="bantek_agent_memory", db_url=db_url)
 
 # Initialize text knowledge base with multiple documents
 knowledge_base = PDFUrlKnowledgeBase(

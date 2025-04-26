@@ -7,7 +7,7 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.qdrant import Qdrant
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from db.session import db_url
@@ -19,7 +19,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
 memory = Memory(db=PostgresMemoryDb(table_name="p2sk_agent_memories", db_url=db_url))
-p2sk_agent_storage = PostgresAgentStorage(table_name="p2sk_agent_memory", db_url=db_url, auto_upgrade_schema=True)
+p2sk_agent_storage = PostgresStorage(table_name="p2sk_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 COLLECTION_NAME = "fismondev"
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
@@ -45,7 +45,7 @@ def get_p2sk_agent(
         agent_id="p2sk-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         tools=[ThinkingTools(add_instructions=True), TavilyTools(), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=p2sk_agent_storage,

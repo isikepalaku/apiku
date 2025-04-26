@@ -1,4 +1,5 @@
 import os
+import asyncio
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
@@ -7,7 +8,7 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.qdrant import Qdrant
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from rich.json import JSON
 from agno.memory.v2.db.postgres import PostgresMemoryDb
@@ -22,7 +23,7 @@ load_dotenv()  # Memuat variabel lingkungan dari file .env
 
 # Inisialisasi memory v2 dan storage
 memory = Memory(db=PostgresMemoryDb(table_name="tipidter_agent_memories", db_url=db_url))
-tipidter_agent_storage = PostgresAgentStorage(table_name="tipidter_memory_agent", db_url=db_url)
+tipidter_agent_storage = PostgresStorage(table_name="tipidter_memory_agent", db_url=db_url)
 COLLECTION_NAME = "tipidter"
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait hukum untuk Tipidter
@@ -55,7 +56,7 @@ def get_tipidter_agent(
         agent_id="tipidter-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         tools=[
             ThinkingTools(add_instructions=True),
             DuckDuckGoTools(cache_results=True), 
@@ -69,6 +70,7 @@ def get_tipidter_agent(
         ),
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
+            "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang sudah memiliki keahlian mendalam di bidang penyidikkan, jawabanmu harus teliti, akurat dan mendalam.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
@@ -116,6 +118,8 @@ def get_tipidter_agent(
             "- Jelaskan unsur-unsur hukum secara terperinci\n"
             "Gunakan tabel jika memungkinkan\n",
             "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
+            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
+            "Ingat!!! selalu utamakan ketentuan pidana khusus (lex specialis) dibandingkan lex generalis dalam menelaah penerapan pasal dan undang-undang\n",
         ],
         additional_context=additional_context,
         use_json_mode=True,

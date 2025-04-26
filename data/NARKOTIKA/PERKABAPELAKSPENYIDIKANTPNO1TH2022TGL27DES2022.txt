@@ -1,0 +1,180 @@
+![](_page_0_Picture_3.jpeg)
+
+![](_page_0_Picture_5.jpeg)
+
+![](_page_1_Picture_1.jpeg)
+
+![](_page_1_Picture_3.jpeg)
+
+![](_page_2_Picture_0.jpeg)
+
+# PERATURAN KEPALA BADAN RESERSE KRIMINAL POLRI NOMOR 1 TAHUN 2022
+
+# TENTANG
+
+# STANDAR OPERASIONAL PROSEDUR PELAKSANAAN PENYIDIKAN TINDAK PIDANA
+
+DENGAN RAHMAT TUHAN YANG MAHA ESA
+
+KEPALA BADAN RESERSE KRIMINAL POLRI,
+
+- Menimbang : a. bahwa dalam melaksanakan tugas penegakan hukum, penyidik Kepolisian Negara Republik Indonesia mempunyai tugas, fungsi, dan wewenang di bidang penyidikan tindak pidana yang dilaksanakan sesuai dengan ketentuan peraturan perundang-undangan;
+	- b. bahwa Peraturan Kepala Badan Reserse Kriminal Kepolisian Negara Republik Indonesia Nomor 1 Tahun 2014 tentang Standar Operasional Prosedur perencanaan penyidikan tindak pidana, Peraturan Kepala Badan Reserse Kriminal Polri Nomor 2 Tahun 2014 tentang Standar Operasional Prosedur Pengorganisasian penyidikan tindak pidana, Peraturan Kepala Badan Reserse Kriminal Kepolisian Negara Republik Indonesia Nomor 3 Tahun 2014 tentang Standar Operasional Prosedur Pelaksanaan Tindak Pidana, dan Peraturan Kepala Badan Reserse Kriminal Kepolisian Negara Republik Indonesia Nomor 4 Tahun 2014 tentang Standar Operasional Prosedur Pengawasan Penyidikan Tindak Pidana, sudah tidak sesuai dengan perkembangan peraturan perundang-undangan, sehingga perlu diganti;
+	- c. bahwa berdasarkan pertimbangan sebagaimana
+
+dimaksud dalam huruf a dan huruf b, perlu menetapkan Peraturan Kepala Badan Reserse Kriminal Kepolisian Negara Republik Indonesia tentang Standar Operasional Prosedur Pelaksanaan Penyidikan Tindak Pidana;
+
+- Mengingat : Peraturan Kepala Kepolisian Negara Republik Indonesia Nomor 6 Tahun 2019 tentang Penyidikan Tindak Pidana;
+#### MEMUTUSKAN
+
+Menetapkan : PERATURAN KEPALA BADAN RESERSE KRIMINALKEPOLISIAN NEGARA REPUBLIK INDONESIA TENTANG PELAKSANAAN PENYIDIKAN TINDAK PIDANA
+
+### BAB I
+
+#### KETENTUAN UMUM
+
+### Pasal 1
+
+Dalam Peraturan ini yang dimaksud dengan :
+
+- 1. Kepolisian Negara Republik Indonesia yang selanjutnya disebut Polri adalah alat negara yang berperan dalam memelihara keamanan dan ketertiban masyarakat, menegakkan hukum, serta memberikan perlindungan, pengayoman dan pelayanan kepada masyarakat dalam rangka terpeliharanya keamanan dalam negeri.
+- 2. Badan Reserse Kriminal Polri yang selanjutnya disingkat Bareskrim Polri adalah unsur pelaksana utama [Kepolisian](https://id.wikipedia.org/wiki/Kepolisian_Republik_Indonesia) Negara [Republik Indonesia (](https://id.wikipedia.org/wiki/Kepolisian_Republik_Indonesia)Polri) pada tingkat Markas Besar yang dipimpin oleh Kepala Bareskrim (Kabareskrim Polri) yang bertanggung jawab kepada Kepala [Kepolisian](https://id.wikipedia.org/wiki/Kepala_Kepolisian_Negara_Republik_Indonesia) [Negara](https://id.wikipedia.org/wiki/Kepala_Kepolisian_Negara_Republik_Indonesia) Republik [Indonesia](https://id.wikipedia.org/wiki/Kepala_Kepolisian_Negara_Republik_Indonesia) (Kapolri).
+- 3. Penyelidikan adalah serangkaian tindakan penyelidikuntuk mencari dan menemukan suatu peristiwa yangdiduga sebagai tindak pidana guna menentukan dapat atau tidaknya dilakukan penyidikan menurut cara yang diatur dalam undang-undang.
+- 4. Penyidikan adalah serangkaian tindakan penyidik dalam hal dan menurut cara yang diatur dalam undang-undang
+
+untuk mencari serta mengumpulkan bukti yang terjadi dan guna menemukan tersangkanya.
+
+- 5. Penyelidik adalah pejabat Polri yang diberi wewenang oleh undang-undang untuk melakukan penyelidikan.
+- 6. Penyidik adalah Pejabat Polri yang diberi wewenang khusus oleh undang-undang untuk melakukan penyidikan.
+- 7. Penyidik Pembantu adalah Pejabat Polri yang diberi wewenang khusus oleh undang-undang untuk melakukan penyidikan.
+- 8. Atasan Penyidik adalah Pejabat Polri yang mempunyai kewenangan penyidikan yang secara struktural membawahi langsung Penyidik/Penyidik Pembantu.
+- 9. Laporan Informasi adalah informasi tentang suatu paristiwa dari masyarakat atau yang diketahui sendiri oleh Anggota Polri untuk dilakukan penyelidikan guna mengetahui apakah peristiwa tersebut merupakan peristiwa pidana atau bukan.
+- 10. Pengaduan adalah pemberitahuan dari seseorang yang memiliki hak untuk mengadu disertai permintaan kepada pejabat yang berwenang untuk menindak menurut hukum yang berlaku terhadap seseorang yang telah melakukan tindak pidana aduan yang merugikannya.
+- 11. Laporan Polisi adalah laporan tertulis yang dibuat oleh petugas Polri tentang adanya suatu peristiwa yang diduga tindak pidana baik yang ditemukan sendiri maupun melalui laporan yang disampaikan oleh seseorang karena hak atau kewajibannya.( dibatasi LP model A dan B)
+- 12. Laporan Hasil Penyelidikan adalah Laporan tertulis yang dibuat oleh Penyelidik yang berisi tentang hasilpenyelidikan terhadap suatu peristiwa yang diduga tindak pidana.
+- 13. Tempat Kejadian Perkara yang selanjutnya disingkat TKP adalah tempat terjadinya suatu tindak pidana dilakukan atau terjadi dan tempat lain dimana tersangka dan/atau korban dan/atau barang bukti yang berhubungan dengan tindak pidana tersebut dapat ditemukan.
+- 14. Barang Bukti adalah barang-barang yang berwujud atau tidak berwujud, bergerak atau tidak bergerak yang telah dilakukan penyitaan oleh Penyidik untuk keperluan pemeriksaan di sidang pengadilan.
+- 15. Barang Bukti Elektronik adalah informasi elektronik, dokumen elektronik, dan perforasi yang tersimpan dalam suatu perangkat elektronik.
+- 16. Surat Pemberitahuan Dimulainya Penyidikan yang selanjutnya disingkat SPDP adalah surat pemberitahuan kepada kepala kejaksaan tentang dimulainya penyidikan yang dilakukan oleh Penyidik Polri.
+- 17. Surat Pemberitahuan Perkembangan Hasil Penyidikan yang selanjutnya di singkat SP2HP adalah surat pemberitahuan terhadap pelapor/pengadu tentang hasil perkembanngan penyidikan.
+- 18. Surat Ketetapan tentang Pencabutan Penghentian Penyidikan disingkat SKPPP adalah surat ketetapan yang dikeluarkan oleh atasan penyidik dalam rangka membuka/melanjutkan kembali proses penyidikan yang telah dihentikan oleh penyidik berdasarkan putusan pra peradilan yang telah memiliki kekuatan hukum yang tetap.
+- 19. Surat Ketetapan tentang Penetapan Tersangka adalah surat ketetapan yang dikeluarkan oleh atasan penyidik untuk menetapkan seseorang menjadi tersangka berdasarkan bukti permulaan yang cukup.
+- 20. Surat Ketetapan tentang Pencabutan Status Tersangka adalah surat ketetapan yang dikeluarkan oleh atasan penyidik untuk mencabut status seseorang yang telah ditetapkan tersangka dengan alasan tidak cukup bukti atau bukan tindak pidana atau demi hukum karena kadaluarsa, nebis in idem, tersangka meninggal dunia, keadilan restoratif.
+- 21. Pemeriksaan pendahuluan adalah pemeriksaan yang dilakukan oleh pejabat pengemban fungsi pengawasan penyidikan berdasarkan surat perintah dari atasan Penyidik yang berwenang terhadap Penyidik atau Penyidik Pembantu yang diduga telah melakukan pelanggaran
+
+proses penyelidikan dan/atau penyidikan.
+
+- 22. Gelar perkara adalah kegiatan penyampaian penjelasan tentang proses penyelidikan dan penyidikan oleh Penyidik kepada peserta gelar dan dilanjutkan diskusi kelompok untuk mendapatkan tanggapan/ masukan/ koreksi guna menghasilkan rekomendasi untuk menentukan tindak lanjut proses penyelidikan dan penyidikan.
+- 23. Registrasi Administrasi penyidikan adalah pencatatan kegiatan proses penyidikan secara manual dan/atau melalui aplikasi e-manajemen.
+- 24. Aplikasi Elektronik manajemen penyidikan yang selanjutnya disebut e-mp adalah Aplikasi yang berbasis website yang digunakan oleh Penyidik atau Penyidik Pembantu dalam sistem manajemen penyidikan, sebagai sarana pengendalian dan datasabase perkara pidana.
+- 25. Penyelesaian Perkara yang selanjutnya disingkat selra adalah perkara yang telah selesai dilakukan proses penyelidikan dan penyidikan oleh penyelidik dan penyidik/penyidik pembantu dan dianggap telah selesai penyidikannya oleh jaksa penuntut umum maupun dihentikan penyelidikan dan penyidikannya, terhadap penghentian penyelidikan dinilai sebagai kinerja penyelidik dan penyidik.
+- 26. Ahli adalah adalah orang yang memiliki pengetahuan dan pengalaman yang khusus sebagai dasar dalam memberikan keterangan yang dapat digunakan sebagai alat bukti di sidang peradilan pidana.
+
+# Pasal 2
+
+Ruang Lingkup pengaturan Peraturan Kabareskrim Polri ini meliputi pelaksanaan:
+
+- a. Penyelidikan dan Penyidikan Tindak Pidana;
+- b. administrasi Penyidikan Tindak Pidana;
+- c. bantuan teknis Penyelidikan Dan Penyidikan Tindak Pidana;
+- d. sistem aplikasi elektronik manajemen penyidikan tindak pidana; dan
+
+- e. pengawasan penyidikan tindak pidana.
+#### Pasal 3
+
+- (1) Pelaksanaan Penyelidikan Tindak Pidana sebagaimana dimaksud dalam Pasal 2 huruf a, meliputi:
+	- a. pengolahan TKP;
+	- b. pengamatan (observasi);
+	- c. wawancara (interview);
+	- d. pembuntutan (surveillance);
+	- e. penyamaran (undercover);
+	- f. pembelian terselubung (undercover buy);
+	- g. penyerahan dibawah Pengawasan (control delivery);
+	- h. pelacakan (tracking);
+	- i. penelitian dan analisa dokumen;
+	- j. penghentian penyelidikan; dan
+	- k. gelar perkara.
+- (2) Pelaksanaan Penyidikan Tindak Pidana sebagaimana dimaksud dalam Pasal 2 huruf a, meliputi:
+	- a. penerimaan Laporan/Pengaduan;
+	- b. penyelidikan;
+	- c. dimulainya penyidikan;
+	- d. upaya paksa;
+	- e. penetapan tersangka;
+	- f. pemberkasan;
+	- g. penyerahan berkas perkara;
+	- h. Penyerahan tanggung jawab atas tersangka dan barang bukti (Tahap II);
+	- i. Penghentian penyidikan;
+	- j. Surat pemberitahuan perkembangan hasil penyidikan (SP2HP);
+	- k. Pemblokiran rekening;
+	- l. Penerbitan daftar pencarian barang;
+	- m. Pencegahan dan/atau penangkalan terhadap pelaku tindak pidana;
+	- n. Menghadapi Pra peradilan;
+	- o. Pengolahan tindak pidana siber atau tindak pidana lain terkait barang bukti digital;
+- p. Gelar Perkara
+- (3) Pelaksanaan Penyelidikan dan penyidikan sebagaimana dimaksud pada ayat (1) dan ayat (2) dilaksanakan sesuai SOP sebagaimana tercantum dalam lampiran I yang merupakan bagian tidak terpisahkan dari peraturanKabareskrim Polri ini.
+
+### Pasal 4
+
+- (1) Pelaksanaan administrasi Penyidikan Tindak Pidana sebagaimana dimaksud dalam Pasal 2 huruf b meliputi:
+	- a. administrasi Penyidikan yang merupakan isi berkas perkara; dan
+	- b. administrasi penyidikan yang bukan merupakan isi berkas perkara.
+- (2) Administrasi penyidikan sebagaimana dimaksud pada ayat (1) dilaksanakan sesuai SOP sebagaimana tercantum dalam lampiran II yang merupakan bagian tidak terpisahkan dari peraturan Kabareskrim Polri ini.
+
+## Pasal 5
+
+- (1) Pelaksanaan bantuan teknis Penyelidikan dan Penyidikan Tindak Pidana sebagaimana dimaksud dalam Pasal 2 huruf c dilakukan berdasarkan permintaan kepada fungsi terkait.
+- (2) Permintaan sebagaimana dimaksud pada ayat (1) dilaksanakan sesuai SOP sebagaimana tercantum dalam lampiran III yang merupakan bagian tidak terpisahkan dari peraturan Kabareskrim Polri ini
+
+#### Pasal 6
+
+- (1) Pelaksanaan sistem aplikasi elektronik manajemen Penyidikan sebagaimana dimaksud dalam Pasal 2 huruf d, meliputi:
+	- a. registrasi dan penonaktifan akun pengguna EMP;
+	- b. input E mindik aplikasi EMP;
+	- c. pengawasan aplikasi EMP;
+	- d. evaluasi aplikasi EMP; dan
+
+e. helpdesk.
+
+- (2) Sistem Aplikasi Elektronik Manajemen Penyidikan sebagaimana dimaksud pada ayat (1) dilaksanakan sesuai SOP sebagaimana tercantum dalam lampiran IV yang merupakan bagian tidak terpisahkan dari peraturan Kabareskrim Polri ini.
+### Pasal 7
+
+- (1) Pelaksanaan pengawasan Penyidikan Tindak Pidana sebagaimana dimaksud dalam Pasal 2 huruf e, meliputi:
+	- a. subjek dan objek pengawasan;
+	- b. metode pengawasan; dan
+	- c. tata cara pengawasan penyidikan.
+- (2) Pengawasan Penyidikan Tindak Pidana sebagaimana dimaksud pada ayat (1) dilaksanakan sesuai SOP sebagaimana tercantum dalam lampiran V yang merupakan bagian tidak terpisahkan dari peraturanKabareskrim Polri ini.
+
+#### Pasal 8
+
+- (1) Selra berdasarkan laporan polisi yang ditangani oleh penyidik/penyidik pembantu yang dinyatakan lengkap oleh jaksa penuntut Umum dan perkara yang dihentikan penyidikannya karena tidak cukup bukti, peristiwa tersebut bukan tindak pidana dan dihentikan demi hukum.
+- (2) Selra berdasarkan laporan polisi atau Laporan Informasi yang ditangani oleh penyidik atau penyelidik yang telah selesai penyelidikanya dan dihentikan penyelidikanya dengan alasan tidak ditemukan peristiwa pidana.
+- (3) Penghitungan selra berdasarkan pada jumlah laporan polisi yang diselesaikan bukan berdasarkan pada jumlah berkas perkara yang dihasilkan.
+- (4) Laporan polisi yang dilimpahkan ke instansi lain tidak dihitung sebagai selra, tetapi dihitung sebagai pengurangan jumlah laporan polisi.
+- (5) Beberapa Laporan polisi yang Tindak Pidananya dengan
+
+subyek dan obyek yang sama dengan adanya persamaan tempat dan waktu terjadian peristiwa dibuat menjadi satu kesatuan penanganan perkara.
+
+### Pasal 9
+
+Pada saat Peraturan Kabareskrim Polri ini mulai berlaku:
+
+- a Peraturan Kabareskrim Polri Nomor 1 Tahun 2014 tentang Standar Operasional Prosedur perencanaan penyidikan tindak pidana;
+- b Peraturan Kabareskrim Polri Nomor 2 Tahun 2014 tentang Standar Operasional Prosedur Pengorganisasian penyidikan tindak pidana;
+- c Peraturan Kabareskrim Polri Nomor 3 Tahun 2014 tentang Standar Operasional Prosedur pelaksanaan tindak pidana;
+- d Peraturan Kabareskrim Polri Nomor 4 Tahun 2014 tentang Standar Operasional Prosedur pengawasan penyidikan tindak pidana;
+
+Dicabut dan dinyatakan tidak berlaku.
+
+#### BAB III
+
+#### KETENTUAN PENUTUP
+
+# Pasal 10
+
+Peraturan Kabareskrim Polri ini mulai berlaku pada tanggal disahkan.
+
+> Ditetapkan di Jakarta Pada tanggal 27 Desember 2022
+
+KEPALA BADAN RESERSE KRIMINAL POLRI
+
+Drs. AGUS ANDRIANTO, S.H., M.H. KOMISARISJENDERAL POLISI

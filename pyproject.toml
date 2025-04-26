@@ -10,6 +10,7 @@ dependencies = [
   "agno",
   "agno[aws]",
   "agno-docker",
+  "aiofiles",
   "beautifulsoup4",
   "duckduckgo-search",
   "fastapi[standard]",
@@ -50,7 +51,7 @@ dependencies = [
   "scholarly",
   "googlemaps",
   "google-maps-places",
-  "qdrant-client"
+  "qdrant-client==1.13.3"
 
 
 ]
