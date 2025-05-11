@@ -6,7 +6,7 @@ from agno.models.google import Gemini
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.tools.mcp import MCPTools
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from mcp import StdioServerParameters
 

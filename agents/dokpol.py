@@ -7,13 +7,13 @@ from agno.tools.newspaper4k import Newspaper4kTools
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.media import Image
-from agno.tools.tavily import TavilyTools
-from agno.storage.agent.postgres import PostgresAgentStorage
+from custom_tools.googlescholar import GoogleScholarTools
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 
 # Muat variabel lingkungan
 load_dotenv()
-dokpol_agent_storage = PostgresAgentStorage(table_name="dokpol_agent_memory", db_url=db_url, auto_upgrade_schema=True)
+dokpol_agent_storage = PostgresStorage(table_name="dokpol_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 # Prompt dasar yang mendefinisikan keahlian ahli citra medis dan analisis kedokteran
 BASE_PROMPT = dedent("""\
     Anda adalah seorang ahli citra medis dan analis kedokteran yang berpengalaman dengan keahlian tinggi di bidang radiologi, diagnostik pencitraan, dan evaluasi klinis.
@@ -108,7 +108,7 @@ def get_medis_agent(
         model=Gemini(id="gemini-2.0-flash"),
         tools=[
             ThinkingTools(add_instructions=True), # Removed to prevent potential tool override
-            TavilyTools(),
+            GoogleScholarTools(),
             Newspaper4kTools()
         ],  # Using GoogleSearchTools for references
         description="Anda adalah ahli kedokteran yang menganalisis gambar medis untuk membantu diagnosis dan penjelasan temuan. Semua analisis akan diberikan dalam Bahasa Indonesia dan berdasarkan standar medis terkini.",

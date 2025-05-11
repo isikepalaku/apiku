@@ -97,6 +97,7 @@ def get_siber_agent(
             "Gunakan tabel jika memungkinkan\n",
             "Ingat!!! selalu utamakan ketentuan pidana khusus (lex specialis) dibandingkan lex generalis dalam menelaah penerapan pasal dan undang-undang\n",
             "Knowledge base mu dibekali (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE dan Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)"
+            "Knowledge base juga terdapat lampiran I & III Perkaba POLRI No. 1/2022 (SOP Lidik Sidik & Bantuan Teknis)"
             "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
             "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],

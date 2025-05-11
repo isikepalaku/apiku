@@ -3,7 +3,7 @@ from typing import Optional
 
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from agno.tools.duckduckgo import DuckDuckGoTools
 
 from db.session import db_url
@@ -30,7 +30,7 @@ def get_scholar(
         # Tools available to the agent
         tools=[DuckDuckGoTools()],
         # Storage for the agent
-        storage=PostgresAgentStorage(table_name="scholar_sessions", db_url=db_url),
+        storage=PostgresStorage(table_name="scholar_sessions", db_url=db_url),
         # Description of the agent
         description=dedent("""\
             You are Scholar, a cutting-edge Answer Engine built to deliver precise, context-rich, and engaging responses.

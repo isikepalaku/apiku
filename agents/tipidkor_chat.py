@@ -14,7 +14,7 @@ from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.reasoning import ReasoningTools
+from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -52,10 +52,10 @@ def get_tipidkor_agent(
         agent_id="tipidkor-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         use_json_mode=True,
         tools=[
-            ReasoningTools(),
+            ThinkingTools(add_instructions=True),
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
         ],
@@ -94,7 +94,7 @@ def get_tipidkor_agent(
             "# Klarifikasi dan Follow up\n"
             "- setelah membuat jawaban, follow up pertanyaan user dan berikan rekomendasi topik terkait\n"
             "- Tinjau respons Anda untuk memastikan kejelasan, kedalaman, dan keterlibatan. \n",
-            "Gunakan tabel jika memungkinkan\n",
+            "- Gunakan tabel jika memungkinkan\n",
             "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
             "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
@@ -105,7 +105,4 @@ def get_tipidkor_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         read_chat_history=True,
-        memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
     )

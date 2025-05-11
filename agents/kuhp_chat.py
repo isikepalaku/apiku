@@ -1,6 +1,8 @@
+import asyncio
 import os
 from typing import Optional
 from pathlib import Path
+from textwrap import dedent
 from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
@@ -40,6 +42,14 @@ def get_kuhp_agent(
     session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
+    # Create MCPTools instance separately
+    sequential_thinking_mcp_tools = MCPTools(
+        server_params=StdioServerParameters(
+            command="npx",
+            args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+        )
+    )
+
     additional_context = ""
     if user_id:
         additional_context += "<context>"
@@ -52,14 +62,9 @@ def get_kuhp_agent(
         user_id=user_id,
         model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         tools=[
-            TavilyTools(), 
+            TavilyTools(),
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
+            sequential_thinking_mcp_tools, # Use the created instance
         ],
         knowledge=knowledge_base,
         storage=kuhp_agent_storage,
@@ -76,6 +81,15 @@ def get_kuhp_agent(
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek "
             "penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Gunakan TavilyTools apabila pertanyaan tidak ditemukan di knowledge_base.\n",
+            "**Sequential Thinking:**",
+            "Sebelum mengambil tindakan atau merespons pengguna setelah menerima hasil alat, gunakan alat `think` sebagai coretan untuk:",
+            "- Mencantumkan aturan spesifik yang berlaku untuk permintaan saat ini",
+            "- Memeriksa apakah semua informasi yang diperlukan telah dikumpulkan",
+            "- Memverifikasi bahwa tindakan yang direncanakan mematuhi semua kebijakan",
+            "- Mengulangi hasil alat untuk kebenaran",
+            "**Aturan Sequential Thinking:**",
+            "- Diharapkan Anda akan menggunakan alat `think` secara bebas untuk mencatat pemikiran dan ide.",
+            "- Gunakan tabel jika memungkinkan.",
         ],
         additional_context=additional_context,
         debug_mode=debug_mode,

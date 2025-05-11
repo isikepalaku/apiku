@@ -9,7 +9,7 @@ from custom_tools.googlescholar import GoogleScholarTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from db.session import db_url
@@ -18,7 +18,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
 memory = Memory(db=PostgresMemoryDb(table_name="ite_agent_memories", db_url=db_url))
-ite_agent_storage = PostgresAgentStorage(table_name="ite_agent_memory", db_url=db_url)
+ite_agent_storage = PostgresStorage(table_name="ite_agent_memory", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU ITE
 knowledge_base = TextKnowledgeBase(

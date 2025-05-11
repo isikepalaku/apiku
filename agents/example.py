@@ -1,7 +1,7 @@
 from typing import Optional
 
 from agno.agent import Agent
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 
 import google.generativeai as genai
 from google.generativeai.tools import browser
@@ -43,7 +43,7 @@ def osint_command_tool(prompt: str) -> str:
 # =============================
 # 4. Agent Storage
 # =============================
-basic_agent_storage = PostgresAgentStorage(
+basic_agent_storage = PostgresStorage(
     table_name="simple_agent",
     db_url=db_url,
     auto_upgrade_schema=True

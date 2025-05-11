@@ -7,7 +7,7 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.pgvector import PgVector, SearchType
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
@@ -16,7 +16,7 @@ from agno.tools.thinking import ThinkingTools
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi penyimpanan sesi dengan tabel baru khusus untuk agen UU Cipta Kerja
-cipta_kerja_agent_storage = PostgresAgentStorage(table_name="cipta_agen_memory", db_url=db_url)
+cipta_kerja_agent_storage = PostgresStorage(table_name="cipta_agen_memory", db_url=db_url)
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU Cipta Kerja
 knowledge_base = TextKnowledgeBase(

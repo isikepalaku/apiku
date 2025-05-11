@@ -7,7 +7,7 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
 from agno.vectordb.qdrant import Qdrant
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
@@ -19,7 +19,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi memory v2 dan storage untuk KUHAP
 memory = Memory(db=PostgresMemoryDb(table_name="kuhap_agent_memories", db_url=db_url))
-kuhap_agent_storage = PostgresAgentStorage(table_name="kuhap_agent_memory", db_url=db_url)
+kuhap_agent_storage = PostgresStorage(table_name="kuhap_agent_memory", db_url=db_url)
 COLLECTION_NAME = "kuhap" # Collection name spesifik untuk KUHAP
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait KUHAP

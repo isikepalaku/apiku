@@ -9,7 +9,7 @@ from agno.models.google import Gemini
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.pgvector import PgVector, SearchType
-from agno.storage.agent.postgres import PostgresAgentStorage
+from agno.storage.postgres import PostgresStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from db.session import db_url
@@ -20,7 +20,7 @@ load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
 memory = Memory(db=PostgresMemoryDb(table_name="kesehatan_agent_memories", db_url=db_url))
-kesehatan_agent_storage = PostgresAgentStorage(table_name="kesehatan_agent_memory", db_url=db_url)
+kesehatan_agent_storage = PostgresStorage(table_name="kesehatan_agent_memory", db_url=db_url)
 
 # Initialize knowledge base with health law documents
 knowledge_base = TextKnowledgeBase(

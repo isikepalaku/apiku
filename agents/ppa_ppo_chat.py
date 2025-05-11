@@ -50,7 +50,7 @@ def get_ppa_ppo_agent(
         agent_id="ppa-ppo-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(cache_results=True), 
@@ -96,7 +96,4 @@ def get_ppa_ppo_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         read_chat_history=True,
-        memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
     )

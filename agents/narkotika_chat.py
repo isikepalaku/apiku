@@ -52,7 +52,7 @@ def get_narkotika_agent(
         agent_id="narkotika-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
@@ -62,7 +62,7 @@ def get_narkotika_agent(
                     args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
                 )
             )
-            ],
+        ],
         knowledge=knowledge_base,
         storage=narkotika_agent_storage,
         search_knowledge=True,
@@ -78,7 +78,12 @@ def get_narkotika_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana narkotika.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Gunakan tabel jika memungkinkan\n",
-            "Knowledge base mu dibekali UU Nomor 35 Tahun 2009 tentang Narkotika dengan memperhatikan perubahan berdasarkan:\n",
+            """Knowledge base mu dibekali :
+            - UU Nomor 35 Tahun 2009 tentang Narkotika
+            - Peraturan Menteri Kesehatan Republik Indonesia Nomor 30 Tahun 2023 tentang Perubahan Penggolongan Narkotika
+            - UU RI Nomor 5 Tahun 1997 tentang Psikotropika"""
+            "Lampiran I & III Perkaba POLRI No. 1/2022 (SOP Lidik Sidik & Bantuan Teknis)\n",
+            "dengan memperhatikan perubahan berdasarkan:\n",
             "- UU No. 1 Tahun 2023 (KUHP) yang mencabut sebagian (Pasal 111-126)\n",
             "- UU No. 6 Tahun 2023 tentang Cipta Kerja\n",
             "Berikan penjelasan yang komprehensif dengan mempertimbangkan status terkini dari peraturan tersebut."

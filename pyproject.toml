@@ -51,7 +51,10 @@ dependencies = [
   "scholarly",
   "googlemaps",
   "google-maps-places",
-  "qdrant-client==1.13.3"
+  "qdrant-client",
+  "redis",
+  "slowapi",
+  "pyjwt"
 
 
 ]

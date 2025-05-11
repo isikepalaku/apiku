@@ -45,7 +45,7 @@ def get_ipi_agent(
         agent_id="ipi-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(),
@@ -65,6 +65,7 @@ def get_ipi_agent(
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "ingat lakukan pencarian web dengan tools 'google_search' Jika pencarian `search_knowledge_base` tidak menghasilkan hasil yang cukup, \n",
             "untuk setiap link berita, baca informasinya dengan tools 'read_article'.\n",
+            "Ingat!!! selalu utamakan ketentuan pidana khusus (lex specialis) dibandingkan lex generalis (KUHP) dalam menelaah penerapan pasal dan undang-undang\n",
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di sektor perdagangan dan investasi, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu peraturan atau pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya agar aspek-aspek penting dapat dipahami dengan jelas.\n",
             "Selalu lampirkan link sumber jika memberikan jawaban dari internet.\n",
@@ -88,7 +89,4 @@ def get_ipi_agent(
         debug_mode=debug_mode,
         show_tool_calls=False,
         markdown=True,
-        memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
     )
