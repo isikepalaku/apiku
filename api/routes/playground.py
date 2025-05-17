@@ -39,7 +39,7 @@ from agents.dit_reskrimum_chat import get_dit_reskrimum_agent # Import Dit Reskr
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 from workflows.sentiment_analysis import get_sentiment_analyzer
 from workflows.analisis_hukum import get_sistem_penelitian_hukum
-#from teams.penelititipidkor import get_corruption_investigator_team # Import the team
+from teams.penelititipidkor import get_sentiment_analysis_team # Import the new sentiment analysis team
 
 ######################################################
 ## Router for the agent playground
@@ -75,7 +75,8 @@ agen_tipidter = get_tipidter_agent(debug_mode=True)
 agen_narkotika = get_narkotika_agent(debug_mode=True)
 agen_ppa_ppo = get_ppa_ppo_agent(debug_mode=True)
 agen_dit_reskrimum = get_dit_reskrimum_agent(debug_mode=True) # Instantiate Dit Reskrimum agent
-#penyidik_tipikor_team = get_corruption_investigator_team(debug_mode=True) # Instantiate the team
+sentiment_analysis_team_instance = get_sentiment_analysis_team(debug_mode=True)
+# penyidik_tipikor_team telah dihapus karena fungsinya tidak tersedia lagi
 
 playground = Playground(
     agents=[
@@ -113,8 +114,8 @@ playground = Playground(
         sentiment_analyzer,
         sistem_penelitian_hukum
     ],
-    teams=[ # Add the teams parameter
-        #penyidik_tipikor_team
+    teams=[ 
+        sentiment_analysis_team_instance # Gunakan instance tim yang telah diganti namanya
     ],
 )
 
@@ -123,7 +124,7 @@ if getenv("RUNTIME_ENV") == "dev":
     playground.create_endpoint("http://localhost:8000")
 
 # Create the router from the playground
-playground_router = playground.get_router()
+playground_router = playground.get_async_router()
 
 # Universal endpoint for all agents to handle file uploads
 @playground_router.post("/agents/{agent_id}/runs-with-files", tags=["Agents"])

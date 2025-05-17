@@ -13,8 +13,7 @@ from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -56,12 +55,7 @@ def get_narkotika_agent(
         tools=[
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
+            ThinkingTools(add_instructions=True),
         ],
         knowledge=knowledge_base,
         storage=narkotika_agent_storage,
@@ -99,6 +93,4 @@ def get_narkotika_agent(
         num_history_responses=5,
         read_chat_history=True,
         memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
     )

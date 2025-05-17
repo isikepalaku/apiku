@@ -97,8 +97,6 @@ def get_kuhp_agent(
         num_history_responses=5,
         read_chat_history=True,
         memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
         show_tool_calls=False,
         markdown=True
     )

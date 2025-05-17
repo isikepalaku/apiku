@@ -1,11 +1,9 @@
 import json
-import asyncio
 from typing import Iterator, Optional, List
 
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
-from agno.models.google import Gemini
-from agno.storage.workflow.postgres import PostgresWorkflowStorage
+from agno.storage.redis import RedisStorage
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
@@ -13,7 +11,14 @@ from agno.utils.log import logger
 from agno.workflow import RunEvent, RunResponse, Workflow
 from pydantic import BaseModel, Field
 
-from db.session import db_url
+from workflows.settings import workflow_settings
+
+# Define Redis storage instance
+redis_storage = RedisStorage(
+    prefix="modus_operandi",
+    host="agno-demo-app-dev-redis",  # Docker container name for Redis
+    port=6379,
+)
 
 class ModusOperandiKejahatan(BaseModel):
     metode: str = Field(..., description="Metode operasi yang digunakan pelaku kejahatan")
@@ -40,6 +45,7 @@ class AnalisaTrenKejahatan(BaseModel):
 
 class SistemAnalisisIntelijen(Workflow):
     agen_analisis_modus: Agent = Agent(
+        model=OpenAIChat(id=workflow_settings.gpt_4_mini),
         tools=[TavilyTools(), Newspaper4kTools()],
         instructions=[
             "Lakukan pencarian kata kunci untuk kasus yang pernah terjadi.",
@@ -51,11 +57,12 @@ class SistemAnalisisIntelijen(Workflow):
         add_history_to_messages=True,
         add_datetime_to_instructions=True,
         response_model=AnalisaPolisional,
+        structured_outputs=True,
         debug_mode=False,
     )
 
     agen_analisis_tren: Agent = Agent(
-        model=OpenAIChat(id="gpt-4o-mini"),
+        model=OpenAIChat(id=workflow_settings.gpt_4_mini),
         instructions=[
             "Analisis tren dan perubahan modus operandi kejahatan.",
             "Identifikasi faktor pendorong dan pola musiman.",
@@ -65,11 +72,12 @@ class SistemAnalisisIntelijen(Workflow):
         add_history_to_messages=True,
         add_datetime_to_instructions=True,
         response_model=AnalisaTrenKejahatan,
+        structured_outputs=True,
         debug_mode=False,
     )
 
     agen_intel: Agent = Agent(
-        model=OpenAIChat(id="gpt-4o-mini"),
+        model=OpenAIChat(id=workflow_settings.gpt_4_mini),
         instructions=[
             "Lakukan analisis intelijen mendalam:",
             "1. Identifikasi pola operasional pelaku",
@@ -86,7 +94,7 @@ class SistemAnalisisIntelijen(Workflow):
     )
 
     agen_laporan: Agent = Agent(
-        model=OpenAIChat(id="gpt-4o-mini"),
+        model=OpenAIChat(id=workflow_settings.gpt_4_mini),
         instructions=[
             "Buat laporan analisis kejahatan yang objektif:",
             "1. Ringkasan eksekutif dengan kategori dan deskripsi",
@@ -108,15 +116,17 @@ class SistemAnalisisIntelijen(Workflow):
                 f"Lakukan analisis mendalam untuk kategori kejahatan: {kategori_kejahatan}"
             )
 
+            # Check if we got a valid response
             if not response or not response.content:
                 logger.warning("Response kosong")
                 return None
 
-            if isinstance(response.content, AnalisaPolisional):
-                return response.content
+            # Check if the response is of the expected type
+            if not isinstance(response.content, AnalisaPolisional):
+                logger.warning("Invalid response type")
+                return None
 
-            logger.warning("Invalid response type")
-            return None
+            return response.content
 
         except Exception as e:
             logger.warning(f"Failed: {str(e)}")
@@ -135,15 +145,17 @@ class SistemAnalisisIntelijen(Workflow):
                 json.dumps(agent_input, indent=4)
             )
 
+            # Check if we got a valid response
             if not response or not response.content:
                 logger.warning("Response kosong")
                 return None
 
-            if isinstance(response.content, AnalisaTrenKejahatan):
-                return response.content
+            # Check if the response is of the expected type
+            if not isinstance(response.content, AnalisaTrenKejahatan):
+                logger.warning("Invalid response type")
+                return None
 
-            logger.warning("Invalid response type")
-            return None
+            return response.content
 
         except Exception as e:
             logger.warning(f"Failed: {str(e)}")
@@ -165,6 +177,7 @@ class SistemAnalisisIntelijen(Workflow):
                 json.dumps(agent_input, indent=4)
             )
 
+            # Check if we got a valid response
             if not response or not response.content:
                 logger.warning("Response kosong")
                 return None
@@ -214,6 +227,7 @@ class SistemAnalisisIntelijen(Workflow):
             )
         )
 
+        # Return final report and mark workflow as completed
         yield RunResponse(
             content=final_response.content,
             event=RunEvent.workflow_completed
@@ -222,28 +236,17 @@ class SistemAnalisisIntelijen(Workflow):
 def get_analisator_tren_kejahatan(debug_mode: bool = False) -> SistemAnalisisIntelijen:
     """Create and configure the workflow instance.
     Maintains backward compatibility with existing code."""
-    workflow = SistemAnalisisIntelijen(
+    return SistemAnalisisIntelijen(
         workflow_id="analisis-modus-kejahatan",  # Must match the API endpoint path
         description="Sistem Analisis Intelijen Kepolisian",
-        session_id="analisis-modus-kejahatan",
-        storage=PostgresWorkflowStorage(
-            table_name="analisis_kejahatan_workflows",
-            db_url=db_url,
-        ),
+        storage=redis_storage,
+        debug_mode=debug_mode,
     )
-
-    if debug_mode:
-        logger.info("Mode debug aktif untuk semua agen")
-        workflow.agen_analisis_modus.debug_mode = True
-        workflow.agen_analisis_tren.debug_mode = True
-        workflow.agen_intel.debug_mode = True
-        workflow.agen_laporan.debug_mode = True
-
-    return workflow
 
 # Instantiate workflow if run directly
 if __name__ == "__main__":
     from rich.prompt import Prompt
+    from agno.utils.pprint import pprint_run_response
 
     kategori = Prompt.ask(
         "[bold]Masukkan kategori kejahatan untuk dianalisis[/bold]\n✨",
@@ -251,11 +254,15 @@ if __name__ == "__main__":
     )
 
     url_safe_kategori = kategori.lower().replace(" ", "-")
-
-    analisis_sistem = get_analisator_tren_kejahatan()
-    analisis_sistem.session_id = f"analisis-kejahatan-{url_safe_kategori}"  # Update session ID with specific case
     
+    # Create the workflow with the predefined storage
+    analisis_sistem = get_analisator_tren_kejahatan()
+    
+    # Set a unique session ID for this run
+    analisis_sistem.session_id = f"analisis-kejahatan-{url_safe_kategori}"
+    
+    # Run the workflow
     hasil_analisis = analisis_sistem.run(kategori_kejahatan=kategori)
 
-    from agno.utils.pprint import pprint_run_response
+    # Print the results
     pprint_run_response(hasil_analisis, markdown=True)

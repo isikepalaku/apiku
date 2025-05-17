@@ -52,8 +52,6 @@ def get_ite_agent(
         num_history_responses=5,
         read_chat_history=True,
         memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
         description=(
             "Anda adalah penyidik kepolisian spesialisasi (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE."
         ),

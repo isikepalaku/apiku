@@ -57,7 +57,6 @@ class ApiSettings(BaseSettings):
             [
                 "http://localhost:3000",
                 "https://app.agno.com",
-                "https://app-stg.agno.com",
                 "https://app.reserse.id",
             ]
         )

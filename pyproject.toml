@@ -54,7 +54,7 @@ dependencies = [
   "qdrant-client",
   "redis",
   "slowapi",
-  "pyjwt"
+  "langtrace-python-sdk"
 
 
 ]

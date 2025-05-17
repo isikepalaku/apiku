@@ -95,6 +95,4 @@ def get_dit_reskrimum_agent(
         num_history_responses=5,
         read_chat_history=True,
         memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
     )

@@ -54,8 +54,6 @@ def get_p2sk_agent(
         num_history_responses=5,
         read_chat_history=True,
         memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
         description=(
             "Anda adalah ahli Undang-undang (UU) Nomor 4 Tahun 2023 tentang Pengembangan dan Penguatan Sektor Keuangan (p2sk)."
         ),

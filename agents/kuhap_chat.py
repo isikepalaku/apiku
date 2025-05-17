@@ -80,9 +80,7 @@ def get_kuhap_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         read_chat_history=True,
-        memory=memory, # Menggunakan memory KUHAP
-        enable_user_memories=True,
-        enable_session_summaries=True,
+        memory=memory,
         show_tool_calls=False,
         markdown=True
     )

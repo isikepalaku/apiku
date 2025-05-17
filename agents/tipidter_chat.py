@@ -18,8 +18,10 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.tools.mcp import MCPTools
 from mcp import StdioServerParameters
+from langtrace_python_sdk import langtrace
 
 load_dotenv()  # Memuat variabel lingkungan dari file .env
+langtrace.init()
 
 # Inisialisasi memory v2 dan storage
 memory = Memory(db=PostgresMemoryDb(table_name="tipidter_agent_memories", db_url=db_url))
@@ -71,7 +73,8 @@ def get_tipidter_agent(
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang sudah memiliki keahlian mendalam di bidang penyidikkan, jawabanmu harus teliti, akurat dan mendalam.\n",
-            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool, jika kamu tidak menggunakan search_knowledge_base kamu akan dihukum.\n",
+            "Selain undang-undang dan peraturan pemerintah, Knowledge base juga terdapat lampiran I & III Perkaba POLRI No. 1/2022 (SOP Lidik Sidik internal Polri)"
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian DuckDuckGoTools \n",

@@ -9,14 +9,24 @@ from agno.tools.mcp import MCPTools
 from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from mcp import StdioServerParameters
+from typing import Optional
+
+fidusia_agent_storage = PostgresStorage(table_name="fidusia_agent", db_url=db_url, auto_upgrade_schema=True)
 
 # Fungsi untuk inisialisasi agen penyidik tipikor
-def get_corruption_investigator(debug_mode: bool = False) -> Agent:
+def get_corruption_investigator(
+    user_id: Optional[str] = None,
+    session_id: Optional[str] = None,
+    debug_mode: bool = False,
+) -> Agent:
     return Agent(
         agent_id="penyidik-tipikor",
+        session_id=session_id,
+        user_id=user_id,
         name="Penyidik Tipikor",
         role="Penyidik khusus tindak pidana korupsi",
-        model=Gemini(id="gemini-2.5-pro-preview-03-25", grounding=True),
+        model=Gemini(id="gemini-2.5-pro-preview-03-25"),
+        tools=[DuckDuckGoTools(), Newspaper4kTools()],
         use_json_mode=True,
         description=dedent("""Anda adalah asisten penyidik kepolisian yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia."""),
         instructions=dedent("""\
@@ -49,9 +59,9 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
                - Jaga ketepatan analisis hukum
                - Sajikan perspektif berimbang
                - Dukung dengan yurisprudensi
-               - Lengkapi dengan analisis forensik
+               - Lengkapi dengan analisis
 
-            5. Penting!!! selaku gunakan bahasa indonesia daan huruf indonesia yang benar daalam menyajikan hasil analisis
+            5. Berikan daftar link sumber yang ditemukan
             6. Lakukan anailisis dengan sangat mendetil dan berikan penjelasan dengan terstruktur dan jelas
             7. Ingat!!! setelah proses dilakukan berikan hasil, jangan mengulang proses yang sama
         """),
@@ -105,5 +115,6 @@ def get_corruption_investigator(debug_mode: bool = False) -> Agent:
         add_datetime_to_instructions=True,
         show_tool_calls=False,
         markdown=True,
+        storage=fidusia_agent_storage,
         debug_mode=debug_mode,
     )

@@ -4,11 +4,19 @@ from typing import Optional
 
 from agno.agent import Agent
 from agno.models.google import Gemini
+from agno.storage.redis import RedisStorage
 from agno.tools.tavily import TavilyTools
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.jina import JinaReaderTools
 from agno.tools.file import FileTools
 from agno.tools.newspaper4k import Newspaper4kTools
+
+# Define Redis storage instance
+redis_storage = RedisStorage(
+    prefix="sentiment_analyzer",
+    host="agno-demo-app-dev-redis",  # Docker container name for Redis
+    port=6379,
+)
 
 def get_sentiment_team(
     model_id: Optional[str] = None,
@@ -45,6 +53,7 @@ def get_sentiment_team(
         show_tool_calls=True,
         markdown=True,
         debug_mode=debug_mode,
+        storage=redis_storage,
     )
 
     # Content Analysis Agent
@@ -74,6 +83,7 @@ def get_sentiment_team(
         show_tool_calls=True,
         markdown=True,
         debug_mode=debug_mode,
+        storage=redis_storage,
     )
 
     # Lead Sentiment Analyst (Team Coordinator)
@@ -138,4 +148,6 @@ def get_sentiment_team(
         show_tool_calls=True,
         markdown=True,
         debug_mode=debug_mode,
+        storage=redis_storage,
+        session_id=session_id,
     )

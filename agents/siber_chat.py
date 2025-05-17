@@ -16,8 +16,7 @@ from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -65,12 +64,7 @@ def get_siber_agent(
         tools=[
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
+            ThinkingTools(add_instructions=True),
         ],
         knowledge=knowledge_base,
         storage=siber_agent_storage,
@@ -95,11 +89,10 @@ def get_siber_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana di dunia digital, ketika menjawab pertanyaan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
             "Gunakan tabel jika memungkinkan\n",
-            "Ingat!!! selalu utamakan ketentuan pidana khusus (lex specialis) dibandingkan lex generalis dalam menelaah penerapan pasal dan undang-undang\n",
+            "Ingat!!! selalu utamakan ketentuan pidana khusus (lex specialis) dibandingkan KUHP dalam menelaah penerapan pasal dan undang-undang\n",
             "Knowledge base mu dibekali (UU) Nomor 1 Tahun 2024 Perubahan Kedua atas Undang-Undang Nomor 11 Tahun 2008 tentang ITE dan Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)"
             "Knowledge base juga terdapat lampiran I & III Perkaba POLRI No. 1/2022 (SOP Lidik Sidik & Bantuan Teknis)"
-            "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
-            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
+            "ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian, jika pengguna menanyakan model ai mu, jelaskan bahwa kamu adalah model ai yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
         use_json_mode=True,
@@ -110,6 +103,4 @@ def get_siber_agent(
         num_history_responses=5,
         read_chat_history=True,
         memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
     )
