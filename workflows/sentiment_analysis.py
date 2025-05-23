@@ -1,17 +1,17 @@
 import json
-from typing import Iterator, List, Optional
+from typing import Dict, Iterator, Optional
 
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.storage.postgres import PostgresStorage
+from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.tavily import TavilyTools
 from agno.utils.log import logger
 from agno.workflow import RunEvent, RunResponse, Workflow
 from pydantic import BaseModel, Field
 
-from workflows.settings import workflow_settings
 from db.session import db_url
+from workflows.settings import workflow_settings
 
 class SentimentSource(BaseModel):
     url: str = Field(..., description="URL sumber konten")
@@ -20,58 +20,51 @@ class SentimentSource(BaseModel):
     content: Optional[str] = Field(None, description="Konten yang dianalisis")
     credibility: str = Field(..., description="Tingkat kredibilitas sumber (high/medium/low)")
 
-class SentimentData(BaseModel):
-    sentiment_score: str = Field(..., description="Skor sentimen (positive/negative/neutral)")
-    intensity: str = Field(..., description="Intensitas sentimen (high/medium/low)")
-    key_phrases: List[str] = Field(..., description="Frasa kunci yang mencerminkan sentimen")
-    context: str = Field(..., description="Konteks pembahasan")
-
 class WebContentAnalysis(BaseModel):
-    sources: List[SentimentSource] = Field(..., description="Daftar sumber konten yang dianalisis")
-    total_sources: int = Field(..., description="Total jumlah sumber yang dianalisis")
-    source_distribution: str = Field(..., description="Distribusi jenis sumber konten")
-    search_keywords: List[str] = Field(..., description="Kata kunci yang digunakan dalam pencarian")
-
-class SentimentAnalysis(BaseModel):
-    overall_sentiment: str = Field(..., description="Sentimen keseluruhan")
-    sentiment_distribution: str = Field(..., description="Distribusi sentimen")
-    key_topics: List[str] = Field(..., description="Topik utama yang dibahas")
-    sentiment_data: List[SentimentData] = Field(..., description="Data sentimen terperinci")
+    sources: list[SentimentSource] = Field(..., description="Daftar sumber konten yang dianalisis")
 
 class SentimentAnalysisSystem(Workflow):
-    web_analyzer: Agent = Agent(
+    """Advanced workflow for generating sentiment analysis reports with proper research and citations."""
+    
+    description: str = "Sistem Analisis Sentimen Publik yang menggunakan caching untuk performa optimal dan mencegah pengulangan task"
+    
+    # Search Agent: Handles intelligent web searching and source gathering
+    searcher: Agent = Agent(
         model=OpenAIChat(id=workflow_settings.gpt_4_mini),
-        tools=[TavilyTools()],
+        tools=[DuckDuckGoTools()],
         instructions=[
             "Penelusuran mendalam konten web untuk analisis sentimen:",
-            "1. Cari berbagai sumber dari berita resmi, media sosial, forum, dan blog",
-            "2. Pastikan keseimbangan antara sumber berita formal dan konten media sosial",
+            "1. Cari 10-15 sumber dan identifikasi 5-7 yang paling relevan dan otoritatif",
+            "2. Pastikan keseimbangan antara sumber berita formal dan konten media sosial", 
             "3. Prioritaskan sumber dengan engagement tinggi dan kredibilitas baik",
             "4. Identifikasi berbagai sudut pandang (positif, negatif, netral)",
             "5. Catat URL, judul, platform, dan kredibilitas dari setiap sumber",
+            "Hindari sumber yang tidak otoritatif atau opinion pieces tanpa dasar.",
         ],
-        add_history_to_messages=True,
-        add_datetime_to_instructions=True,
         response_model=WebContentAnalysis,
         structured_outputs=True,
-        debug_mode=False,
     )
 
-    sentiment_analyzer: Agent = Agent(
+    # Content Scraper: Extracts and processes article content
+    article_scraper: Agent = Agent(
         model=OpenAIChat(id=workflow_settings.gpt_4_mini),
         tools=[Newspaper4kTools()],
         instructions=[
-            "Analisis sentimen mendalam dari konten yang ditemukan.",
-            "Evaluasi tone, konteks, dan nuansa pembahasan dari setiap sumber.",
+            "Analisis sentimen mendalam dari konten yang ditemukan:",
+            "- Ekstrak konten dari artikel menggunakan read_article",
+            "- Evaluasi tone, konteks, dan nuansa pembahasan dari setiap sumber",
+            "- Lewati URL atau link yang tidak valid atau tidak dapat dibaca",
+            "- Pertahankan akurasi teknis dalam terminologi",
+            "- Struktur konten secara logis dengan bagian yang jelas",
+            "- Tangani konten paywall dengan baik",
+            "Format semua dalam markdown yang bersih untuk keterbacaan optimal.",
         ],
-        add_history_to_messages=True,
-        add_datetime_to_instructions=True,
-        response_model=SentimentAnalysis,
+        response_model=SentimentSource,
         structured_outputs=True,
-        debug_mode=False,
     )
 
-    reporter: Agent = Agent(
+    # Content Writer Agent: Crafts engaging sentiment analysis reports from research
+    writer: Agent = Agent(
         model=OpenAIChat(id=workflow_settings.gpt_4_mini),
         instructions=[
             "Buat laporan analisis sentimen komprehensif dengan struktur berikut:",
@@ -96,121 +89,166 @@ class SentimentAnalysisSystem(Workflow):
             "",
             "Catatan: Jika diperlukan visualisasi data, gunakan tabel untuk menyajikan data secara struktural karena aplikasi belum mendukung fitur chart.",
         ],
-        add_history_to_messages=True,
-        add_datetime_to_instructions=True,
         markdown=True,
-        debug_mode=False,
     )
 
-    def get_web_analysis(self, topic: str) -> Optional[WebContentAnalysis]:
-        try:
-            response: RunResponse = self.web_analyzer.run(
-                f"Lakukan penelusuran mendalam untuk topik: {topic}"
-            )
-            
-            if not response or not response.content:
-                logger.warning("Empty Web Analysis response")
-                return None
-                
-            if not isinstance(response.content, WebContentAnalysis):
-                logger.warning("Invalid response type")
-                return None
-                
-            return response.content
-            
-        except Exception as e:
-            logger.warning(f"Failed: {str(e)}")
-            return None
+    def run(
+        self,
+        topic: str,
+        use_search_cache: bool = True,
+        use_scrape_cache: bool = True,
+        use_cached_report: bool = True,
+    ) -> Iterator[RunResponse]:
+        logger.info(f"Generating a sentiment analysis report on: {topic}")
 
-    def get_sentiment_analysis(
-        self, topic: str, web_analysis: WebContentAnalysis
-    ) -> Optional[SentimentAnalysis]:
-        agent_input = {"topic": topic, **web_analysis.model_dump()}
-        
-        try:
-            response: RunResponse = self.sentiment_analyzer.run(
-                json.dumps(agent_input, indent=4)
-            )
-            
-            if not response or not response.content:
-                logger.warning("Empty Sentiment Analysis response")
-                return None
-                
-            if not isinstance(response.content, SentimentAnalysis):
-                logger.warning("Invalid response type")
-                return None
-                
-            return response.content
-            
-        except Exception as e:
-            logger.warning(f"Failed: {str(e)}")
-            return None
+        # Use the cached report if use_cached_report is True
+        if use_cached_report:
+            cached_report = self.get_cached_report(topic)
+            if cached_report:
+                yield RunResponse(content=cached_report, event=RunEvent.workflow_completed)
+                return
 
-    def get_final_report(
-        self, topic: str, web_analysis: WebContentAnalysis, sentiment_analysis: SentimentAnalysis
-    ) -> Optional[str]:
-        agent_input = {
-            "topic": topic,
-            **web_analysis.model_dump(),
-            **sentiment_analysis.model_dump()
-        }
-        
-        try:
-            response: RunResponse = self.reporter.run(
-                json.dumps(agent_input, indent=4)
-            )
-            
-            if not response or not response.content:
-                logger.warning("Empty Final Report response")
-                return None
-                
-            return response.content
-            
-        except Exception as e:
-            logger.warning(f"Failed: {str(e)}")
-            return None
+        # Search the web for articles on the topic
+        search_results: Optional[WebContentAnalysis] = self.get_search_results(topic, use_search_cache)
 
-    def run(self, topic: str) -> Iterator[RunResponse]:
-        logger.info(f"Generating a sentiment analysis report for: {topic}")
-        
-        # Step 1: Web Content Analysis
-        web_analysis = self.get_web_analysis(topic)
-        if web_analysis is None:
+        # If no search_results are found for the topic, end the workflow
+        if search_results is None or len(search_results.sources) == 0:
             yield RunResponse(
                 event=RunEvent.workflow_completed,
-                content=f"Sorry, could not analyze web content for: {topic}"
+                content=f"Sorry, could not find any articles on the topic: {topic}",
             )
             return
-            
-        # Step 2: Sentiment Analysis
-        sentiment_analysis = self.get_sentiment_analysis(topic, web_analysis)
-        if sentiment_analysis is None:
-            yield RunResponse(
-                event=RunEvent.workflow_completed,
-                content="Sentiment analysis failed"
-            )
-            return
-            
-        # Step 3: Generate Final Report
-        final_report = self.get_final_report(topic, web_analysis, sentiment_analysis)
-        if final_report is None:
-            yield RunResponse(
-                event=RunEvent.workflow_completed,
-                content="Final report generation failed"
-            )
-            return
-            
-        # Return final report
-        yield RunResponse(
-            content=final_report,
-            event=RunEvent.workflow_completed
+
+        # Scrape the search results
+        scraped_articles: Dict[str, SentimentSource] = self.scrape_articles(
+            topic, search_results, use_scrape_cache
         )
 
+        # Prepare the input for the writer
+        writer_input = {
+            "topic": topic,
+            "articles": [v.model_dump() for v in scraped_articles.values()],
+        }
+
+        # Run the writer and yield the response
+        yield from self.writer.run(json.dumps(writer_input, indent=4), stream=True)
+
+        # Save the report in the cache
+        if self.writer.run_response:
+            self.add_report_to_cache(topic, str(self.writer.run_response.content))
+
+    def get_cached_report(self, topic: str) -> Optional[str]:
+        logger.info("Checking if cached report exists")
+        return self.session_state.get("reports", {}).get(topic)
+
+    def add_report_to_cache(self, topic: str, report: str):
+        logger.info(f"Saving report for topic: {topic}")
+        self.session_state.setdefault("reports", {})
+        self.session_state["reports"][topic] = report
+
+    def get_cached_search_results(self, topic: str) -> Optional[WebContentAnalysis]:
+        logger.info("Checking if cached search results exist")
+        search_results = self.session_state.get("search_results", {}).get(topic)
+        return (
+            WebContentAnalysis.model_validate(search_results)
+            if search_results and isinstance(search_results, dict)
+            else search_results
+        )
+
+    def add_search_results_to_cache(self, topic: str, search_results: WebContentAnalysis):
+        logger.info(f"Saving search results for topic: {topic}")
+        self.session_state.setdefault("search_results", {})
+        self.session_state["search_results"][topic] = search_results
+
+    def get_cached_scraped_articles(self, topic: str):
+        logger.info("Checking if cached scraped articles exist")
+        scraped_articles = self.session_state.get("scraped_articles", {}).get(topic)
+        return (
+            SentimentSource.model_validate(scraped_articles)
+            if scraped_articles and isinstance(scraped_articles, dict)
+            else scraped_articles
+        )
+
+    def add_scraped_articles_to_cache(self, topic: str, scraped_articles: Dict[str, SentimentSource]):
+        logger.info(f"Saving scraped articles for topic: {topic}")
+        self.session_state.setdefault("scraped_articles", {})
+        self.session_state["scraped_articles"][topic] = scraped_articles
+
+    def get_search_results(
+        self, topic: str, use_search_cache: bool, num_attempts: int = 3
+    ) -> Optional[WebContentAnalysis]:
+        # Get cached search_results from the session state if use_search_cache is True
+        if use_search_cache:
+            try:
+                search_results_from_cache = self.get_cached_search_results(topic)
+                if search_results_from_cache is not None:
+                    search_results = WebContentAnalysis.model_validate(search_results_from_cache)
+                    logger.info(f"Found {len(search_results.sources)} articles in cache.")
+                    return search_results
+            except Exception as e:
+                logger.warning(f"Could not read search results from cache: {e}")
+
+        # If there are no cached search_results, use the searcher to find the latest articles
+        for attempt in range(num_attempts):
+            try:
+                searcher_response: RunResponse = self.searcher.run(topic)
+                if (
+                    searcher_response is not None
+                    and searcher_response.content is not None
+                    and isinstance(searcher_response.content, WebContentAnalysis)
+                ):
+                    article_count = len(searcher_response.content.sources)
+                    logger.info(f"Found {article_count} articles on attempt {attempt + 1}")
+                    # Cache the search results
+                    self.add_search_results_to_cache(topic, searcher_response.content)
+                    return searcher_response.content
+                else:
+                    logger.warning(f"Attempt {attempt + 1}/{num_attempts} failed: Invalid response type")
+            except Exception as e:
+                logger.warning(f"Attempt {attempt + 1}/{num_attempts} failed: {str(e)}")
+
+        logger.error(f"Failed to get search results after {num_attempts} attempts")
+        return None
+
+    def scrape_articles(
+        self, topic: str, search_results: WebContentAnalysis, use_scrape_cache: bool
+    ) -> Dict[str, SentimentSource]:
+        scraped_articles: Dict[str, SentimentSource] = {}
+
+        # Get cached scraped_articles from the session state if use_scrape_cache is True
+        if use_scrape_cache:
+            try:
+                scraped_articles_from_cache = self.get_cached_scraped_articles(topic)
+                if scraped_articles_from_cache is not None:
+                    scraped_articles = scraped_articles_from_cache
+                    logger.info(f"Found {len(scraped_articles)} scraped articles in cache.")
+                    return scraped_articles
+            except Exception as e:
+                logger.warning(f"Could not read scraped articles from cache: {e}")
+
+        # Scrape the articles that are not in the cache
+        for article in search_results.sources:
+            if article.url in scraped_articles:
+                logger.info(f"Found scraped article in cache: {article.url}")
+                continue
+
+            article_scraper_response: RunResponse = self.article_scraper.run(article.url)
+            if (
+                article_scraper_response is not None
+                and article_scraper_response.content is not None
+                and isinstance(article_scraper_response.content, SentimentSource)
+            ):
+                scraped_articles[article_scraper_response.content.url] = article_scraper_response.content
+                logger.info(f"Scraped article: {article_scraper_response.content.url}")
+
+        # Save the scraped articles in the session state
+        self.add_scraped_articles_to_cache(topic, scraped_articles)
+        return scraped_articles
+
+
 def get_sentiment_analyzer(debug_mode: bool = False) -> SentimentAnalysisSystem:
-    """Create and configure the sentiment analysis workflow instance."""
     return SentimentAnalysisSystem(
         workflow_id="sentiment-analysis-system",
-        description="Sistem Analisis Sentimen Publik",
         storage=PostgresStorage(
             table_name="sentiment_analysis_workflows",
             db_url=db_url,
@@ -218,6 +256,7 @@ def get_sentiment_analyzer(debug_mode: bool = False) -> SentimentAnalysisSystem:
         ),
         debug_mode=debug_mode,
     )
+
 
 # Run workflow directly if executed as script
 if __name__ == "__main__":
@@ -229,16 +268,22 @@ if __name__ == "__main__":
         default="Kebijakan transportasi publik"
     )
 
+    # Convert the topic to a URL-safe string for use in session_id
     url_safe_topic = topic.lower().replace(" ", "-")
     
-    # Create the workflow
+    # Create the workflow with caching enabled
     analysis_system = get_sentiment_analyzer()
     
     # Set a unique session ID for this run
     analysis_system.session_id = f"sentiment-analysis-{url_safe_topic}"
     
-    # Run the workflow
-    hasil_analisis = analysis_system.run(topic=topic)
+    # Run the workflow with caching enabled to prevent repetitive tasks
+    hasil_analisis = analysis_system.run(
+        topic=topic,
+        use_search_cache=True,
+        use_scrape_cache=True,
+        use_cached_report=True
+    )
 
     # Print the results
     pprint_run_response(hasil_analisis, markdown=True)

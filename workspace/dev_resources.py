@@ -37,6 +37,8 @@ dev_redis = Redis(
     name=f"{DEV_KEY}-redis",
     enabled=True,
     host_port=6379,
+    config_file="redis_master.conf"  # Assuming this is relative to WS_ROOT
+                                     # and agno handles mounting and using it.
 )
 
 # -*- Build container environment

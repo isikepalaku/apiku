@@ -16,12 +16,8 @@ from agno.memory.v2.memory import Memory
 from agno.tools.thinking import ThinkingTools
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
-from langtrace_python_sdk import langtrace
 
 load_dotenv()  # Memuat variabel lingkungan dari file .env
-langtrace.init()
 
 # Inisialisasi memory v2 dan storage
 memory = Memory(db=PostgresMemoryDb(table_name="tipidter_agent_memories", db_url=db_url))
@@ -61,7 +57,7 @@ def get_tipidter_agent(
         model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             ThinkingTools(add_instructions=True),
-            DuckDuckGoTools(cache_results=True), 
+            DuckDuckGoTools(), 
             Newspaper4kTools(),
             ],
         knowledge=knowledge_base,
@@ -77,8 +73,8 @@ def get_tipidter_agent(
             "Selain undang-undang dan peraturan pemerintah, Knowledge base juga terdapat lampiran I & III Perkaba POLRI No. 1/2022 (SOP Lidik Sidik internal Polri)"
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
-            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian DuckDuckGoTools \n",
-            "Ingat peranmu adalah mentor anggota kepolisian yang sangat ahli tindaak pidana khusus.\n",
+            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan duckduckgo_search untuk mencari berita di internet \n",
+            "Untuk hasil pencarian berita internet gunakan newspaper4k_tools untuk mengekstrak informasi dari link yang diberikan.\n",
             "Jangan pernah menjelaskan langkah-langkah dan tools yang kamu gunakan dalam proses.\n",
             
             "# Bidang Tugas Utama:\n"

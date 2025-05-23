@@ -25,7 +25,7 @@ def get_corruption_investigator(
         user_id=user_id,
         name="Penyidik Tipikor",
         role="Penyidik khusus tindak pidana korupsi",
-        model=Gemini(id="gemini-2.5-pro-preview-03-25"),
+        model=Gemini(id="gemini-2.5-pro-preview-05-06"),
         tools=[DuckDuckGoTools(), Newspaper4kTools()],
         use_json_mode=True,
         description=dedent("""Anda adalah asisten penyidik kepolisian yang ahli dalam penanganan kasus tindak pidana korupsi Indonesia."""),

@@ -12,13 +12,10 @@ from agno.vectordb.qdrant import Qdrant
 from agno.storage.postgres import PostgresStorage
 from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.thinking import ThinkingTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -59,12 +56,7 @@ def get_fismondev_agent(
         tools=[
             GoogleSearchTools(),
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
+            ThinkingTools(add_instructions=True),
         ],
         knowledge=knowledge_base,
         storage=fismondev_agent_storage,

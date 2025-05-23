@@ -53,8 +53,7 @@ dependencies = [
   "google-maps-places",
   "qdrant-client",
   "redis",
-  "slowapi",
-  "langtrace-python-sdk"
+  "slowapi"
 
 
 ]

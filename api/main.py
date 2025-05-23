@@ -20,6 +20,40 @@ handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s -
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
+# Custom failed handler for SlowAPI Limiter
+def custom_slowapi_failed_handler(request: Request, exc: Exception) -> JSONResponse:
+    user_id_for_log = "unknown"
+    try:
+        user_id_for_log = get_user_id(request) # get_user_id might fail if request is not as expected
+    except Exception:
+        pass # Keep user_id_for_log as "unknown"
+
+    if isinstance(exc, RateLimitExceeded):
+        logger.warning(f"Rate limit exceeded (from slowapi failed_handler) for: {user_id_for_log}, path: {request.url.path}, details: {exc.detail}")
+        return JSONResponse(
+            status_code=429,
+            content={
+                "detail": f"Rate limit exceeded: {exc.detail}",
+                "retry_after": getattr(exc, "retry_after", None) # slowapi might provide retry_after
+            }
+        )
+    elif isinstance(exc, ReadOnlyError):
+        logger.error(f"Redis ReadOnly error (from slowapi failed_handler) for: {user_id_for_log}, path: {request.url.path}, error: {str(exc)}")
+        return JSONResponse(
+            status_code=503, # Service Unavailable
+            content={
+                "detail": "Rate limiting service temporarily unavailable due to a storage issue. Please try again later."
+            }
+        )
+    else:
+        logger.error(f"Unexpected error in rate limiter (from slowapi failed_handler) for: {user_id_for_log}, path: {request.url.path}, error: {type(exc).__name__} - {str(exc)}")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "An unexpected error occurred with the rate limiting service."
+            }
+        )
+
 # Konfigurasi Redis - menggunakan variabel environment atau default
 REDIS_HOST = os.getenv("REDIS_HOST", "agno-demo-app-dev-redis")  # Gunakan nama container sebagai default
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
@@ -44,6 +78,7 @@ def get_user_id(request: Request):
 # Inisialisasi limiter dengan In-Memory storage sebagai default
 # Ini akan digunakan sebagai fallback jika Redis gagal
 limiter = Limiter(key_func=get_user_id, default_limits=["4/120second"])
+limiter.invalid_response = custom_slowapi_failed_handler
 redis_status = "not_configured"
 
 try:
@@ -71,6 +106,7 @@ try:
         storage_uri=REDIS_URI,
         default_limits=["4/120second"]  # Default rate limit untuk semua endpoint
     )
+    limiter.invalid_response = custom_slowapi_failed_handler
 except ReadOnlyError as e:
     logger.warning(f"Redis server is in read-only mode: {e}. Using in-memory storage for rate limiting.")
     redis_status = "connected_readonly"
