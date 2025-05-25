@@ -60,7 +60,7 @@ def get_ipi_agent(
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
             "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang sudah memiliki keahlian mendalam di bidang penyidikkan, jawabanmu harus teliti, akurat dan mendalam.\n",
-            "Ingat selalu awali dengan pencarian di knowledge base menggunakan 'search_knowledge_base' tool.\n",
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool, jika kamu tidak menggunakan search_knowledge_base kamu akan dihukum.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "ingat lakukan pencarian web dengan tools 'google_search' Jika pencarian `search_knowledge_base` tidak menghasilkan hasil yang cukup, \n",
@@ -85,6 +85,7 @@ def get_ipi_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         read_chat_history=True,
+        memory=memory,
         use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,

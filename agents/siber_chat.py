@@ -81,7 +81,7 @@ def get_siber_agent(
             "- Memastikan bahwa rencana tindakan sesuai dengan semua kebijakan yang berlaku\n",
             "- Meninjau ulang hasil dari alat untuk memastikan kebenarannya\n",
              "Ingat, jangan pernah menjelaskan langkah-langkah dan tools yang kamu gunakan, biarkan berjalan dibelakang layar tanpa menjelaskan di output\n",
-            "selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool, jika kamu tidak menggunakan search_knowledge_base kamu akan dihukum.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "gunakan pencarian 'google_search', Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup.\n",

@@ -51,6 +51,7 @@ def get_fismondev_agent(
         agent_id="fismondev-chat",
         session_id=session_id,
         user_id=user_id,
+        memory=memory,
         model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         use_json_mode=True,
         tools=[
@@ -76,7 +77,7 @@ def get_fismondev_agent(
         """),
         instructions=dedent("""
         Tanggapi pertanyaan pengguna dengan mengikuti langkah-langkah berikut:
-
+        "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool, jika kamu tidak menggunakan search_knowledge_base kamu akan dihukum.\n",
         1. Analisis Permintaan dan Pencarian
            - Analisis pertanyaan pengguna secara mendalam dan identifikasi 1-3 kata kunci pencarian yang tepat untuk pencarian search_knowledge_base
            - **SANGAT PENTING:** WAJIB melakukan pencarian di basis pengetahuan terlebih dahulu dengan tool `search_knowledge_base` di SETIAP pertanyaan

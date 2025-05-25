@@ -105,4 +105,5 @@ def get_tipidkor_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         read_chat_history=True,
+        memory=memory,
     )

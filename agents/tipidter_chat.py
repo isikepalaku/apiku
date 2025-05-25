@@ -54,6 +54,7 @@ def get_tipidter_agent(
         agent_id="tipidter-chat",
         session_id=session_id,
         user_id=user_id,
+        memory=memory,
         model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             ThinkingTools(add_instructions=True),

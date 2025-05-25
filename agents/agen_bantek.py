@@ -47,8 +47,6 @@ def get_perkaba_bantek_agent(
         search_knowledge=True,
         storage=bantek_agent_storage,
         memory=memory,
-        enable_user_memories=True,
-        enable_session_summaries=True,
         description="Anda adalah agen AI yang dirancang untuk memberikan penjelasan mengenai Standar Operasional Prosedur (SOP) bantuan teknis, sesuai dengan Peraturan Kepala Badan Reserse Kriminal Polri Nomor 1 Tahun 2022.",
         instructions=[
                     "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",

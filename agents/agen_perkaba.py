@@ -15,10 +15,11 @@ from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
-# Initialize memory v2 and storage
+# Initialize memory v2 and storage with fixed table names (as per Agno documentation)
 memory = Memory(db=PostgresMemoryDb(table_name="perkaba_agent_memories", db_url=db_url))
 perkaba_agent_storage = PostgresStorage(table_name="perkaba_agent_memory", db_url=db_url)
 COLLECTION_NAME = "perkabapolri"
+
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
 path=Path("data/perkaba"),
@@ -38,6 +39,7 @@ def get_perkaba_agent(
     session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
+    
     return Agent(
         name="SOP Reskrim Agent",
         agent_id="sop-reskrim-agent",

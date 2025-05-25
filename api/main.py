@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, Request
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -19,6 +19,27 @@ handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
+
+# Konfigurasi Redis - menggunakan variabel environment atau default
+REDIS_HOST = os.getenv("REDIS_HOST", "agno-demo-app-dev-redis")  # Gunakan nama container sebagai default
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+REDIS_DB = int(os.getenv("REDIS_DB", "0"))
+REDIS_URI = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+
+logger.info(f"Connecting to Redis at: {REDIS_URI}")
+
+# Function untuk mendapatkan user_id dari request
+def get_user_id(request: Request):
+    # Dapatkan user_id dari request (bisa dari header, query param, atau token)
+    # Di sini contoh mengambil dari header "X-User-ID", bisa disesuaikan
+    user_id = request.headers.get("X-User-ID", "anonymous")
+    
+    # Jika tidak ada user_id, gunakan IP address sebagai fallback
+    if user_id == "anonymous":
+        user_id = request.client.host
+    
+    logger.info(f"Rate limit check for user: {user_id}")
+    return user_id
 
 # Custom failed handler for SlowAPI Limiter
 def custom_slowapi_failed_handler(request: Request, exc: Exception) -> JSONResponse:
@@ -53,27 +74,6 @@ def custom_slowapi_failed_handler(request: Request, exc: Exception) -> JSONRespo
                 "detail": "An unexpected error occurred with the rate limiting service."
             }
         )
-
-# Konfigurasi Redis - menggunakan variabel environment atau default
-REDIS_HOST = os.getenv("REDIS_HOST", "agno-demo-app-dev-redis")  # Gunakan nama container sebagai default
-REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
-REDIS_DB = int(os.getenv("REDIS_DB", "0"))
-REDIS_URI = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
-
-logger.info(f"Connecting to Redis at: {REDIS_URI}")
-
-# Function untuk mendapatkan user_id dari request
-def get_user_id(request: Request):
-    # Dapatkan user_id dari request (bisa dari header, query param, atau token)
-    # Di sini contoh mengambil dari header "X-User-ID", bisa disesuaikan
-    user_id = request.headers.get("X-User-ID", "anonymous")
-    
-    # Jika tidak ada user_id, gunakan IP address sebagai fallback
-    if user_id == "anonymous":
-        user_id = request.client.host
-    
-    logger.info(f"Rate limit check for user: {user_id}")
-    return user_id
 
 # Inisialisasi limiter dengan In-Memory storage sebagai default
 # Ini akan digunakan sebagai fallback jika Redis gagal
@@ -135,13 +135,16 @@ def create_app() -> FastAPI:
     # Tambahkan limiter ke app.state
     app.state.limiter = limiter
     
-    # Tambahkan exception handler untuk rate limit exceeded
-    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-    
-    # Override _rate_limit_exceeded_handler untuk logging dan respons yang lebih baik
+    # Custom exception handler untuk RateLimitExceeded
     @app.exception_handler(RateLimitExceeded)
     async def custom_rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
-        logger.warning(f"Rate limit exceeded for: {get_user_id(request)}, path: {request.url.path}")
+        user_id_for_log = "unknown"
+        try:
+            user_id_for_log = get_user_id(request)
+        except Exception:
+            pass
+        
+        logger.warning(f"Rate limit exceeded for: {user_id_for_log}, path: {request.url.path}")
         return JSONResponse(
             status_code=429,
             content={
@@ -153,7 +156,13 @@ def create_app() -> FastAPI:
     # Tambahkan exception handler untuk ConnectionError
     @app.exception_handler(ConnectionError)
     async def connection_error_handler(request: Request, exc: ConnectionError):
-        logger.error(f"Connection error for: {get_user_id(request)}, path: {request.url.path}, error: {str(exc)}")
+        user_id_for_log = "unknown"
+        try:
+            user_id_for_log = get_user_id(request)
+        except Exception:
+            pass
+        
+        logger.error(f"Connection error for: {user_id_for_log}, path: {request.url.path}, error: {str(exc)}")
         return JSONResponse(
             status_code=500,
             content={
@@ -164,9 +173,15 @@ def create_app() -> FastAPI:
     # Tambahkan exception handler untuk ReadOnlyError
     @app.exception_handler(ReadOnlyError)
     async def readonly_error_handler(request: Request, exc: ReadOnlyError):
-        logger.error(f"Redis ReadOnly error for: {get_user_id(request)}, path: {request.url.path}, error: {str(exc)}")
+        user_id_for_log = "unknown"
+        try:
+            user_id_for_log = get_user_id(request)
+        except Exception:
+            pass
+        
+        logger.error(f"Redis ReadOnly error for: {user_id_for_log}, path: {request.url.path}, error: {str(exc)}")
         return JSONResponse(
-            status_code=500,
+            status_code=503,
             content={
                 "detail": "Redis server dalam mode read-only. Rate limiting menggunakan in-memory storage."
             }
@@ -175,7 +190,13 @@ def create_app() -> FastAPI:
     # Tambahkan exception handler umum untuk semua exception
     @app.exception_handler(Exception)
     async def general_exception_handler(request: Request, exc: Exception):
-        logger.error(f"Unhandled exception for: {get_user_id(request)}, path: {request.url.path}, error: {str(exc)}")
+        user_id_for_log = "unknown"
+        try:
+            user_id_for_log = get_user_id(request)
+        except Exception:
+            pass
+        
+        logger.error(f"Unhandled exception for: {user_id_for_log}, path: {request.url.path}, error: {str(exc)}")
         return JSONResponse(
             status_code=500,
             content={
@@ -221,7 +242,7 @@ app = create_app()
 
 # Debug endpoint untuk status dengan limiter eksplisit
 @app.get("/status")
-@limiter.limit("4/120second")  # 2 request per 2 menit (120 detik)
+@limiter.limit("4/120second")  # 4 request per 2 menit (120 detik)
 async def health_check(request: Request):
     """Health check endpoint that is rate limited"""
     return {"status": "healthy", "redis_status": redis_status}
