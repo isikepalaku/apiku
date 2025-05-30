@@ -12,6 +12,7 @@ from agents.agen_perkaba import get_perkaba_agent
 from agents.agen_bantek import get_perkaba_bantek_agent
 from agents.agen_emp import get_emp_agent
 from agents.agen_wassidik import get_wassidik_agent
+from agents.wassidik_chat import get_wassidik_chat_agent
 from agents.fidusia import get_corruption_investigator
 from agents.hoax import fact_checker_agent
 from agents.perbankan import get_perbankan_agent
@@ -54,6 +55,7 @@ agen_kesehatan = get_kesehatan_agent(debug_mode=True)
 agen_indagsi = get_ipi_agent(debug_mode=True)
 agen_emp = get_emp_agent(debug_mode=True)
 agen_wassidik = get_wassidik_agent(debug_mode=True)
+agen_wassidik_chat = get_wassidik_chat_agent(debug_mode=True)
 agen_perkaba = get_perkaba_agent(debug_mode=True)
 agen_bantek = get_perkaba_bantek_agent(debug_mode=True)
 geo_agent = get_geo_agent(debug_mode=True)
@@ -90,6 +92,7 @@ playground = Playground(
         agen_bantek,
         agen_emp,
         agen_wassidik,
+        agen_wassidik_chat,
         agen_tipidkor,
         agen_p2sk,
         agen_kuhp, # Existing KUHP (UU 1/2023) agent
@@ -120,8 +123,8 @@ playground = Playground(
 )
 
 # Log the playground endpoint with phidata.app
-if getenv("RUNTIME_ENV") == "dev":
-    playground.create_endpoint("http://localhost:8000")
+# if getenv("RUNTIME_ENV") == "dev":
+#     playground.create_endpoint("http://localhost:8000")
 
 # Create the router from the playground
 playground_router = playground.get_async_router()
@@ -232,6 +235,7 @@ async def agent_with_files(
         "bantek-agent": get_perkaba_bantek_agent,
         "emp-agent": get_emp_agent,
         "wassidik-agent": get_wassidik_agent,
+        "wassidik-chat": get_wassidik_chat_agent,
         "dit-reskrimum-chat": get_dit_reskrimum_agent, # Add Dit Reskrimum agent function mapping
     }
     

@@ -52,7 +52,7 @@ def get_tipidkor_agent(
         agent_id="tipidkor-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
         use_json_mode=True,
         tools=[
             ThinkingTools(add_instructions=True),
@@ -99,6 +99,7 @@ def get_tipidkor_agent(
             "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
         markdown=True,

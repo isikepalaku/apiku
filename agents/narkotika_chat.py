@@ -29,6 +29,7 @@ knowledge_base = TextKnowledgeBase(
         table_name="text_narkotika",
         db_url=db_url,
         embedder=OpenAIEmbedder(),
+        search_type=SearchType.hybrid
     ),
 )
 
@@ -51,7 +52,7 @@ def get_narkotika_agent(
         agent_id="narkotika-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
         tools=[
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
@@ -85,6 +86,7 @@ def get_narkotika_agent(
             "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
         use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,

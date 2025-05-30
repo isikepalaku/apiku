@@ -45,7 +45,7 @@ def get_p2sk_agent(
         agent_id="p2sk-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
+        model=Gemini(id="gemini-2.5-flash-preview-05-20", vertexai=True),
         tools=[ThinkingTools(add_instructions=True), TavilyTools(), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=p2sk_agent_storage,

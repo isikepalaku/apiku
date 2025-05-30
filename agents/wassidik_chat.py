@@ -6,6 +6,7 @@ from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
+from agno.models.deepseek import DeepSeek
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.pgvector import PgVector, SearchType
@@ -18,14 +19,14 @@ from agno.tools.thinking import ThinkingTools
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi memory v2 dan storage
-memory = Memory(db=PostgresMemoryDb(table_name="ppa_ppo_agent_memories", db_url=db_url))
-ppa_ppo_agent_storage = PostgresStorage(table_name="ppa_ppo_agent_memory", db_url=db_url, auto_upgrade_schema=True)
+memory = Memory(db=PostgresMemoryDb(table_name="wassidik_chat_agent_memories", db_url=db_url))
+wassidik_chat_agent_storage = PostgresStorage(table_name="wassidik_chat_agent_memory", db_url=db_url, auto_upgrade_schema=True)
 
-# Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait UU PPA PPO
+# Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait Wassidik
 knowledge_base = TextKnowledgeBase(
-    path=Path("data/krimum/tpo"),  # Folder berisi dokumen UU terkait PPA dan PPO
+    path=Path("data/wassidik"),  # Folder berisi dokumen SOP Wassidik
     vector_db=PgVector(
-        table_name="text_ppa_ppo",
+        table_name="pengetahuan_wassidik",
         db_url=db_url,
         embedder=OpenAIEmbedder(),
         search_type=SearchType.hybrid
@@ -35,7 +36,7 @@ knowledge_base = TextKnowledgeBase(
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
 #knowledge_base.load(recreate=False)
 
-def get_ppa_ppo_agent(
+def get_wassidik_chat_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     debug_mode: bool = True,
@@ -47,21 +48,21 @@ def get_ppa_ppo_agent(
         additional_context += "</context>"
 
     return Agent(
-        name="Penyidik Senior Tindak Pidana Perempuan dan Anak serta Pidana Perdagangan Orang",
-        agent_id="ppa-ppo-chat",
+        name="Asisten Wassidik (Pengawasan Penyidikan) Polri",
+        agent_id="wassidik-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
+        model=DeepSeek(id="deepseek-reasoner"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
         ],
         knowledge=knowledge_base,
-        storage=ppa_ppo_agent_storage,
+        storage=wassidik_chat_agent_storage,
         search_knowledge=True,
         description=(
-            "Anda adalah asisten penyidik kepolisian spesialisasi Tindak Pidana Perempuan dan Anak serta Pidana Perdagangan Orang (Dir PPA PPO) yang berperan sebagai mentor."
+            "Anda adalah Asisten Wassidik (Pengawasan Penyidikan) Polri yang bertugas untuk melakukan koordinasi dan pengawasan terhadap proses penyelidikan dan penyidikan tindak pidana. Fungsi ini dilaksanakan oleh unit seperti Bagwassidik di tingkat Polda atau Birowassidik di tingkat Mabes Polri."
         ),
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
@@ -78,16 +79,41 @@ def get_ppa_ppo_agent(
             "Sertakan kutipan hukum serta referensi sumber resmi atau link URL yang relevan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya.\n",
             "Gunakan tabel jika memungkinkan.\n",
+            "## Tugas Pokok Wassidik (Pengawasan Penyidikan):\n",
+            "### 1. Koordinasi dan Pengawasan Proses Penyidikan\n",
+            "- Melakukan koordinasi dan pengawasan terhadap proses penyidikan tindak pidana di lingkungan Direktorat Reserse Kriminal\n",
+            "- Menindaklanjuti pengaduan masyarakat terkait proses penyidikan\n",
+            "- Memastikan kepatuhan terhadap peraturan dan perundang-undangan yang berlaku\n\n",
+            "### 2. Supervisi, Koreksi, dan Asistensi\n",
+            "- Melaksanakan supervisi terhadap kegiatan penyelidikan dan penyidikan tindak pidana\n",
+            "- Melakukan koreksi terhadap proses penyidikan yang tidak sesuai prosedur\n",
+            "- Memberikan asistensi kepada direktorat/subdirektorat di lingkungan Direktorat Reserse Kriminal\n",
+            "- Memberikan bantuan dalam penyelidikan dan penyidikan tindak pidana kepada penyidik dan PPNS\n\n",
+            "### 3. Pengkajian Efektivitas Melalui Gelar Perkara\n",
+            "- Mempersiapkan dan melaksanakan gelar perkara untuk mengkaji efektivitas pelaksanaan penyelidikan dan penyidikan\n",
+            "- Memfasilitasi diskusi dalam gelar perkara\n",
+            "- Menyusun kesimpulan dan memberikan rekomendasi untuk penyidik\n",
+            "- Melakukan monitoring dan evaluasi terhadap pelaksanaan rekomendasi hasil gelar perkara\n\n",
+            "### 4. Pemberian Saran dan Masukan\n",
+            "- Memberikan saran dan masukan kepada Direktur Reserse Kriminal terkait hasil pengawasan penyidikan\n",
+            "- Menanggapi pengaduan masyarakat terkait proses penyidikan\n",
+            "- Menyusun laporan pengawasan dan rekomendasi perbaikan\n",
+            "- Memastikan tindak lanjut sesuai dengan batas waktu yang ditentukan\n\n",
             "Knowledge base mu dibekali:\n",
-            "- UU Nomor 23 Tahun 2004 tentang Penghapusan Kekerasan Dalam Rumah Tangga (PKDRT)\n",
-            "- UU Nomor 21 Tahun 2007 tentang Pemberantasan Tindak Pidana Perdagangan Orang (TPPO)\n",
-            "  Perhatikan perubahan berdasarkan UU No. 1 Tahun 2023 (KUHP) yang mencabut sebagian Pasal 2\n",
-            "- UU Nomor 11 Tahun 2012 tentang Sistem Peradilan Pidana Anak (SPPA)\n", 
-            "- UU Nomor 12 Tahun 2022 tentang Tindak Pidana Kekerasan Seksual (TPKS)\n",
+            "- Lampiran V SOP Wassidik Perkaba 1 Tahun 2022\n",
+            "- Perkaba Pelaksanaan Penyidikan TP No. 1 Tahun 2022\n",
+            "- Lampiran I SOP Lidik Sidik Perkaba 1 Tahun 2022\n",
+            "- Lampiran III SOP Bantek Perkaba 1 Tahun 2022\n",
+            "- Lampiran IV SOP EMP Perkaba 1 Tahun 2022\n",
+            "- UU Nomor 8 Tahun 1981 (KUHAP)\n",
+            "- UU Nomor 2 Tahun 2002\n",
+            "- Perpolri No. 6 Tahun 2019\n",
+            "- Permenpan Nomor 35 Tahun 2012\n",
             "Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar.\n",
-            "Berikan panduan investigatif yang jelas dan terstruktur.\n",
+            "Berikan panduan pengawasan dan koordinasi yang jelas dan terstruktur.\n",
             "Diharapkan kamu akan menggunakan think tool secara aktif untuk mencatat pemikiran dan ide.\n",
-            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
+            "Fokuskan pada aspek pengawasan, koordinasi, dan pembinaan dalam proses penyidikan.\n",
+            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk pengawasan penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
         add_datetime_to_instructions=True,
@@ -96,6 +122,8 @@ def get_ppa_ppo_agent(
         show_tool_calls=False,
         markdown=True,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
+        memory=memory,
+        enable_user_memories=True,
     )

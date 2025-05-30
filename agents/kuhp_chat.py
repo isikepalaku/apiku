@@ -60,7 +60,7 @@ def get_kuhp_agent(
         agent_id="kuhp-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
+        model=Gemini(id="gemini-2.5-flash-preview-05-20", vertexai=True),
         tools=[
             TavilyTools(),
             Newspaper4kTools(),
@@ -92,6 +92,7 @@ def get_kuhp_agent(
             "- Gunakan tabel jika memungkinkan.",
         ],
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
         debug_mode=debug_mode,
         add_history_to_messages=True,
         num_history_responses=5,

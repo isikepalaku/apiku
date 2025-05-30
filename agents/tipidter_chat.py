@@ -55,7 +55,7 @@ def get_tipidter_agent(
         session_id=session_id,
         user_id=user_id,
         memory=memory,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
         tools=[
             ThinkingTools(add_instructions=True),
             DuckDuckGoTools(), 
@@ -122,6 +122,7 @@ def get_tipidter_agent(
             "Ingat!!! selalu utamakan ketentuan pidana khusus (lex specialis) dibandingkan lex generalis dalam menelaah penerapan pasal dan undang-undang\n",
         ],
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
         use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
@@ -129,4 +130,5 @@ def get_tipidter_agent(
         num_history_responses=5,
         read_chat_history=True,
         markdown=True,
+        enable_user_memories=True,
     )

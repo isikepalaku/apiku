@@ -59,7 +59,7 @@ def get_siber_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(
-            id="gemini-2.5-flash-preview-04-17"
+            id="gemini-2.5-flash-preview-05-20"
         ),
         tools=[
             GoogleSearchTools(cache_results=True), 
@@ -95,6 +95,7 @@ def get_siber_agent(
             "ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian, jika pengguna menanyakan model ai mu, jelaskan bahwa kamu adalah model ai yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
         use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
@@ -103,4 +104,5 @@ def get_siber_agent(
         num_history_responses=5,
         read_chat_history=True,
         memory=memory,
+        enable_user_memories=True,
     )

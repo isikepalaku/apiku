@@ -85,6 +85,7 @@ def get_kesehatan_agent(
             "Anjurkan untuk berkonsultasi dengan penyidik atau ahli hukum resmi apabila situasi hukum tertentu memerlukan analisis atau penanganan lebih lanjut.\n",
         ],
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
         markdown=True

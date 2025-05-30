@@ -52,7 +52,7 @@ def get_kuhap_agent(
         agent_id="kuhap-chat", # ID agen diubah
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"), # Model bisa disesuaikan jika perlu
+        model=Gemini(id="gemini-2.5-flash-preview-05-20"), # Model bisa disesuaikan jika perlu
         tools=[
             ThinkingTools(add_instructions=True),
             TavilyTools(),
@@ -76,6 +76,7 @@ def get_kuhap_agent(
             "**Konteks Pengguna:** Perhatikan konteks pengguna (jika ada) untuk memberikan jawaban yang lebih personal dan relevan.",
         ], # Instruksi disesuaikan untuk ahli KUHAP
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
         debug_mode=debug_mode,
         add_history_to_messages=True,
         num_history_responses=5,

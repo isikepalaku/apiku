@@ -29,6 +29,7 @@ knowledge_base = TextKnowledgeBase(
         table_name="text_ipi",
         db_url=db_url,
         embedder=OpenAIEmbedder(),
+        search_type=SearchType.hybrid
     ),
 )
 
@@ -45,7 +46,7 @@ def get_ipi_agent(
         agent_id="ipi-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(),
@@ -83,6 +84,7 @@ def get_ipi_agent(
 
         ],
         add_history_to_messages=True,
+        add_datetime_to_instructions=True,
         num_history_responses=5,
         read_chat_history=True,
         memory=memory,

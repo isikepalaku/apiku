@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.models.google import Gemini
+from agno.models.openai import OpenAIChat
 from agno.knowledge.text import TextKnowledgeBase
 from agno.vectordb.qdrant import Qdrant
 from agno.storage.postgres import PostgresStorage
@@ -14,13 +15,12 @@ from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.thinking import ThinkingTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.db.redis import RedisMemoryDb
 from agno.memory.v2.memory import Memory
 
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
-memory = Memory(db=PostgresMemoryDb(table_name="fismondev_agent_memories", db_url=db_url))
 fismondev_agent_storage = PostgresStorage(table_name="fismondev_agent_memory", db_url=db_url)
 COLLECTION_NAME = "fismondev"
 # Initialize text knowledge base with multiple documents
@@ -30,13 +30,14 @@ knowledge_base = TextKnowledgeBase(
         collection=COLLECTION_NAME,
         url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
         embedder=OpenAIEmbedder(),
-        api_key=os.getenv("QDRANT_API_KEY")
+        api_key=os.getenv("QDRANT_API_KEY"),
     )
 )
 # Load knowledge base before initializing agent
 #knowledge_base.load(recreate=False)
 
 def get_fismondev_agent(
+    model_id: str = "gpt-4o-mini",
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     debug_mode: bool = True,
@@ -51,8 +52,7 @@ def get_fismondev_agent(
         agent_id="fismondev-chat",
         session_id=session_id,
         user_id=user_id,
-        memory=memory,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
         use_json_mode=True,
         tools=[
             GoogleSearchTools(),
@@ -141,7 +141,22 @@ def get_fismondev_agent(
         Pasal 36 UU Fidusia:
         Pemberi Fidusia yang mengalihkan, menggadaikan, atau menyewakan Benda yang menjadi objek Jaminan Fidusia sebagaimana dimaksud dalam Pasal 23 ayat (2) yang dilakukan tanpa persetujuan tertulis terlebih dahulu dari Penerima Fidusia, dipidana dengan pidana penjara paling lama 2 (dua) tahun dan denda paling banyak Rp.50.000.000,- (lima puluh juta rupiah).
         """),
+        add_state_in_messages=True,
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
+        memory=Memory(
+            model=OpenAIChat(id=model_id),
+            db=RedisMemoryDb(
+                prefix="fismondev_memory", 
+                host=os.getenv("REDIS_HOST", "localhost"), 
+                port=int(os.getenv("REDIS_PORT", "6379")),
+                password=os.getenv("REDIS_PASSWORD", None),
+                db=int(os.getenv("REDIS_DB", "0"))
+            ),
+            delete_memories=True,
+            clear_memories=True,
+        ),
+        enable_agentic_memory=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
         add_history_to_messages=True,

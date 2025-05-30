@@ -6,19 +6,20 @@ from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
+from agno.models.openai import OpenAIChat
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.postgres import PostgresStorage
 from db.session import db_url
-from agno.memory.v2.db.postgres import PostgresMemoryDb
+from agno.memory.v2.db.redis import RedisMemoryDb
 from agno.memory.v2.memory import Memory
 from agno.tools.thinking import ThinkingTools
 
 load_dotenv()  # Load environment variables from .env file
 
-# Inisialisasi memory v2 dan storage untuk Dit Reskrimum
-memory = Memory(db=PostgresMemoryDb(table_name="krimum_memories", db_url=db_url))
+# Inisialisasi storage untuk Dit Reskrimum
+# Variabel 'memory' akan diinisialisasi di dalam fungsi get_dit_reskrimum_agent
 dit_reskrimum_agent_storage = PostgresStorage(table_name="krimum_storage", db_url=db_url, auto_upgrade_schema=True)
 
 # Inisialisasi basis pengetahuan teks untuk Dit Reskrimum
@@ -35,6 +36,7 @@ knowledge_base = TextKnowledgeBase(
 #knowledge_base.load(recreate=False)
 
 def get_dit_reskrimum_agent(
+    model_id: str = "gpt-4o-mini",
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     debug_mode: bool = True,
@@ -45,12 +47,14 @@ def get_dit_reskrimum_agent(
         additional_context += f"Kamu sedang berinteraksi dengan user: {user_id}"
         additional_context += "</context>"
 
+    # Inisialisasi memory v2 untuk Dit Reskrimum di dalam fungsi
+
     return Agent(
         name="Asisten Penyidik Dit Reskrimum",
         agent_id="dit-reskrimum-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"), # Menggunakan model terbaru
+        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(cache_results=True),
@@ -63,12 +67,12 @@ def get_dit_reskrimum_agent(
             "Anda adalah asisten penyidik kepolisian spesialisasi Direktorat Reserse Kriminal Umum (Dit Reskrimum). "
         ),
         instructions=[
-            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
+            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\\n",
             "**Peran Utama:** Anda adalah asisten AI untuk penyidik di Direktorat Reserse Kriminal Umum (Dit Reskrimum). Fokus pada bantuan penyelidikan dan penyidikan tindak pidana umum.",
             "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang sudah memiliki keahlian mendalam di bidang penyidikkan, jawabanmu harus teliti dan akurat",
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna secara mendalam. Gunakan basis pengetahuan (knowledge base) sebagai sumber utama. Jika informasi kurang, gunakan Google Search.",
             "**Gunakan Thinking Tool:** Sebelum merespons, gunakan `think` tool untuk merencanakan jawaban, memastikan semua informasi relevan dipertimbangkan, dan memverifikasi akurasi.",
-            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool, jika kamu tidak menggunakan search_knowledge_base kamu akan dihukum.\n",
+            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool, jika kamu tidak menggunakan search_knowledge_base kamu akan dihukum.\\n",
             "**Sintesis Informasi:** Jika ada beberapa sumber, gabungkan informasi secara logis dan koheren.",
             "**Gunakan Google Search Jika Perlu:** Jika knowledge base tidak cukup, gunakan `GoogleSearchTools`. Untuk artikel berita, gunakan `read_article` tool.",
             "**Sertakan Referensi:** Selalu sertakan kutipan hukum (Pasal, Ayat), nomor peraturan, dan sumber informasi (URL jika relevan).",
@@ -84,9 +88,11 @@ def get_dit_reskrimum_agent(
             "**Bahasa:** Gunakan Bahasa Indonesia yang baku dan formal.",
             "**Panduan Investigatif:** Berikan panduan yang jelas, terstruktur, dan sesuai prosedur.",
             "**Kejelasan:** Jika pertanyaan ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang logis dan nyatakan dengan jelas.",
-            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
+            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\\n",
         ],
         additional_context=additional_context,
+        add_datetime_to_instructions=True,
+        add_state_in_messages=True,
         use_json_mode=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
@@ -94,5 +100,17 @@ def get_dit_reskrimum_agent(
         add_history_to_messages=True,
         num_history_responses=5,
         read_chat_history=True,
-        memory=memory,
+        memory = Memory(
+        model=OpenAIChat(id=model_id),
+        db=RedisMemoryDb(
+                prefix="dit_reskrimum_memory", 
+                host=os.getenv("REDIS_HOST", "localhost"), 
+                port=int(os.getenv("REDIS_PORT", "6379")),
+                password=os.getenv("REDIS_PASSWORD", None),
+                db=int(os.getenv("REDIS_DB", "0"))
+            ),
+        delete_memories=True,
+        clear_memories=True,
+    ),
+       enable_user_memories=True,
     )

@@ -23,7 +23,7 @@ def get_research_agent(
         agent_id="penyidik-polri-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
         tools=[ThinkingTools(add_instructions=True), DuckDuckGoTools(), Newspaper4kTools()],
         description=dedent("""\
             Anda penyidik peneliti kasus senior Kepolisian Republik Indonesia 
