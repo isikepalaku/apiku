@@ -15,8 +15,8 @@ from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+# from agno.tools.mcp import MCPTools
+# from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -43,12 +43,12 @@ def get_kuhp_agent(
     debug_mode: bool = True,
 ) -> Agent:
     # Create MCPTools instance separately
-    sequential_thinking_mcp_tools = MCPTools(
-        server_params=StdioServerParameters(
-            command="npx",
-            args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-        )
-    )
+    # sequential_thinking_mcp_tools = MCPTools(
+    #     server_params=StdioServerParameters(
+    #         command="npx",
+    #         args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    #     )
+    # )
 
     additional_context = ""
     if user_id:
@@ -64,7 +64,7 @@ def get_kuhp_agent(
         tools=[
             TavilyTools(),
             Newspaper4kTools(),
-            sequential_thinking_mcp_tools, # Use the created instance
+            # sequential_thinking_mcp_tools, # Use the created instance
         ],
         knowledge=knowledge_base,
         storage=kuhp_agent_storage,
@@ -95,7 +95,7 @@ def get_kuhp_agent(
         add_datetime_to_instructions=True,
         debug_mode=debug_mode,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         memory=memory,
         show_tool_calls=False,

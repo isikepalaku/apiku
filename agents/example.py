@@ -65,7 +65,7 @@ def get_basic_agent(
         user_id=user_id,
         storage=basic_agent_storage,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         add_datetime_to_instructions=True,
         markdown=True,
         debug_mode=debug_mode,

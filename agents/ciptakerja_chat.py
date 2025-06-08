@@ -48,7 +48,7 @@ def get_cipta_kerja_agent(
         search_knowledge=True,
         read_chat_history=True,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         description=(
             "Anda adalah ahli Undang-undang Nomor 6 Tahun 2023 tentang Cipta Kerja. "
         ),

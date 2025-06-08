@@ -66,7 +66,7 @@ def get_perkaba_agent(
         memory=memory,
         enable_user_memories=True,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         enable_session_summaries=True,
         debug_mode=debug_mode,

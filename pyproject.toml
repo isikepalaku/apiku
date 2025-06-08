@@ -1,9 +1,9 @@
 [project]
-name = "agent-app"
+name = "agent-api"
 version = "0.1.0"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 readme = "README.md"
-authors = [{ name = "Phidata Team", email = "hello@phidata.com" }]
+authors = [{ name = "Agno", email = "hello@agno.com" }]
 
 dependencies = [
    "alembic",
@@ -54,7 +54,11 @@ dependencies = [
   "qdrant-client",
   "redis",
   "slowapi",
-  "qdrant-client[fastembed]"
+  "qdrant-client[fastembed]",
+  "numpy",
+  "fastembed",
+  "cohere",
+  "infinity_client"
 
 
 ]
@@ -84,7 +88,7 @@ plugins = ["pydantic.mypy"]
 exclude = ["aienv*", ".venv*"]
 
 [[tool.mypy.overrides]]
-module = ["pgvector.*", "setuptools.*", "nest_asyncio.*"]
+module = ["pgvector.*", "setuptools.*", "agno.*", "agno.docker.*", "agno.aws.*"]
 ignore_missing_imports = true
 
 [tool.uv.pip]

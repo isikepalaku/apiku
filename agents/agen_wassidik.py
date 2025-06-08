@@ -47,7 +47,7 @@ def get_wassidik_agent(
         storage=wassidik_agent_storage,
         search_knowledge=True,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         memory=memory,
         enable_user_memories=True,

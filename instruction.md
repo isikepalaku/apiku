@@ -17,6 +17,8 @@ When you need to add new Python packages to the project, follow these steps:
    ./scripts/generate_requirements.sh upgrade
    ```
 
+docker system prune -a
+
 3. **Configure Build Settings**
    - Ensure `build_images=True` is set in `workspace/settings.py`
    - This setting tells phi to rebuild the Docker images with the new requirements

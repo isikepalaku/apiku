@@ -15,13 +15,14 @@ from db.session import db_url
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.thinking import ThinkingTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.memory.v2.db.redis import RedisMemoryDb
+from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 
 load_dotenv()  # Load environment variables from .env file
 
 # Initialize memory v2 and storage
-fismondev_agent_storage = PostgresStorage(table_name="fismondev_agent_memory", db_url=db_url)
+memory = Memory(db=PostgresMemoryDb(table_name="ingatan_fismondev", db_url=db_url))
+fismondev_agent_storage = PostgresStorage(table_name="fismondev_storage", db_url=db_url)
 COLLECTION_NAME = "fismondev"
 # Initialize text knowledge base with multiple documents
 knowledge_base = TextKnowledgeBase(
@@ -37,7 +38,6 @@ knowledge_base = TextKnowledgeBase(
 #knowledge_base.load(recreate=False)
 
 def get_fismondev_agent(
-    model_id: str = "gpt-4o-mini",
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     debug_mode: bool = True,
@@ -61,6 +61,8 @@ def get_fismondev_agent(
         ],
         knowledge=knowledge_base,
         storage=fismondev_agent_storage,
+        memory=memory,
+        enable_user_memories=True,
         search_knowledge=True,
         description=dedent("""
         Anda adalah Penyidik Kepolisian Fismodev (Fiskal, Moneter, dan Devisa), ahli di bidang penyidikan tindak pidana sektor jasa keuangan.
@@ -144,23 +146,10 @@ def get_fismondev_agent(
         add_state_in_messages=True,
         additional_context=additional_context,
         add_datetime_to_instructions=True,
-        memory=Memory(
-            model=OpenAIChat(id=model_id),
-            db=RedisMemoryDb(
-                prefix="fismondev_memory", 
-                host=os.getenv("REDIS_HOST", "localhost"), 
-                port=int(os.getenv("REDIS_PORT", "6379")),
-                password=os.getenv("REDIS_PASSWORD", None),
-                db=int(os.getenv("REDIS_DB", "0"))
-            ),
-            delete_memories=True,
-            clear_memories=True,
-        ),
-        enable_agentic_memory=True,
         debug_mode=debug_mode,
         show_tool_calls=False,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         markdown=True,
     )

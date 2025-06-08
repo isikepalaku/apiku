@@ -69,7 +69,7 @@ def get_tipidkor_agent(
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
-            "Lakukan pencarian internet dengan google_search jika tidak ditemukan jawaban di basis pengetahuanmu.\n",
+            "Lakukan pencarian internet dengan google_search jika tidak ditemukan jawaban di basis pengetahuanmu atau jika memerlukan pencarian internet.\n",
             "Berikan panduan selayaknya mentor penyidik kepolsian yang ahli pada tindak pidana korupsi\n",
             
             "# Dasar Hukum\n"
@@ -94,8 +94,6 @@ def get_tipidkor_agent(
             "# Klarifikasi dan Follow up\n"
             "- setelah membuat jawaban, follow up pertanyaan user dan berikan rekomendasi topik terkait\n"
             "- Tinjau respons Anda untuk memastikan kejelasan, kedalaman, dan keterlibatan. \n",
-            "- Gunakan tabel jika memungkinkan\n",
-            "- Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar\n",
             "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
@@ -104,7 +102,8 @@ def get_tipidkor_agent(
         show_tool_calls=False,
         markdown=True,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         memory=memory,
+        stream=True,
     )

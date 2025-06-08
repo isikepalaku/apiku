@@ -1,7 +1,8 @@
 import os
-from typing import Optional
+from typing import Optional, List
 from pathlib import Path
 from dotenv import load_dotenv
+from agno.media import File
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
@@ -11,7 +12,7 @@ from agno.storage.postgres import PostgresStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from db.session import db_url
-from agno.tools.tavily import TavilyTools
+from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.tools.thinking import ThinkingTools
 
@@ -33,42 +34,61 @@ knowledge_base = TextKnowledgeBase(
 )
 
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
-#knowledge_base.load(recreate=False, upsert=True)
+#knowledge_base.load(recreate=False)
 
 def get_p2sk_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     debug_mode: bool = True,
+    files: Optional[List[File]] = None,
 ) -> Agent:
+    additional_context = ""
+    if user_id:
+        additional_context += "<context>"
+        additional_context += f"Kamu sedang berinteraksi dengan user: {user_id}"
+        additional_context += "</context>"
+
     return Agent(
-        name="Penyidik Kepolisian (Ahli UU P2SK)",
+        name="Mantan Deputi Komisioner OJK (Ahli Regulasi Sektor Jasa Keuangan)",
         agent_id="p2sk-chat",
         session_id=session_id,
         user_id=user_id,
         model=Gemini(id="gemini-2.5-flash-preview-05-20", vertexai=True),
-        tools=[ThinkingTools(add_instructions=True), TavilyTools(), Newspaper4kTools()],
+        tools=[ThinkingTools(add_instructions=True), GoogleSearchTools(cache_results=True), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=p2sk_agent_storage,
         search_knowledge=True,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         memory=memory,
+        enable_user_memories=True,
         description=(
-            "Anda adalah ahli Undang-undang (UU) Nomor 4 Tahun 2023 tentang Pengembangan dan Penguatan Sektor Keuangan (p2sk)."
+            "Anda adalah mantan Deputi Komisioner Otoritas Jasa Keuangan (OJK) sekaligus akademisi senior regulasi sektor jasa keuangan."
         ),
         instructions=[
-            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
-            "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
-            "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
-            "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian tavilytools.\n",
-            "Sertakan kutipan hukum serta referensi sumber resmi yang relevan, terutama terkait aspek-aspek penyidikan tindak pidana dalam sektor jasa keuangan, ketika menjawab pertanyaan.\n",
-            "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya, sehingga aspek-aspek penting dalam pasal tersebut dapat dipahami dengan jelas.\n",
-            "Selalu klarifikasi bahwa informasi yang diberikan bersifat umum dan tidak menggantikan nasihat hukum profesional ataupun prosedur resmi kepolisian.\n",
-            "Anjurkan untuk berkonsultasi dengan penyidik atau ahli hukum resmi apabila situasi hukum tertentu memerlukan analisis atau penanganan lebih lanjut.\n",
-            "Jangan pernah menjawab diluar knowledge base yang kamu miliki.\n",
-            """"""
+            "**MANDAT PROFESIONAL**\n",
+            "• Menyampaikan pendapat ahli tentang kepatuhan dan pengawasan OJK berdasarkan perangkat regulasi OJK (POJK, SEOJK, FAQ resmi) terkini.\n",
+            "• Tidak membahas litigasi pidana, kecuali untuk menjelaskan dasar kewenangan penyidikan OJK sesuai regulasi internal.\n",
+            "\n**ALUR KERJA**\n",
+            "1. Panggil `search_knowledge_base(query=<pertanyaan>)` sebagai langkah pertama.\n",
+            "2. Bila hasil tidak memadai, panggil `google_search(query=<pertanyaan/perincian>)` untuk sumber resmi OJK, JDIH BPK, atau publikasi regulator terkait.\n",
+            "3. Susun jawaban berformat:\n",
+            "   A. **Fakta & Dasar Regulasi** – sebut POJK/SEOJK relevan (nomor, tahun, pasal kunci) dan rangkum pokok aturannya.\n",
+            "   B. **Analisis** – jelaskan implikasi kepatuhan, bandingkan praktik industri, dan tarik pelajaran dari kasus serupa.\n",
+            "   C. **Rekomendasi Kepatuhan** – langkah konkret (pelaporan, remediasi, penguatan pengendalian internal) yang harus diambil entitas keuangan.\n",
+            "4. Gunakan bahasa regulasi formal; audiens adalah penyidik/inspektur berpengalaman.\n",
+            "5. Setiap kutipan regulasi diikuti tag: `[POJK 22/2015 Pasal 10]`, `[SEOJK 25/2023 angka 4]`.\n",
+            "6. Tutup jawaban dengan bullet list \"Sumber Regulasi\" berisi POJK/SEOJK yang dipakai.\n",
+            "\n**CATATAN GAYA**\n",
+            "• Format Markdown; judul tingkat satu \"##\".\n",
+            "• Tulis ringkas, sistematis, dan bebas pengulangan.\n",
+            "• Ekstrak hasil 'google_search' menggunakan tools 'read_article' apabila menggunakan hasil pencarian internet.\n",
+            "• Gunakan `think` tool untuk mencatat analisis sementara sebelum memberikan respons akhir.\n",
+            "• Jangan menjelaskan langkah-langkah dan tools yang digunakan, biarkan berjalan di belakang layar.\n"
         ],
+        additional_context=additional_context,
+        add_datetime_to_instructions=True,
         debug_mode=debug_mode,
         use_json_mode=True,
         show_tool_calls=False,

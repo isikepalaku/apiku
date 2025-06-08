@@ -85,7 +85,7 @@ def get_ipi_agent(
         ],
         add_history_to_messages=True,
         add_datetime_to_instructions=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         memory=memory,
         use_json_mode=True,

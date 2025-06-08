@@ -13,8 +13,8 @@ from agno.storage.postgres import PostgresStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from db.session import db_url
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+# from agno.tools.mcp import MCPTools
+# from mcp import StdioServerParameters
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -54,17 +54,17 @@ def get_kesehatan_agent(
         tools=[
             GoogleSearchTools(), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
+            # MCPTools(
+            #     server_params=StdioServerParameters(
+            #         command="npx",
+            #         args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+            #     )
+            # )
         ],
         knowledge=knowledge_base,
         storage=kesehatan_agent_storage,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         search_knowledge=True,
         memory=memory,

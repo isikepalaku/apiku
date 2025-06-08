@@ -1,11 +1,11 @@
 from textwrap import dedent
 from typing import Optional
 from datetime import datetime
-
+from agno.models.openai import OpenAIChat
 from agno.agent import Agent
 from agno.models.google import Gemini
-from agno.tools.duckduckgo import DuckDuckGoTools
-from agno.tools.newspaper4k import Newspaper4kTools
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.jina import JinaReaderTools
 from agno.tools.thinking import ThinkingTools
 from agno.storage.postgres import PostgresStorage
 from agents.settings import agent_settings
@@ -23,8 +23,8 @@ def get_research_agent(
         agent_id="penyidik-polri-agent",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
-        tools=[ThinkingTools(add_instructions=True), DuckDuckGoTools(), Newspaper4kTools()],
+        model=OpenAIChat(id="gpt-4.1-mini"),
+        tools=[ThinkingTools(add_instructions=True), GoogleSearchTools(), JinaReaderTools()],
         description=dedent("""\
             Anda penyidik peneliti kasus senior Kepolisian Republik Indonesia 
             Gaya analisis Anda:
@@ -36,9 +36,9 @@ def get_research_agent(
         """),
         instructions=dedent("""\
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
-            "lakukan pencarian setiap kata kunci menggunakan 'duckduckgo_search'."
+            "lakukan pencarian setiap kata kunci menggunakan 'google_search'."
             "lakukan pencarian putusan yang relevan"
-           "Ekstrak semua URL yang relevan dari hasil pencarian menggunakan 'read_article'."
+           "read semua URL yang relevan dari hasil pencarian 'google_search' menggunakan 'jina_reader_tools'."
             "Tidak perlu menjelaskan langkah-langkah yang kamu lakukan kepada pengguna"
             "Analisis semua barang bukti yang tersedia, yurisprudensi, dan peraturan perundang-undangan yang relevan."
             "Periksa silang sumber-sumber hukum dan verifikasi keakuratan fakta."

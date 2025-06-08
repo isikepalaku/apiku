@@ -58,7 +58,7 @@ def get_perkaba_bantek_agent(
                     "Fokuskan penjelasan pada implementasi praktis dan penerapan prosedur teknis yang mendukung efektivitas investigasi, sambil memastikan kesesuaian dengan peraturan yang berlaku."],
         debug_mode=debug_mode,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         show_tool_calls=False,
         markdown=True,

@@ -11,8 +11,8 @@ from agno.storage.postgres import PostgresStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from db.session import db_url
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+# from agno.tools.mcp import MCPTools
+# from mcp import StdioServerParameters
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
@@ -50,12 +50,12 @@ def get_perbankan_agent(
         tools=[
             TavilyTools(), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
+            # MCPTools(
+            #     server_params=StdioServerParameters(
+            #         command="npx",
+            #         args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+            #     )
+            # )
         ],
         knowledge=knowledge_base,
         storage=perbankan_agent_storage,

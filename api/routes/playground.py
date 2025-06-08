@@ -37,10 +37,12 @@ from agents.sentiment_analyzer import get_sentiment_team
 from agents.narkotika_chat import get_narkotika_agent
 from agents.ppa_ppo_chat import get_ppa_ppo_agent
 from agents.dit_reskrimum_chat import get_dit_reskrimum_agent # Import Dit Reskrimum agent
+from agents.ahli_hukum_pidana import get_ahli_hukum_pidana_agent # Import Ahli Hukum Pidana agent
 from workflows.modus_operandi import get_analisator_tren_kejahatan
 from workflows.sentiment_analysis import get_sentiment_analyzer
 from workflows.analisis_hukum import get_sistem_penelitian_hukum
 from teams.penelititipidkor import get_sentiment_analysis_team # Import the new sentiment analysis team
+from teams.ahli_hukum_pidana import get_ahli_hukum_pidana_team # Import the criminal law expert team
 
 ######################################################
 ## Router for the agent playground
@@ -77,7 +79,9 @@ agen_tipidter = get_tipidter_agent(debug_mode=True)
 agen_narkotika = get_narkotika_agent(debug_mode=True)
 agen_ppa_ppo = get_ppa_ppo_agent(debug_mode=True)
 agen_dit_reskrimum = get_dit_reskrimum_agent(debug_mode=True) # Instantiate Dit Reskrimum agent
+agen_ahli_hukum_pidana = get_ahli_hukum_pidana_agent(debug_mode=True) # Instantiate Ahli Hukum Pidana agent
 sentiment_analysis_team_instance = get_sentiment_analysis_team(debug_mode=True)
+ahli_hukum_pidana_team_instance = get_ahli_hukum_pidana_team(debug_mode=True)
 # penyidik_tipikor_team telah dihapus karena fungsinya tidak tersedia lagi
 
 playground = Playground(
@@ -110,7 +114,8 @@ playground = Playground(
         sentiment_team,
         agen_narkotika,
         agen_ppa_ppo,
-        agen_dit_reskrimum # Add Dit Reskrimum agent instance
+        agen_dit_reskrimum, # Add Dit Reskrimum agent instance
+        agen_ahli_hukum_pidana # Add Ahli Hukum Pidana agent instance
     ],
     workflows=[
         analisator_kejahatan,
@@ -118,7 +123,8 @@ playground = Playground(
         sistem_penelitian_hukum
     ],
     teams=[ 
-        sentiment_analysis_team_instance # Gunakan instance tim yang telah diganti namanya
+        sentiment_analysis_team_instance, # Gunakan instance tim yang telah diganti namanya
+        ahli_hukum_pidana_team_instance # Add the criminal law expert team
     ],
 )
 
@@ -237,6 +243,7 @@ async def agent_with_files(
         "wassidik-agent": get_wassidik_agent,
         "wassidik-chat": get_wassidik_chat_agent,
         "dit-reskrimum-chat": get_dit_reskrimum_agent, # Add Dit Reskrimum agent function mapping
+        "ahli-hukum-pidana": get_ahli_hukum_pidana_agent, # Add Ahli Hukum Pidana agent function mapping
     }
     
     # Get the agent creation function or return 404 if not found

@@ -92,7 +92,8 @@ def get_narkotika_agent(
         show_tool_calls=False,
         markdown=True,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         memory=memory,
+        enable_user_memories=True,
     )

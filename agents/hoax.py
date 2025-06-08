@@ -6,8 +6,8 @@ load_dotenv()  # Load environment variables from .env file
 from agno.models.google import Gemini
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+# from agno.tools.mcp import MCPTools
+# from mcp import StdioServerParameters
 
 # Agen Pengecek Fakta Hoax
 fact_checker_agent = Agent(
@@ -20,12 +20,12 @@ fact_checker_agent = Agent(
     tools=[
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
+            # MCPTools(
+            #     server_params=StdioServerParameters(
+            #         command="npx",
+            #         args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+            #     )
+            # )
         ],
     description=(
         "Anda adalah agen pengecek fakta yang andal. Tugas Anda adalah mengevaluasi kebenaran "

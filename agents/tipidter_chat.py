@@ -14,16 +14,15 @@ from rich.json import JSON
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from agno.tools.thinking import ThinkingTools
-from agno.tools.duckduckgo import DuckDuckGoTools
+from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
 load_dotenv()  # Memuat variabel lingkungan dari file .env
 
 # Inisialisasi memory v2 dan storage
-memory = Memory(db=PostgresMemoryDb(table_name="tipidter_agent_memories", db_url=db_url))
-tipidter_agent_storage = PostgresStorage(table_name="tipidter_memory_agent", db_url=db_url)
+memory = Memory(db=PostgresMemoryDb(table_name="tipidter_memory", db_url=db_url))
+tipidter_agent_storage = PostgresStorage(table_name="tipidter_storage", db_url=db_url, auto_upgrade_schema=True)
 COLLECTION_NAME = "tipidter"
-
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait hukum untuk Tipidter
 knowledge_base = TextKnowledgeBase(
     path=Path("data/tipidter"),
@@ -41,7 +40,6 @@ knowledge_base = TextKnowledgeBase(
 def get_tipidter_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
-    team_session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
     additional_context = ""
@@ -54,11 +52,10 @@ def get_tipidter_agent(
         agent_id="tipidter-chat",
         session_id=session_id,
         user_id=user_id,
-        memory=memory,
-        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
+        model=Gemini(id="gemini-2.0-flash"),
         tools=[
             ThinkingTools(add_instructions=True),
-            DuckDuckGoTools(), 
+            GoogleSearchTools(), 
             Newspaper4kTools(),
             ],
         knowledge=knowledge_base,
@@ -125,10 +122,11 @@ def get_tipidter_agent(
         add_datetime_to_instructions=True,
         use_json_mode=True,
         debug_mode=debug_mode,
-        show_tool_calls=False,
-        add_history_to_messages=True,
-        num_history_responses=5,
-        read_chat_history=True,
+        show_tool_calls=True,
         markdown=True,
-        enable_user_memories=True,
+        add_history_to_messages=True,
+        num_history_responses=3,
+        read_chat_history=True,
+        memory=memory,
+        stream=True,
     )

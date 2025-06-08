@@ -1,4 +1,5 @@
 import os
+from agno.media import File
 from typing import Optional
 from pathlib import Path
 from dotenv import load_dotenv
@@ -9,8 +10,9 @@ from agno.models.google import Gemini
 from agno.models.deepseek import DeepSeek
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.vectordb.pgvector import PgVector, SearchType
 from agno.storage.postgres import PostgresStorage
+from agno.vectordb.qdrant import Qdrant
+from agno.vectordb.search import SearchType
 from db.session import db_url
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
@@ -21,16 +23,17 @@ load_dotenv()  # Load environment variables from .env file
 # Inisialisasi memory v2 dan storage
 memory = Memory(db=PostgresMemoryDb(table_name="wassidik_chat_agent_memories", db_url=db_url))
 wassidik_chat_agent_storage = PostgresStorage(table_name="wassidik_chat_agent_memory", db_url=db_url, auto_upgrade_schema=True)
-
+COLLECTION_NAME = "wassidik"
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait Wassidik
+# Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait hukum untuk Tipidter
 knowledge_base = TextKnowledgeBase(
-    path=Path("data/wassidik"),  # Folder berisi dokumen SOP Wassidik
-    vector_db=PgVector(
-        table_name="pengetahuan_wassidik",
-        db_url=db_url,
-        embedder=OpenAIEmbedder(),
-        search_type=SearchType.hybrid
-    ),
+    path=Path("data/wassidik"),
+    vector_db = Qdrant(
+        collection=COLLECTION_NAME,
+        url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
+        api_key=os.getenv("QDRANT_API_KEY"),
+        search_type=SearchType.hybrid,
+    )
 )
 
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
@@ -52,7 +55,7 @@ def get_wassidik_chat_agent(
         agent_id="wassidik-chat",
         session_id=session_id,
         user_id=user_id,
-        model=DeepSeek(id="deepseek-reasoner"),
+        model=Gemini(id="gemini-2.0-flash"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(cache_results=True), 
@@ -71,6 +74,7 @@ def get_wassidik_chat_agent(
             "- Memeriksa apakah semua informasi yang dibutuhkan sudah dikumpulkan\n",
             "- Memastikan bahwa rencana tindakan sesuai dengan semua kebijakan yang berlaku\n",
             "- Meninjau ulang hasil dari alat untuk memastikan kebenarannya\n",
+            "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang yang ingin mengetahui aturan-aturan penyidikan, jawabanmu harus teliti, akurat dan mendalam.\n",
             "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
@@ -78,7 +82,6 @@ def get_wassidik_chat_agent(
             "untuk setiap link berita, baca informasinya dengan tools 'read_article'."
             "Sertakan kutipan hukum serta referensi sumber resmi atau link URL yang relevan.\n",
             "Ketika menjawab mengenai suatu pasal, jelaskan secara terperinci unsur-unsur hukum yang mendasarinya.\n",
-            "Gunakan tabel jika memungkinkan.\n",
             "## Tugas Pokok Wassidik (Pengawasan Penyidikan):\n",
             "### 1. Koordinasi dan Pengawasan Proses Penyidikan\n",
             "- Melakukan koordinasi dan pengawasan terhadap proses penyidikan tindak pidana di lingkungan Direktorat Reserse Kriminal\n",
@@ -109,11 +112,9 @@ def get_wassidik_chat_agent(
             "- UU Nomor 2 Tahun 2002\n",
             "- Perpolri No. 6 Tahun 2019\n",
             "- Permenpan Nomor 35 Tahun 2012\n",
-            "Penting, selalu gunakan bahasa indonesia dan huruf indonesia yang benar.\n",
             "Berikan panduan pengawasan dan koordinasi yang jelas dan terstruktur.\n",
             "Diharapkan kamu akan menggunakan think tool secara aktif untuk mencatat pemikiran dan ide.\n",
             "Fokuskan pada aspek pengawasan, koordinasi, dan pembinaan dalam proses penyidikan.\n",
-            "- ingat kamu adalah ai model bahasa besar yang dibuat khusus untuk pengawasan penyidikan kepolisian\n",
         ],
         additional_context=additional_context,
         add_datetime_to_instructions=True,

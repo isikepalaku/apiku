@@ -60,7 +60,7 @@ def get_emp_agent(
         ],
         debug_mode=debug_mode,
         add_history_to_messages=True,
-        num_history_responses=5,
+        num_history_responses=3,
         read_chat_history=True,
         show_tool_calls=True,
         markdown=True

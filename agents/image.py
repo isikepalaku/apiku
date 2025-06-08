@@ -5,8 +5,8 @@ from pathlib import Path
 from agno.agent import Agent
 from agno.media import Image
 from agno.models.google import Gemini
-from agno.tools.mcp import MCPTools
-from mcp import StdioServerParameters
+# from agno.tools.mcp import MCPTools
+# from mcp import StdioServerParameters
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from dotenv import load_dotenv
@@ -69,12 +69,12 @@ def get_geo_agent(
         tools=[
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
-            MCPTools(
-                server_params=StdioServerParameters(
-                    command="npx",
-                    args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
-                )
-            )
+            # MCPTools(
+            #     server_params=StdioServerParameters(
+            #         command="npx",
+            #         args=["-y", "@modelcontextprotocol/server-sequential-thinking"]
+            #     )
+            # )
         ],
         description="Anda adalah ahli geografi yang menganalisis gambar untuk menentukan lokasi berdasarkan petunjuk visual yang tersedia. Semua analisis akan diberikan dalam Bahasa Indonesia.",
         instructions=[geo_query],

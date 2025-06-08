@@ -5,10 +5,8 @@ from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.tools.mcp import MCPTools
 from agno.storage.postgres import PostgresStorage
 from db.session import db_url
-from mcp import StdioServerParameters
 from typing import Optional
 
 fidusia_agent_storage = PostgresStorage(table_name="fidusia_agent", db_url=db_url, auto_upgrade_schema=True)
