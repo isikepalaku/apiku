@@ -58,7 +58,11 @@ dependencies = [
   "numpy",
   "fastembed",
   "cohere",
-  "infinity_client"
+  "infinity_client",
+  "textract-py3",
+  "markdown",
+  "unstructured",
+  "lightrag-hku"
 
 
 ]
