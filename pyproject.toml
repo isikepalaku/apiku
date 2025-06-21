@@ -41,7 +41,6 @@ dependencies = [
   "mistralai",
   "mcp",
   "groq",
-  "huggingface_hub",
   "tantivy",
   "inquirer",
   "jinaai",
@@ -60,7 +59,8 @@ dependencies = [
   "textract-py3",
   "markdown",
   "unstructured",
-  "google-cloud-firestore"
+  "google-cloud-firestore",
+  "ag-ui-protocol"
 
 
 ]
