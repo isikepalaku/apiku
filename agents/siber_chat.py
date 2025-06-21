@@ -5,6 +5,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
 from agno.media import File
+from google.generativeai import upload_file
+from google.generativeai.types import file_types
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
@@ -59,7 +61,7 @@ def get_siber_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(
-            id="gemini-2.5-flash-preview-05-20"
+            id="gemini-2.5-flash-preview-04-17"
         ),
         tools=[
             GoogleSearchTools(cache_results=True), 

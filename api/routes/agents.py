@@ -19,7 +19,7 @@ agents_router = APIRouter(prefix="/agents", tags=["Agents"])
 class Model(str, Enum):
     gpt_4o = "gpt-4o-mini"
     o3_mini = "o3-mini"
-    gemini_flash = "gemini-2.5-flash-preview-05-20"
+    gemini_flash = "gemini-2.5-flash-preview-04-17"
 
 
 @agents_router.get("", response_model=List[str])

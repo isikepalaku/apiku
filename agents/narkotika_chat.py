@@ -52,7 +52,7 @@ def get_narkotika_agent(
         agent_id="narkotika-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),

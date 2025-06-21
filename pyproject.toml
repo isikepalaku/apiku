@@ -54,15 +54,13 @@ dependencies = [
   "qdrant-client",
   "redis",
   "slowapi",
-  "qdrant-client[fastembed]",
   "numpy",
-  "fastembed",
   "cohere",
   "infinity_client",
   "textract-py3",
   "markdown",
   "unstructured",
-  "lightrag-hku"
+  "google-cloud-firestore"
 
 
 ]

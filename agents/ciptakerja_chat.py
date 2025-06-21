@@ -41,7 +41,7 @@ def get_cipta_kerja_agent(
         agent_id="cipta-kerja-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-05-20", vertexai=True),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17", vertexai=True),
         tools=[ThinkingTools(add_instructions=True), GoogleSearchTools(fixed_language="id"), Newspaper4kTools()],
         knowledge=knowledge_base,
         storage=cipta_kerja_agent_storage,

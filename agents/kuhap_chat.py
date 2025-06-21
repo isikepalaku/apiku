@@ -1,87 +1,182 @@
-import os
-from typing import Optional
+# main.py  ──────────────────────────────────────────────────────────────────────
+import os, asyncio
 from pathlib import Path
+from typing import Optional, List, Dict, Any
+
 from dotenv import load_dotenv
+from functools import wraps
+
+# Agno imports
 from agno.agent import Agent
-from agno.embedder.openai import OpenAIEmbedder
-from agno.knowledge.text import TextKnowledgeBase
+from agno.knowledge.light_rag import LightRagKnowledgeBase
 from agno.models.google import Gemini
-from agno.vectordb.qdrant import Qdrant
-from agno.storage.postgres import PostgresStorage
-from db.session import db_url
+from agno.document import Document
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
+from agno.storage.postgres import PostgresStorage
+
 from agno.tools.tavily import TavilyTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from agno.tools.thinking import ThinkingTools
 
-load_dotenv()  # Load environment variables from .env file
+from db.session import db_url        # koneksi DB Anda
 
-# Inisialisasi memory v2 dan storage untuk KUHAP
-memory = Memory(db=PostgresMemoryDb(table_name="kuhap_agent_memories", db_url=db_url))
-kuhap_agent_storage = PostgresStorage(table_name="kuhap_agent_memory", db_url=db_url)
-COLLECTION_NAME = "kuhap" # Collection name spesifik untuk KUHAP
+# ─── ENV & konstanta ───────────────────────────────────────────────────────────
+load_dotenv()
+LIGHTRAG_URL = os.getenv("LIGHTRAG_URL", "https://rag.reserse.id")
+LIGHTRAG_KEY = os.getenv("LIGHTRAG_API_KEY")
+KUHAP_DIR    = Path("data/kuhap")
 
-# Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait KUHAP
-# Menggunakan path yang dikonfirmasi: data/kuhap
-knowledge_base = TextKnowledgeBase(
-    path=Path("data/kuhap"), # Path ke data KUHAP (UU 8/1981)
-    vector_db = Qdrant(
-        collection=COLLECTION_NAME,
-        url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
-        embedder=OpenAIEmbedder(),
-        api_key=os.getenv("QDRANT_API_KEY")
-    )
+HEADERS = {
+    "Content-Type": "application/json",
+    "X-API-Key": LIGHTRAG_KEY,
+}
+
+# ─── Memory & storage ──────────────────────────────────────────────────────────
+memory = Memory(db=PostgresMemoryDb(
+    table_name="kuhap_agent_memories", db_url=db_url
+))
+kuhap_agent_storage = PostgresStorage(
+    table_name="kuhap_agent_memory", db_url=db_url
 )
-# Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
-# Pastikan data UU No. 8 Tahun 1981 ada di data/kuhap dan collection 'kuhap' di Qdrant sudah di-generate
-#knowledge_base.load(recreate=False)
 
+# ─── Custom Knowledge Base (header API-key otomatis) ───────────────────────────
+class LightragKB(LightRagKnowledgeBase):
+    lightrag_server_url: str = LIGHTRAG_URL
+
+    async def _insert_text(self, text: str):
+        import httpx
+        async with httpx.AsyncClient() as c:
+            r = await c.post(
+                f"{self.lightrag_server_url}/documents/text",
+                json={"text": text},
+                headers=HEADERS,
+            ); r.raise_for_status()
+
+    async def async_search(self, query: str, **_) -> List[Document]:
+        import httpx
+        async with httpx.AsyncClient() as c:
+            r = await c.post(
+                f"{self.lightrag_server_url}/query",
+                json={"query": query, "mode": "hybrid"},
+                headers=HEADERS,
+            ); r.raise_for_status()
+            data = r.json()
+        content = data["response"] if isinstance(data, dict) else str(data)
+        return [Document(content=content, meta_data={"query": query})]
+
+knowledge_base = LightragKB()
+
+# ─── NEW: custom retriever yang kompatibel ─────────────────────────────────────
+async def custom_retriever(
+    query: str,
+    num_documents: int = 5,
+    mode: str = "hybrid",
+) -> List[Dict[str, Any]]:
+    """
+    Cari ke LightRAG Server dan kembalikan list dict dokumen.
+    """
+    import httpx
+    async with httpx.AsyncClient(timeout=30.0) as c:
+        r = await c.post(
+            f"{LIGHTRAG_URL}/query",
+            json={"query": query, "mode": mode},
+            headers=HEADERS,
+        ); r.raise_for_status()
+        data = r.json()
+
+    # format menjadi list[dict] sesuai ekspektasi Agno
+    if isinstance(data, dict) and "response" in data:
+        data = [data["response"]]
+
+    return [
+        {"content": str(item), "source": "lightrag", "metadata": {"query": query, "mode": mode}}
+        for item in (data if isinstance(data, list) else [data])
+    ]
+
+# ─── Seed dokumen sekali (opsional) ────────────────────────────────────────────
+async def seed_kb(recreate: bool = False):
+    if recreate:
+        await knowledge_base.delete_all()
+
+    for fp in KUHAP_DIR.rglob("*"):
+        if fp.suffix.lower() not in {".txt", ".md"}:
+            continue
+        await knowledge_base.load_text(fp.read_text(encoding="utf-8"))
+    print("Upload selesai – tunggu status FINISHED di WebUI.")
+
+# ─── Factory Agent ────────────────────────────────────────────────────────────
 def get_kuhap_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
     debug_mode: bool = True,
 ) -> Agent:
-    additional_context = ""
-    if user_id:
-        additional_context += "<context>"
-        additional_context += f"Kamu sedang berinteraksi dengan user: {user_id}"
-        additional_context += "</context>"
     return Agent(
-        name="Ahli Hukum Acara Pidana (KUHAP)", # Nama agen diubah
-        agent_id="kuhap-chat", # ID agen diubah
+        name="Ahli Hukum Acara Pidana (KUHAP)",
+        agent_id="kuhap-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-05-20"), # Model bisa disesuaikan jika perlu
-        tools=[
-            ThinkingTools(add_instructions=True),
-            TavilyTools(),
-            Newspaper4kTools(),
-        ],
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+
         knowledge=knowledge_base,
-        storage=kuhap_agent_storage, # Menggunakan storage KUHAP
-        description=(
-            "Anda adalah ahli hukum yang sangat memahami Undang-Undang Nomor 8 Tahun 1981 tentang Hukum Acara Pidana (KUHAP)." # Deskripsi diubah
-        ),
-        instructions=[
-            "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
-            "**Peran Anda:** Anda adalah seorang ahli hukum yang memiliki pemahaman mendalam mengenai Undang-Undang Nomor 8 Tahun 1981 tentang Hukum Acara Pidana (KUHAP). Fokus utama Anda adalah memberikan penjelasan yang akurat, rinci, dan relevan mengenai prosedur hukum acara pidana di Indonesia.",
-            "**Prioritaskan Knowledge Base:** Selalu utamakan pencarian informasi di dalam knowledge base KUHAP (`search_knowledge_base`) sebelum mencari sumber eksternal.",
-            "**Analisis Mendalam:** Teliti setiap pertanyaan pengguna. Jika pertanyaan ambigu, ajukan klarifikasi. Analisis semua hasil pencarian dari knowledge base sebelum merumuskan jawaban.",
-            "**Jawaban Komprehensif & Akurat:** Berikan jawaban yang jelas, terstruktur, dan mudah dipahami. Jelaskan konsep-konsep kunci dalam KUHAP, seperti hak tersangka/terdakwa, alat bukti, upaya hukum, dan tahapan proses peradilan pidana (penyelidikan, penyidikan, penuntutan, pemeriksaan di sidang pengadilan, hingga putusan).",
-            "**Sertakan Referensi Pasal:** Wajib sertakan kutipan pasal-pasal KUHAP yang relevan secara langsung dalam jawaban Anda untuk mendukung penjelasan.",
-            "**Jelaskan Unsur Pasal:** Ketika merujuk pada suatu pasal, uraikan unsur-unsur penting di dalamnya untuk memastikan pemahaman yang lengkap.",
-            "**Gunakan Alat Bantu:** Jika informasi tidak ditemukan dalam knowledge base KUHAP, gunakan `TavilyTools` untuk mencari informasi hukum yang relevan dari sumber eksternal yang kredibel. Gunakan `Newspaper4kTools` jika perlu menganalisis artikel berita terkait penerapan KUHAP.",
-            "**Bahasa Formal:** Gunakan bahasa Indonesia hukum yang formal dan presisi layaknya dosen ilmu hukum.",
-            "**Konteks Pengguna:** Perhatikan konteks pengguna (jika ada) untuk memberikan jawaban yang lebih personal dan relevan.",
-        ], # Instruksi disesuaikan untuk ahli KUHAP
-        additional_context=additional_context,
-        add_datetime_to_instructions=True,
-        debug_mode=debug_mode,
-        add_history_to_messages=True,
-        num_history_responses=3,
-        read_chat_history=True,
+        retriever=custom_retriever,        # ← pakai retriever baru
+        search_knowledge=True,
+
+        tools=[ThinkingTools(add_instructions=True), TavilyTools(), Newspaper4kTools()],
+        storage=kuhap_agent_storage,
         memory=memory,
-        show_tool_calls=False,
-        markdown=True
+        description="Anda adalah ahli hukum KUHAP.",
+        instructions=[
+            "**PERSONA AKADEMIK:**",
+            "Anda adalah seorang Doktor Hukum (Dr.) dengan spesialisasi mendalam dalam Hukum Acara Pidana (KUHAP). "
+            "Sebagai akademisi senior dengan pengalaman puluhan tahun, Anda memiliki pemahaman komprehensif tentang:",
+            "• Filosofi dan ratio legis setiap pasal dalam KUHAP",
+            "• Perkembangan yurisprudensi dan putusan landmark pengadilan",
+            "• Perbandingan sistem peradilan pidana dengan negara lain",
+            "• Analisis kritis terhadap kelemahan dan kelebihan sistem KUHAP",
+            "• Hubungan KUHAP dengan peraturan perundang-undangan lainnya",
+            "",
+            "**GAYA KOMUNIKASI AKADEMIK:**",
+            "• Gunakan terminologi hukum yang tepat dan presisi",
+            "• Berikan analisis yang mendalam dengan pendekatan dogmatik, normatif, dan empiris",
+            "• Sertakan perspektif historis dan komparatif ketika relevan",
+            "• Jelaskan implikasi praktis dari setiap ketentuan hukum",
+            "• Berikan contoh kasus nyata atau hipotetis untuk memperjelas konsep",
+            "",
+            "**METODE ANALISIS:**",
+            "• Mulai dengan analisis gramatikal (penafsiran harfiah)",
+            "• Lanjutkan dengan analisis sistematis (konteks dalam keseluruhan UU)",
+            "• Berikan analisis teleologis (tujuan dan maksud pembuat UU)",
+            "• Pertimbangkan aspek historis dan sosiologis jika diperlukan",
+            "",
+            "**Prioritas:** Cari di knowledge base LightRAG lebih dulu.",
+            "",
+            "**Referensi Pasal:** Sertakan kutipan KUHAP dengan format:",
+            "• Pasal [nomor] KUHAP: '[bunyi pasal lengkap]'",
+            "• Jelaskan maksud dan tujuan pasal tersebut",
+            "• Berikan interpretasi akademik yang mendalam",
+            "• Hubungkan dengan pasal-pasal terkait lainnya",
+            "",
+            "**STRUKTUR JAWABAN AKADEMIK:**",
+            "1. **Definisi dan Konsep Dasar** - Jelaskan terminologi dengan presisi akademik",
+            "2. **Landasan Hukum** - Kutip pasal-pasal KUHAP yang relevan", 
+            "3. **Analisis Yuridis** - Berikan interpretasi mendalam dengan berbagai metode penafsiran",
+            "4. **Yurisprudensi** - Sebutkan putusan-putusan penting jika ada",
+            "5. **Implikasi Praktis** - Jelaskan penerapan dalam praktik peradilan",
+            "6. **Kritik dan Saran** - Berikan evaluasi kritis jika diperlukan",
+            "",
+            "Jawablah dengan kedalaman akademik setingkat disertasi doktoral, namun tetap dapat dipahami praktisi hukum."
+        ],
+        add_datetime_to_instructions=True,
+        add_history_to_messages=True,
+        markdown=True,
+        debug_mode=debug_mode,
     )
+
+# ─── Demo ──────────────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    # asyncio.run(seed_kb())   # ← jalankan sekali untuk unggah dokumen
+    agent = get_kuhap_agent()
+    print(asyncio.run(agent.aprint_response(
+        "Jelaskan asas praduga tak bersalah dalam KUHAP!"
+    )))

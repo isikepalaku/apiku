@@ -14,7 +14,6 @@ from agno.tools.newspaper4k import Newspaper4kTools
 from agno.storage.postgres import PostgresStorage
 from agno.vectordb.qdrant import Qdrant
 from agno.vectordb.pgvector import PgVector
-from agno.vectordb.search import SearchType
 from agno.knowledge.text import TextKnowledgeBase
 from agno.embedder.openai import OpenAIEmbedder
 from agno.memory.v2.db.redis import RedisMemoryDb
@@ -31,7 +30,6 @@ knowledge_base_sop = TextKnowledgeBase(
         collection=COLLECTION_SOP,
         url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
         api_key=os.getenv("QDRANT_API_KEY"),
-        search_type=SearchType.hybrid,
     )
 )
 knowledge_base_umum = TextKnowledgeBase(

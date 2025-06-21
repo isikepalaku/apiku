@@ -46,7 +46,7 @@ def get_ipi_agent(
         agent_id="ipi-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.5-flash-preview-05-20"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(),

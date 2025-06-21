@@ -14,6 +14,8 @@ from agno.tools.newspaper4k import Newspaper4kTools
 from agno.vectordb.qdrant import Qdrant
 from agno.storage.postgres import PostgresStorage
 from db.session import db_url
+from agno.memory.v2.db.firestore import FirestoreMemoryDb
+from agno.storage.firestore import FirestoreStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from agno.tools.thinking import ThinkingTools
@@ -21,8 +23,15 @@ from agno.tools.thinking import ThinkingTools
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi memory v2 dan storage
-memory = Memory(db=PostgresMemoryDb(table_name="ahli_hukum_pidana_memories", db_url=db_url))
-ahli_hukum_pidana_storage = PostgresStorage(table_name="ahli_hukum_pidana_memory", db_url=db_url, auto_upgrade_schema=True)
+memory_db = FirestoreMemoryDb(
+    db_name="(default)", project_id="website-382700", collection_name="ahli_memory"
+)
+ahli_hukum_pidana_storage = FirestoreStorage(
+    db_name="(default)",
+    project_id="website-382700",
+    collection_name="ahli_sessions",
+)
+memory = Memory(model=Gemini(id="gemini-2.0-flash-lite"), db=memory_db)
 COLLECTION_NAME = "hukum"
 
 # Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen hukum pidana
@@ -60,7 +69,7 @@ def get_ahli_hukum_pidana_agent(
         session_id=session_id,
         user_id=user_id,
         model=Gemini(
-            id="gemini-2.5-flash-preview-05-20"
+            id="gemini-2.5-flash-preview-04-17"
         ),
         tools=[
             GoogleSearchTools(cache_results=True), 
@@ -104,7 +113,7 @@ def get_ahli_hukum_pidana_agent(
         add_datetime_to_instructions=True,
         use_json_mode=True,
         debug_mode=debug_mode,
-        show_tool_calls=False,
+        show_tool_calls=True,
         markdown=True,
         add_history_to_messages=True,
         num_history_responses=3,

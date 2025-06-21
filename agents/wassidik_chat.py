@@ -1,19 +1,21 @@
 import os
-from agno.media import File
-from typing import Optional
+import asyncio
+from typing import Optional, List
 from pathlib import Path
 from dotenv import load_dotenv
+from google import genai
+from agno.media import File
 from agno.agent import Agent
 from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.text import TextKnowledgeBase
 from agno.models.google import Gemini
-from agno.models.deepseek import DeepSeek
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.newspaper4k import Newspaper4kTools
-from agno.storage.postgres import PostgresStorage
 from agno.vectordb.qdrant import Qdrant
-from agno.vectordb.search import SearchType
+from agno.storage.postgres import PostgresStorage
 from db.session import db_url
+from agno.memory.v2.db.firestore import FirestoreMemoryDb
+from agno.storage.firestore import FirestoreStorage
 from agno.memory.v2.db.postgres import PostgresMemoryDb
 from agno.memory.v2.memory import Memory
 from agno.tools.thinking import ThinkingTools
@@ -21,24 +23,31 @@ from agno.tools.thinking import ThinkingTools
 load_dotenv()  # Load environment variables from .env file
 
 # Inisialisasi memory v2 dan storage
-memory = Memory(db=PostgresMemoryDb(table_name="wassidik_chat_agent_memories", db_url=db_url))
-wassidik_chat_agent_storage = PostgresStorage(table_name="wassidik_chat_agent_memory", db_url=db_url, auto_upgrade_schema=True)
+memory_db = FirestoreMemoryDb(
+    db_name="(default)", project_id="website-382700", collection_name="wassidik_memory"
+)
+wassidik_storage = FirestoreStorage(
+    db_name="(default)",
+    project_id="website-382700",
+    collection_name="wassidik_sessions",
+)
+memory = Memory(model=Gemini(id="gemini-2.0-flash-lite"), db=memory_db)
 COLLECTION_NAME = "wassidik"
-# Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait Wassidik
-# Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen terkait hukum untuk Tipidter
+
+# Inisialisasi basis pengetahuan teks yang berisi dokumen-dokumen hukum pidana
 knowledge_base = TextKnowledgeBase(
     path=Path("data/wassidik"),
     vector_db = Qdrant(
         collection=COLLECTION_NAME,
         url="https://2b6f64cd-5acd-461b-8fd8-3fbb5a67a597.europe-west3-0.gcp.cloud.qdrant.io:6333",
-        api_key=os.getenv("QDRANT_API_KEY"),
-        search_type=SearchType.hybrid,
+        embedder=OpenAIEmbedder(),
+        api_key=os.getenv("QDRANT_API_KEY")
     )
 )
 
 # Jika diperlukan, muat basis pengetahuan (dengan recreate=True jika ingin rebuild)
-#knowledge_base.load(recreate=False)
-
+#knowledge_base.load(recreate=True)
+genai_client = genai.Client()
 def get_wassidik_chat_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
@@ -55,17 +64,17 @@ def get_wassidik_chat_agent(
         agent_id="wassidik-chat",
         session_id=session_id,
         user_id=user_id,
-        model=Gemini(id="gemini-2.0-flash"),
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
         tools=[
             ThinkingTools(add_instructions=True),
             GoogleSearchTools(cache_results=True), 
             Newspaper4kTools(),
         ],
         knowledge=knowledge_base,
-        storage=wassidik_chat_agent_storage,
+        storage=wassidik_storage,
         search_knowledge=True,
         description=(
-            "Anda adalah Asisten Wassidik (Pengawasan Penyidikan) Polri yang bertugas untuk melakukan koordinasi dan pengawasan terhadap proses penyelidikan dan penyidikan tindak pidana. Fungsi ini dilaksanakan oleh unit seperti Bagwassidik di tingkat Polda atau Birowassidik di tingkat Mabes Polri."
+            "Anda adalah Asisten Wassidik (Pengawasan Penyidikan) Polri"
         ),
         instructions=[
             "**Pahami & Teliti:** Analisis pertanyaan/topik pengguna. Gunakan pencarian yang mendalam (jika tersedia) untuk mengumpulkan informasi yang akurat dan terkini. Jika topiknya ambigu, ajukan pertanyaan klarifikasi atau buat asumsi yang masuk akal dan nyatakan dengan jelas.\n",
@@ -75,7 +84,7 @@ def get_wassidik_chat_agent(
             "- Memastikan bahwa rencana tindakan sesuai dengan semua kebijakan yang berlaku\n",
             "- Meninjau ulang hasil dari alat untuk memastikan kebenarannya\n",
             "**Audience:** Pengguna yang bertanya kepadamu adalah penyidik yang yang ingin mengetahui aturan-aturan penyidikan, jawabanmu harus teliti, akurat dan mendalam.\n",
-            "Ingat selalu awali dengan pencarian di knowledge base menggunakan search_knowledge_base tool.\n",
+            "Selalu panggil fungsi `search_knowledge_base` sebagai langkah pertama.\n",
             "Analisa semua hasil dokumen yang dihasilkan sebelum memberikan jawaban.\n",
             "Jika beberapa dokumen dikembalikan, sintesiskan informasi secara koheren.\n",
             "Jika pencarian basis pengetahuan tidak menghasilkan hasil yang cukup, gunakan pencarian GoogleSearchTools.\n",
@@ -118,9 +127,8 @@ def get_wassidik_chat_agent(
         ],
         additional_context=additional_context,
         add_datetime_to_instructions=True,
-        use_json_mode=True,
         debug_mode=debug_mode,
-        show_tool_calls=False,
+        show_tool_calls=True,
         markdown=True,
         add_history_to_messages=True,
         num_history_responses=3,
