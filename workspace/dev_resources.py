@@ -1,10 +1,7 @@
-from os import getenv
-
 from agno.docker.app.fastapi import FastApi
 from agno.docker.app.postgres import PgVectorDb
 from agno.docker.resource.image import DockerImage
 from agno.docker.resources import DockerResources
-from agno.docker.app.redis import Redis
 
 from workspace.settings import BUILD_IMAGES, DEV_ENV, DEV_KEY, IMAGE_REPO, WS_NAME, WS_ROOT
 
@@ -32,15 +29,6 @@ dev_db = PgVectorDb(
     host_port=5432,
 )
 
-# -*- Dev Redis running on port 6379:6379
-dev_redis = Redis(
-    name=f"{DEV_KEY}-redis",
-    enabled=True,
-    host_port=6379,
-    config_file="redis_master.conf"  # Assuming this is relative to WS_ROOT
-                                     # and agno handles mounting and using it.
-)
-
 # -*- Build container environment
 container_env = {
     "RUNTIME_ENV": "dev",
@@ -51,13 +39,10 @@ container_env = {
     "DB_USER": dev_db.get_db_user(),
     "DB_PASS": dev_db.get_db_password(),
     "DB_DATABASE": dev_db.get_db_database(),
-    # Redis configuration
-    "REDIS_HOST": dev_redis.name,
-    "REDIS_PORT": 6379,
     # Wait for database to be available before starting the application
     "WAIT_FOR_DB": True,
     # Migrate database on startup using alembic
-    # "MIGRATE_DB": ws_settings.prd_db_enabled,
+    "MIGRATE_DB": True,
 }
 
 # -*- FastApi running on port 8000:8000
@@ -73,12 +58,12 @@ dev_fastapi = FastApi(
     use_cache=True,
     # Read secrets from secrets/dev_api_secrets.yml
     secrets_file=WS_ROOT.joinpath("workspace/secrets/dev_api_secrets.yml"),
-    depends_on=[dev_db, dev_redis],
+    depends_on=[dev_db],
 )
 
 # -*- Dev DockerResources
 dev_docker_resources = DockerResources(
     env=DEV_ENV,
     network=WS_NAME,
-    apps=[dev_db, dev_redis, dev_fastapi],
+    apps=[dev_db, dev_fastapi],
 )

@@ -135,7 +135,8 @@ playground = Playground(
 
 # Log the playground endpoint with phidata.app
 # if getenv("RUNTIME_ENV") == "dev":
-#     playground.create_endpoint("http://localhost:8000")
+if getenv("RUNTIME_ENV") == "dev":
+    playground.register_app_on_platform()
 
 # Create the router from the playground
 playground_router = playground.get_async_router()

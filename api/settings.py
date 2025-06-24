@@ -58,6 +58,8 @@ class ApiSettings(BaseSettings):
                 "http://localhost:3000",
                 "https://app.agno.com",
                 "https://app.reserse.id",
+                "http://localhost:8282",
+                "https://desktenagakerjapoldasulsel.com",
             ]
         )
 

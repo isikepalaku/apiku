@@ -38,7 +38,8 @@ def get_user_id(request: Request):
     if user_id == "anonymous":
         user_id = request.client.host
     
-    logger.info(f"Rate limit check for user: {user_id}")
+    # Hanya log jika dalam mode debug atau untuk monitoring khusus
+    # logger.info(f"Rate limit check for user: {user_id}")  # Commented out untuk mengurangi spam log
     return user_id
 
 # Custom failed handler for SlowAPI Limiter
@@ -135,24 +136,6 @@ def create_app() -> FastAPI:
     # Tambahkan limiter ke app.state
     app.state.limiter = limiter
     
-    # Custom exception handler untuk RateLimitExceeded
-    @app.exception_handler(RateLimitExceeded)
-    async def custom_rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
-        user_id_for_log = "unknown"
-        try:
-            user_id_for_log = get_user_id(request)
-        except Exception:
-            pass
-        
-        logger.warning(f"Rate limit exceeded for: {user_id_for_log}, path: {request.url.path}")
-        return JSONResponse(
-            status_code=429,
-            content={
-                "detail": "Terlalu banyak permintaan, coba lagi nanti.",
-                "retry_after": getattr(exc, "retry_after", 120)  # 120 detik default
-            }
-        )
-
     # Tambahkan exception handler untuk ConnectionError
     @app.exception_handler(ConnectionError)
     async def connection_error_handler(request: Request, exc: ConnectionError):
@@ -186,23 +169,6 @@ def create_app() -> FastAPI:
                 "detail": "Redis server dalam mode read-only. Rate limiting menggunakan in-memory storage."
             }
         )
-    
-    # Tambahkan exception handler umum untuk semua exception
-    @app.exception_handler(Exception)
-    async def general_exception_handler(request: Request, exc: Exception):
-        user_id_for_log = "unknown"
-        try:
-            user_id_for_log = get_user_id(request)
-        except Exception:
-            pass
-        
-        logger.error(f"Unhandled exception for: {user_id_for_log}, path: {request.url.path}, error: {str(exc)}")
-        return JSONResponse(
-            status_code=500,
-            content={
-                "detail": "Terjadi kesalahan pada server. Silakan coba lagi nanti."
-            }
-        )
 
     # Tambahkan middleware untuk rate limiting - HARUS ditambahkan SEBELUM include_router
     try:
@@ -214,10 +180,18 @@ def create_app() -> FastAPI:
     # Add v1 router with API key dependency
     app.include_router(v1_router, dependencies=[Depends(verify_api_key)])
     
+    # Setup AG-UI routes after including routers
+    try:
+        from api.routes.agui import setup_agui_routes
+        setup_agui_routes()
+        logger.info("AG-UI routes setup completed")
+    except Exception as e:
+        logger.error(f"Failed to setup AG-UI routes: {e}")
+    
     # Add CORS middleware
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=api_settings.cors_origin_list,
+        allow_origins=api_settings.cors_origin_list if api_settings.cors_origin_list else ["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
